@@ -1,6 +1,7 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -16,6 +17,7 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const { fontScale } = useThemeCustom();
 
   return (
     <Text
@@ -27,6 +29,21 @@ export function ThemedText({
         type === 'subtitle' ? styles.subtitle : undefined,
         type === 'link' ? styles.link : undefined,
         style,
+        (() => {
+          // Soporta style como array o undefined
+          let baseFontSize: number | undefined;
+          let flatStyle: any = Array.isArray(style)
+            ? Object.assign({}, ...style)
+            : style || {};
+          if (flatStyle && typeof flatStyle.fontSize === 'number') {
+            baseFontSize = flatStyle.fontSize;
+          } else if (type && styles[type]?.fontSize) {
+            baseFontSize = styles[type].fontSize;
+          } else {
+            baseFontSize = styles.default.fontSize;
+          }
+          return { fontSize: baseFontSize ? baseFontSize * fontScale : undefined };
+        })(),
       ]}
       {...rest}
     />
