@@ -1,103 +1,267 @@
-import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { AppLayout } from '@/components/AppLayout';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useThemeCustom } from '@/hooks/ThemeContext';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Platform, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+
+import { ColorMode } from '@/constants/Colors';
+import RNSlider from '@react-native-community/slider';
 
 let Slider: any;
 
 if (Platform.OS === 'web') {
-  Slider = function WebSlider({ value, onValueChange, minimumValue, maximumValue, step, style }: any) {
-    return (
-      <input
-        type="range"
-        min={minimumValue}
-        max={maximumValue}
-        step={step}
-        value={value}
-        onChange={e => onValueChange(Number(e.target.value))}
-        style={{ width: '100%', ...style }}
-      />
-    );
-  };
-  Slider.displayName = 'WebSlider';
+  const WebSlider = ({ value, onValueChange, minimumValue, maximumValue, step, style }: any) => (
+    <input
+      type="range"
+      min={minimumValue}
+      max={maximumValue}
+      step={step}
+      value={value}
+      onChange={e => onValueChange(Number(e.target.value))}
+      style={{ width: '100%', ...style }}
+    />
+  );
+  WebSlider.displayName = 'WebSlider';
+  Slider = WebSlider;
 } else {
-  try {
-    // Import dinámico para evitar error si no está instalado
-    Slider = require('@react-native-community/slider').default;
-  } catch (e) {
-    // Fallback si no está instalado
-    Slider = () => null;
-  }
+  Slider = RNSlider;
 }
 
-const themes = [
-  { key: 'system', label: 'Por defecto del sistema' },
-  { key: 'light', label: 'Claro' },
-  { key: 'dark', label: 'Oscuro' },
-  { key: 'protanopia', label: 'Protanopía' },
-  { key: 'deuteranopia', label: 'Deuteranopía' },
-  { key: 'tritanopia', label: 'Tritanopía' },
+// Opciones de accesibilidad visual
+const colorOptions: { key: ColorMode; label: string; description: string }[] = [
+  {
+    key: 'normal',
+    label: 'Normal',
+    description: 'Colores estándar',
+  },
+  {
+    key: 'highContrast',
+    label: 'Alto contraste',
+    description: 'Mejora la legibilidad para todos',
+  },
+  {
+    key: 'protanopia',
+    label: 'Protanopía',
+    description: 'Optimizado para protanopía (rojo-verde)',
+  },
+  {
+    key: 'deuteranopia',
+    label: 'Deuteranopía',
+    description: 'Optimizado para deuteranopía (verde-rojo)',
+  },
+  {
+    key: 'tritanopia',
+    label: 'Tritanopía',
+    description: 'Optimizado para tritanopía (azul-amarillo)',
+  },
 ];
 
 export default function ConfigScreen() {
-  const { themeSetting, setTheme, fontScale, setFontScale } = useThemeCustom();
+  const { themeSetting, setTheme, fontScale, setFontScale, colorMode, setColorMode } = useThemeCustom();
+  const [darkMode, setDarkMode] = React.useState(themeSetting === 'dark');
+
+  // Simula cambio de tema oscuro
+  const handleDarkMode = (value: boolean) => {
+    setDarkMode(value);
+    setTheme(value ? 'dark' : 'light');
+  };
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">Configuración</ThemedText>
-      <ThemedText type="subtitle">Tema</ThemedText>
-      {themes.map((t) => (
-        <ThemedText
-          key={t.key}
-          style={[
-            styles.option,
-            themeSetting === t.key && styles.selected,
-          ]}
-          onPress={() => setTheme(t.key as any)}
-        >
-          {t.label}
-        </ThemedText>
-      ))}
-      <ThemedText type="subtitle" style={{ marginTop: 24 }}>Tamaño de letra</ThemedText>
-      <View style={styles.sliderRow}>
-        <ThemedText style={{ width: 40 }}>A-</ThemedText>
-        <Slider
-          style={{ flex: 1 }}
-          minimumValue={0.8}
-          maximumValue={1.5}
-          step={0.05}
-          value={fontScale}
-          onValueChange={setFontScale}
-        />
-        <ThemedText style={{ width: 40 }}>A+</ThemedText>
+    <AppLayout
+      description="Preferencias de accesibilidad y visualización."
+    >
+    
+      <View style={styles.fontRow}>
+        <ThemedText style={styles.fontLabel}>Tamaño fuente</ThemedText>
+        <View style={styles.fontControls}>
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={() => setFontScale(Math.min(fontScale + 0.05, 1.5))}
+            accessibilityLabel="Aumentar fuente"
+          >
+            <Ionicons name="add-circle-outline" size={28} color="#222" />
+          </TouchableOpacity>
+          <TextInput
+            style={styles.fontInput}
+            value={String(Math.round(fontScale * 16))}
+            editable={false}
+          />
+          <TouchableOpacity
+            style={styles.iconBtn}
+            onPress={() => setFontScale(Math.max(fontScale - 0.05, 0.8))}
+            accessibilityLabel="Disminuir fuente"
+          >
+            <Ionicons name="remove-circle-outline" size={28} color="#222" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <ThemedText style={{ marginTop: 8 }}>Actual: {fontScale.toFixed(2)}x</ThemedText>
-    </ThemedView>
+      <View style={styles.switchRow}>
+        <ThemedText style={styles.switchLabel}>Modo oscuro</ThemedText>
+        <Switch
+          value={darkMode}
+          onValueChange={handleDarkMode}
+          thumbColor={darkMode ? '#222' : '#fff'}
+          trackColor={{ false: '#ccc', true: '#b6f3c2' }}
+          accessibilityLabel="Modo oscuro"
+        />
+        <Ionicons name="moon" size={28} color="#222" style={{ marginLeft: 8 }} />
+      </View>
+      <View style={styles.section}>
+        <ThemedText style={styles.fontLabel}>Opciones de color para accesibilidad</ThemedText>
+        {colorOptions.map(opt => (
+          <TouchableOpacity
+            key={opt.key}
+            style={[
+              styles.colorOption,
+              colorMode === opt.key && styles.colorOptionSelected,
+            ]}
+            onPress={() => setColorMode(opt.key)}
+            accessibilityLabel={opt.label}
+          >
+            <View style={[
+              styles.colorRadio,
+              colorMode === opt.key && styles.colorRadioSelected,
+            ]}>
+              {colorMode === opt.key && (
+                <Ionicons name="checkmark" size={18} color="#fff" />
+              )}
+            </View>
+            <View style={{ flex: 1 }}>
+              <ThemedText style={styles.colorOptionLabel}>{opt.label}</ThemedText>
+              <ThemedText style={styles.colorOptionDesc}>{opt.description}</ThemedText>
+            </View>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </AppLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    gap: 12,
-  },
-  option: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    marginVertical: 2,
-    cursor: Platform.OS === 'web' ? 'pointer' : undefined,
-  },
-  selected: {
-    backgroundColor: '#e0e0e0',
-    fontWeight: 'bold',
-  },
-  sliderRow: {
+  cardHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 12,
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  helpBtn: {
+    backgroundColor: '#eee',
+    borderRadius: 18,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#aaa',
+  },
+  helpBtnText: {
+    fontSize: 22,
+    color: '#444',
+    fontWeight: 'bold',
+  },
+  fontRow: {
+    marginBottom: 18,
+    width: '100%',
+  },
+  fontLabel: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  fontControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f8c6c6',
+    borderRadius: 12,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: '#222',
+    justifyContent: 'center',
+  },
+  iconBtn: {
+    padding: 4,
+  },
+  fontInput: {
+    width: 48,
+    height: 32,
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#222',
+    textAlign: 'center',
+    fontSize: 18,
+    marginHorizontal: 8,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 18,
     marginTop: 8,
+    width: '100%',
+  },
+  switchLabel: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    flex: 1,
+  },
+  section: {
+    backgroundColor: '#e6e6e6',
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 18,
+    width: '100%',
+    gap: 8,
+  },
+  colorOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 10,
+    marginBottom: 6,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#bbb',
+    gap: 12,
+  },
+  colorOptionSelected: {
+    borderColor: '#1976d2',
+    backgroundColor: '#e3f2fd',
+  },
+  colorRadio: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: '#bbb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+    backgroundColor: '#ccc',
+  },
+  colorRadioSelected: {
+    backgroundColor: '#1976d2',
+    borderColor: '#1976d2',
+  },
+  colorOptionLabel: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#222',
+  },
+  colorOptionDesc: {
+    fontSize: 13,
+    color: '#555',
+  },
+  switchYes: {
+    marginLeft: 8,
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#222',
   },
 });

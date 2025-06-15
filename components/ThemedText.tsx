@@ -1,7 +1,7 @@
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { useThemeCustom } from '@/hooks/ThemeContext';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -21,6 +21,8 @@ export function ThemedText({
 
   return (
     <Text
+      accessible
+      accessibilityRole="text"
       style={[
         { color },
         type === 'default' ? styles.default : undefined,

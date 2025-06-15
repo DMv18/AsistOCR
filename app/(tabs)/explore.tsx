@@ -1,5 +1,7 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
@@ -7,8 +9,45 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { globalStyles } from '@/styles/globalStyles';
+import { router } from 'expo-router';
+
+type Evento = {
+  id: string;
+  nombre: string;
+  fecha: string;
+  color?: string;
+};
+
+const eventosIniciales: Evento[] = [
+  { id: '1', nombre: 'Tendencias Tecnológicas', fecha: '10/05/2025', color: '#e1aaff' },
+  { id: '2', nombre: 'Arquitectura de Maquinas III', fecha: '09/05/2025', color: '#aaffc3' },
+  { id: '3', nombre: 'Ingeniería de Software II', fecha: '06/05/2025', color: '#ffd6a5' },
+  { id: '4', nombre: 'Redes de Computadora', fecha: '09/05/2025', color: '#b5d0ff' },
+];
 
 export default function TabTwoScreen() {
+  const [eventos, setEventos] = useState(eventosIniciales);
+  const [busqueda, setBusqueda] = useState('');
+
+  const eventosFiltrados = eventos.filter(e =>
+    e.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
+  const handleBorrar = (id: string) => {
+    setEventos(eventos => eventos.filter(e => e.id !== id));
+  };
+
+  const handleEditar = (id: string) => {
+    // Aquí puedes navegar a la pantalla de edición
+    alert('Editar evento: ' + id);
+  };
+
+  const handleVer = (id: string) => {
+    // Aquí puedes navegar a la pantalla de visualización
+    alert('Ver evento: ' + id);
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -92,6 +131,168 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
+      <View style={[globalStyles.container, { backgroundColor: '#18362a' }]}>
+        <View style={globalStyles.header}>
+          <ThemedText style={globalStyles.headerTitle}>AsistOCR</ThemedText>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity style={globalStyles.headerBtn} accessibilityLabel="Usuario">
+              <Ionicons name="person-circle-outline" size={20} color="#fff" />
+              <ThemedText style={globalStyles.headerBtnText}>Usuario</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={globalStyles.headerBtn}
+              accessibilityLabel="Ajustes"
+              onPress={() => router.push('/config')}
+            >
+              <Ionicons name="settings" size={20} color="#fff" />
+              <ThemedText style={globalStyles.headerBtnText}>Ajustes</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={{
+          backgroundColor: '#fff',
+          borderRadius: 20,
+          padding: 16,
+          marginTop: 16,
+          width: '100%',
+          alignSelf: 'center',
+          alignItems: 'stretch',
+          flex: 1,
+          minHeight: 500,
+        }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+            <ThemedText style={{ fontWeight: 'bold', fontSize: 20, flex: 1 }}>
+              Lista de eventos
+            </ThemedText>
+            <TouchableOpacity style={globalStyles.helpBtn}>
+              <ThemedText style={globalStyles.helpBtnText}>?</ThemedText>
+            </TouchableOpacity>
+          </View>
+          <View style={{
+            backgroundColor: '#d2f7c6',
+            borderRadius: 18,
+            padding: 12,
+            marginBottom: 18,
+          }}>
+            <View style={{
+              backgroundColor: '#f3f3f3',
+              borderRadius: 16,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 12,
+              paddingHorizontal: 8,
+            }}>
+              <Ionicons name="search" size={22} color="#888" />
+              <TextInput
+                style={{
+                  flex: 1,
+                  padding: 10,
+                  fontSize: 16,
+                  backgroundColor: 'transparent',
+                  borderRadius: 8,
+                  marginLeft: 8,
+                  color: '#222',
+                }}
+                placeholder="Buscar evento..."
+                placeholderTextColor="#888"
+                value={busqueda}
+                onChangeText={setBusqueda}
+              />
+            </View>
+            <ScrollView style={{ maxHeight: 350 }}>
+              {eventosFiltrados.map((evento) => (
+                <View
+                  key={evento.id}
+                  style={{
+                    backgroundColor: '#6ee7b7',
+                    borderRadius: 18,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    marginBottom: 14,
+                    padding: 10,
+                    gap: 10,
+                  }}
+                >
+                  <View style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: 19,
+                    backgroundColor: evento.color || '#e1aaff',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 8,
+                  }}>
+                    <Ionicons name="document-text-outline" size={22} color="#fff" />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <ThemedText style={{ fontWeight: 'bold', fontSize: 15 }}>
+                      {evento.nombre}
+                    </ThemedText>
+                  </View>
+                  <View style={{
+                    minWidth: 80,
+                    alignItems: 'flex-end',
+                    marginRight: 8,
+                  }}>
+                    <ThemedText style={{ fontWeight: 'bold', color: '#222', fontSize: 13 }}>
+                      {evento.fecha}
+                    </ThemedText>
+                  </View>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#b6f3c2',
+                      borderRadius: 8,
+                      padding: 6,
+                      marginHorizontal: 2,
+                    }}
+                    onPress={() => handleEditar(evento.id)}
+                    accessibilityLabel="Editar"
+                  >
+                    <Ionicons name="pencil" size={22} color="#222" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#f8c6c6',
+                      borderRadius: 8,
+                      padding: 6,
+                      marginHorizontal: 2,
+                    }}
+                    onPress={() => handleBorrar(evento.id)}
+                    accessibilityLabel="Borrar"
+                  >
+                    <Ionicons name="trash" size={22} color="#d32f2f" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#b6d0f3',
+                      borderRadius: 8,
+                      padding: 6,
+                      marginHorizontal: 2,
+                    }}
+                    onPress={() => handleVer(evento.id)}
+                    accessibilityLabel="Ver"
+                  >
+                    <Ionicons name="eye" size={22} color="#222" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#2196f3',
+              borderRadius: 16,
+              paddingVertical: 18,
+              alignItems: 'center',
+              marginTop: 16,
+            }}
+            onPress={() => router.back()}
+            accessibilityLabel="Regresar"
+          >
+            <ThemedText style={{ color: '#fff', fontWeight: 'bold', fontSize: 20 }}>Regresar</ThemedText>
+          </TouchableOpacity>
+        </View>
+      </View>
     </ParallaxScrollView>
   );
 }
