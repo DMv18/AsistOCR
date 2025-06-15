@@ -13,7 +13,13 @@ export function RegisterForm() {
   const [contrasena, setContrasena] = useState('');
   const [confirmar, setConfirmar] = useState('');
   const { theme, colorMode } = useThemeCustom();
-  const c = Colors[colorMode][theme].LoginForm;
+  const c = Colors[colorMode]?.[theme]?.RegisterForm || {
+    iconCircle: '#FFFFFF',
+    inputBg: '#FFFFFF',
+    inputBorder: '#E2E8F0',
+    inputText: '#1A202C',
+    linkText: '#3182CE',
+  };
 
   return (
     <View style={styles.root}>

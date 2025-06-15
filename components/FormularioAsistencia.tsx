@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { Colors } from '@/constants/Colors';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 import { globalStyles } from '@/styles/globalStyles';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,7 +16,18 @@ type Foto = {
 export function FormularioAsistencia() {
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const c = (key: string) => useThemeColor({}, `FormularioAsistencia.${key}`);
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode]?.[theme]?.FormularioAsistencia || {
+    fotosBlock: '#FFFFFF',
+    fotoRow: '#FFFFFF',
+    fotoRowBorder: '#BEE3F8',
+    addBtn: '#EBF8FF',
+    addBtnText: '#2D3748',
+    btnDanger: '#E53E3E',
+    btnDangerText: '#FFFFFF',
+    btnPrimary: '#38A169',
+    btnPrimaryText: '#FFFFFF',
+  };
   const router = useRouter();
 
   const subirFoto = async (uri: string): Promise<'success' | 'error'> => {
@@ -63,11 +75,11 @@ export function FormularioAsistencia() {
       <ThemedText type="title" style={{ marginBottom: 12 }}>
         Subir fotos de una asistencia
       </ThemedText>
-      <View style={[styles.fotosBlock, { backgroundColor: c('fotosBlock') }]}>
+      <View style={[styles.fotosBlock, { backgroundColor: c.fotosBlock }]}>
         {fotos.map((foto) => (
           <View
             key={foto.uri}
-            style={[styles.fotoRow, { borderColor: c('fotoRowBorder'), backgroundColor: c('fotoRow') }]}
+            style={[styles.fotoRow, { borderColor: c.fotoRowBorder, backgroundColor: c.fotoRow }]}
           >
             <Image
               source={{ uri: foto.uri }}
@@ -75,44 +87,46 @@ export function FormularioAsistencia() {
             />
             <View style={{ flex: 1 }}>
               {foto.status === 'success' && (
-                <ThemedText style={{ color: c('btnSecondary'), fontWeight: 'bold' }}>
-                  <Ionicons name="checkmark-circle" size={18} color={c('btnSecondary')} /> foto subida exitosamente
+                <ThemedText style={{ color: c.btnSecondary, fontWeight: 'bold' }}>
+                  <Ionicons name="checkmark-circle" size={18} color={c.btnSecondary} /> foto subida exitosamente
                 </ThemedText>
               )}
               {foto.status === 'error' && (
-                <ThemedText style={{ color: c('btnDanger'), fontWeight: 'bold' }}>
-                  <Ionicons name="close-circle" size={18} color={c('btnDanger')} /> Fallo al subir la foto
+                <ThemedText style={{ color: c.btnDanger, fontWeight: 'bold' }}>
+                  <Ionicons name="close-circle" size={18} color={c.btnDanger} /> Fallo al subir la foto
                 </ThemedText>
               )}
               {foto.status === 'pending' && (
-                <ThemedText style={{ color: c('addBtnText'), fontWeight: 'bold' }}>
-                  <Ionicons name="cloud-upload-outline" size={18} color={c('addBtnText')} /> Subiendo...
+                <ThemedText style={{ color: c.addBtnText, fontWeight: 'bold' }}>
+                  <Ionicons name="cloud-upload-outline" size={18} color={c.addBtnText} /> Subiendo...
                 </ThemedText>
               )}
               <TouchableOpacity
-                style={[globalStyles.btnDanger, { backgroundColor: c('btnDanger') }]}
+                style={[globalStyles.btnDanger, { backgroundColor: c.btnDanger }]} 
                 onPress={() => handleQuitarFoto(foto.uri)}
               >
-                <MaterialIcons name="delete" size={18} color={c('btnDangerText')} />
-                <ThemedText style={[globalStyles.btnDangerText, { color: c('btnDangerText') }]}>quitar foto</ThemedText>
+                <MaterialIcons name="delete" size={18} color={c.btnDangerText} />
+                <ThemedText style={[globalStyles.btnDangerText, { color: c.btnDangerText }]}>
+                  quitar foto
+                </ThemedText>
               </TouchableOpacity>
             </View>
           </View>
         ))}
         <TouchableOpacity
-          style={[styles.addBtn, { backgroundColor: c('addBtn') }]}
+          style={[styles.addBtn, { backgroundColor: c.addBtn }]}
           onPress={handleAgregarFoto}
         >
-          <Ionicons name="add-circle-outline" size={24} color={c('addBtnText')} />
-          <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: c('addBtnText') }}>
+          <Ionicons name="add-circle-outline" size={24} color={c.addBtnText} />
+          <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: c.addBtnText }}>
             Agregar nueva foto
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[globalStyles.btnPrimary, { backgroundColor: c('btnPrimary') }]}
+          style={[globalStyles.btnPrimary, { backgroundColor: c.btnPrimary }]}
           accessibilityLabel="Guardar"
         >
-          <ThemedText style={[globalStyles.btnPrimaryText, { color: c('btnPrimaryText') }]}>
+          <ThemedText style={[globalStyles.btnPrimaryText, { color: c.btnPrimaryText }]}>
             Guardar
           </ThemedText>
         </TouchableOpacity>

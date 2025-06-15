@@ -5,16 +5,16 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    Pressable,
+    SafeAreaView,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    useWindowDimensions,
+    View,
 } from 'react-native';
 import { ThemedText } from './ThemedText';
 
@@ -40,6 +40,11 @@ export function AppLayout({ children, description, showBack = true }: Props) {
   // Colores del botón regresar
   const regresarBtnColor = Colors[colorMode][theme].AppLayout?.regresarBtn ?? '#2196f3';
   const regresarBtnTextColor = Colors[colorMode][theme].AppLayout?.regresarBtnText ?? '#fff';
+
+  // Colores para el header
+  const headerTitleColor = Colors[colorMode][theme].AppLayout.headerText;
+  const headerBtnBgColor = Colors[colorMode][theme].AppLayout.headerBtnBg;
+  const headerBtnTextColor = Colors[colorMode][theme].AppLayout.headerBtnText;
 
   // Mostrar menú compacto si la pantalla es pequeña o la fuente es grande
   const showCompactMenu = width < 420 || fontScale > 1.15;
@@ -69,7 +74,7 @@ export function AppLayout({ children, description, showBack = true }: Props) {
         }
       ]}>
         <TouchableOpacity onPress={() => router.push('/')} accessibilityLabel="Inicio">
-          <ThemedText style={[styles.headerTitle, { fontSize: headerFontSize, color: '#fff' }]}>AsistOCR</ThemedText>
+          <ThemedText style={[styles.headerTitle, { fontSize: headerFontSize, color: headerTitleColor }]}>AsistOCR</ThemedText>
         </TouchableOpacity>
         {showCompactMenu ? (
           <>
@@ -115,20 +120,20 @@ export function AppLayout({ children, description, showBack = true }: Props) {
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity
-              style={[styles.headerBtn, { backgroundColor: accentColor }]}
+              style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
               accessibilityLabel="Usuario"
               onPress={() => router.push('/login')}
             >
-              <Ionicons name="person-circle-outline" size={20} color="#fff" />
-              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize }]}>Usuario</ThemedText>
+              <Ionicons name="person-circle-outline" size={20} color={headerBtnTextColor} />
+              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Usuario</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.headerBtn, { backgroundColor: accentColor }]}
+              style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
               accessibilityLabel="Ajustes"
               onPress={() => router.push('/config')}
             >
-              <Ionicons name="settings" size={20} color="#fff" />
-              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize }]}>Ajustes</ThemedText>
+              <Ionicons name="settings" size={20} color={headerBtnTextColor} />
+              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Ajustes</ThemedText>
             </TouchableOpacity>
           </View>
         )}

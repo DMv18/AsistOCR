@@ -1,6 +1,6 @@
 import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from '@/hooks/ThemeContext';
-import { useThemeColor } from '@/hooks/useThemeColor';
 import { globalStyles } from '@/styles/globalStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -29,27 +29,38 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
   const { width } = useWindowDimensions();
   const isSmall = width < 500;
   const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode]?.[theme]?.ListaEventos || {
+    searchBar: '#FFFFFF',
+    eventoCard: '#FFFFFF',
+    iconTendencias: '#FFA500',
+    iconArquitectura: '#000000',
+    iconSoftware: '#0000FF',
+    iconRedes: '#008000',
+    eventoNombre: '#000000',
+    eventoFecha: '#000000',
+    btnEditar: '#008000',
+    btnBorrar: '#FF0000',
+    btnVer: '#0000FF',
+    btnIcon: '#FFFFFF',
+  };
   const router = useRouter();
 
-  // Colores por componente
-  const c = (key: string) => useThemeColor({}, `ListaEventos.${key}`);
-
   function getIconColor(nombre: string) {
-    if (nombre.includes('Tendencias')) return c('iconTendencias');
-    if (nombre.includes('Arquitectura')) return c('iconArquitectura');
-    if (nombre.includes('Software')) return c('iconSoftware');
-    if (nombre.includes('Redes')) return c('iconRedes');
-    return c('iconTendencias');
+    if (nombre.includes('Tendencias')) return c.iconTendencias;
+    if (nombre.includes('Arquitectura')) return c.iconArquitectura;
+    if (nombre.includes('Software')) return c.iconSoftware;
+    if (nombre.includes('Redes')) return c.iconRedes;
+    return c.iconTendencias;
   }
 
   return (
     <View style={styles.root}>
-      <View style={[styles.searchRow, { backgroundColor: c('searchBar') }]}>
-        <Ionicons name="search" size={22} color={c('btnIcon')} />
+      <View style={[styles.searchRow, { backgroundColor: c.searchBar }]}>
+        <Ionicons name="search" size={22} color={c.btnIcon} />
         <TextInput
-          style={[styles.input, { color: c('eventoNombre') }]}
+          style={[styles.input, { color: c.eventoNombre }]}
           placeholder="Buscar evento..."
-          placeholderTextColor={c('eventoFecha')}
+          placeholderTextColor={c.eventoFecha}
           value={busqueda}
           onChangeText={setBusqueda}
         />
@@ -60,42 +71,42 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
             key={evento.id}
             style={[
               styles.evento,
-              { backgroundColor: c('eventoCard'), maxWidth: 600, width: isSmall ? '98%' : 500 },
+              { backgroundColor: c.eventoCard, maxWidth: 600, width: isSmall ? '98%' : 500 },
               isSmall && { flexDirection: 'column', alignItems: 'flex-start', gap: 4, padding: 10 }
             ]}
           >
             <View style={[styles.iconCol, { backgroundColor: getIconColor(evento.nombre), borderRadius: 16 }]}>
-              <Ionicons name="document-text-outline" size={22} color={c('btnIcon')} style={{ marginRight: 8 }} />
+              <Ionicons name="document-text-outline" size={22} color={c.btnIcon} style={{ marginRight: 8 }} />
             </View>
             <View style={[styles.infoCol, isSmall && { marginBottom: 6 }]}>
-              <ThemedText style={[styles.eventoNombre, { color: c('eventoNombre') }, isSmall && { fontSize: 14 }]}>
+              <ThemedText style={[styles.eventoNombre, { color: c.eventoNombre }, isSmall && { fontSize: 14 }]}>
                 {evento.nombre}
               </ThemedText>
-              <ThemedText style={[styles.eventoFecha, { color: c('eventoFecha') }, isSmall && { fontSize: 12 }]}>
+              <ThemedText style={[styles.eventoFecha, { color: c.eventoFecha }, isSmall && { fontSize: 12 }]}>
                 {evento.fecha}
               </ThemedText>
             </View>
             <View style={[styles.btnsCol, isSmall && { flexDirection: 'row', flexWrap: 'wrap', width: '100%', gap: 4, marginTop: 4 }]}>
               <TouchableOpacity
-                style={[globalStyles.btnSecondary, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c('btnEditar') }]}
+                style={[globalStyles.btnSecondary, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c.btnEditar }]}
                 onPress={() => router.push({ pathname: '/editar-evento', params: { id: evento.id } })}
                 accessibilityLabel="Editar"
               >
-                <Ionicons name="pencil" size={18} color={c('btnIcon')} />
+                <Ionicons name="pencil" size={18} color={c.btnIcon} />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[globalStyles.btnDanger, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c('btnBorrar') }]}
+                style={[globalStyles.btnDanger, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c.btnBorrar }]}
                 onPress={() => onBorrar(evento.id)}
                 accessibilityLabel="Borrar"
               >
-                <Ionicons name="trash" size={18} color={c('btnIcon')} />
+                <Ionicons name="trash" size={18} color={c.btnIcon} />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[globalStyles.btnPrimary, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c('btnVer') }]}
+                style={[globalStyles.btnPrimary, styles.btn, isSmall && styles.btnSmall, { backgroundColor: c.btnVer }]}
                 onPress={() => onVer(evento.id)}
                 accessibilityLabel="Ver"
               >
-                <Ionicons name="eye" size={18} color={c('btnIcon')} />
+                <Ionicons name="eye" size={18} color={c.btnIcon} />
               </TouchableOpacity>
             </View>
           </View>
@@ -189,3 +200,4 @@ const styles = StyleSheet.create({
     color: '#222',
   },
 });
+  

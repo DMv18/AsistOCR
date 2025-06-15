@@ -9,9 +9,7 @@ import { TouchableOpacity, View } from 'react-native';
 export default function HomeScreen() {
   const router = useRouter();
   const { theme, colorMode } = useThemeCustom();
-  // Asegura que Home exista antes de acceder a cardBg
-  const palette = Colors[colorMode]?.[theme];
-  const homeColors = palette && palette.Home ? palette.Home : { cardBg: '#d7ccc8' };
+  const homeColors = Colors[colorMode]?.[theme]?.Home || { cardBg: '#FFFFFF', btnText: '#111111' };
 
   return (
     <AppLayout description="Bienvenido. Selecciona una opción para comenzar." showBack={false}>
@@ -22,23 +20,13 @@ export default function HomeScreen() {
         width: '100%',
       }}>
         <TouchableOpacity
-          style={[
-            globalStyles.btnPrimary,
-            {
-              backgroundColor: homeColors.cardBg,
-              alignSelf: 'center',
-              minWidth: 220,
-              width: 240,
-              height: 60,
-              justifyContent: 'center',
-            }
-          ]}
+          style={[globalStyles.btnPrimary, { backgroundColor: homeColors.cardBg }]}
           accessibilityLabel="Crear nueva asistencia"
           onPress={() => router.push('/crear-asistencia')}
         >
           <ThemedText style={[
             globalStyles.btnPrimaryText,
-            { color: '#111', textAlign: 'center', width: '100%' }
+            { color: homeColors.btnText, textAlign: 'center', width: '100%' }
           ]}>
             Crear nueva asistencia
           </ThemedText>
@@ -60,7 +48,7 @@ export default function HomeScreen() {
         >
           <ThemedText style={[
             globalStyles.btnSecondaryText,
-            { color: '#111', textAlign: 'center', width: '100%' }
+            { color: homeColors.btnText, textAlign: 'center', width: '100%' }
           ]}>
             Historial
           </ThemedText>
@@ -69,5 +57,6 @@ export default function HomeScreen() {
     </AppLayout>
   );
 }
+
 
 

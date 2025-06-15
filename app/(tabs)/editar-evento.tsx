@@ -33,16 +33,10 @@ export default function EditarEventoScreen() {
   const params = useLocalSearchParams();
   const eventoId = params.id as string | undefined;
   const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode]?.[theme]?.EditarEvento || { greenBlock: '#FFFFFF', regresarBtn: '#2196F3', regresarBtnText: '#FFFFFF' };
 
-  // Aquí deberías obtener los datos reales del evento por id
-  // Para demo, solo muestra el id como nombre y una fecha dummy
   const nombre = eventoId ? `Evento ${eventoId}` : 'Evento';
   const fecha = '10/05/2025';
-
-  // Colores heredados
-  const greenBlock = Colors[colorMode][theme].AppLayout.greenBlock;
-  const regresarBtn = Colors[colorMode][theme].AppLayout.regresarBtn;
-  const regresarBtnText = Colors[colorMode][theme].AppLayout.regresarBtnText;
 
   return (
     <AppLayout description="Escoja una de las opciones para modificar.">
@@ -52,7 +46,7 @@ export default function EditarEventoScreen() {
       <ThemedText style={{ fontSize: 16, color: '#555', marginBottom: 16, textAlign: 'center' }}>
         Fecha: {fecha}
       </ThemedText>
-      <View style={[styles.greenBlock, { backgroundColor: greenBlock }]}>
+      <View style={[styles.greenBlock, { backgroundColor: c.greenBlock }]}>
         {opciones.map((op, idx) => (
           <TouchableOpacity
             key={op.texto}
@@ -68,11 +62,11 @@ export default function EditarEventoScreen() {
         ))}
       </View>
       <TouchableOpacity
-        style={[styles.regresarBtn, { backgroundColor: regresarBtn }]}
+        style={[styles.regresarBtn, { backgroundColor: c.regresarBtn }]}
         onPress={() => router.back()}
         accessibilityLabel="Regresar"
       >
-        <ThemedText style={[styles.regresarBtnText, { color: regresarBtnText }]}>Salir de este evento</ThemedText>
+        <ThemedText style={[styles.regresarBtnText, { color: c.regresarBtnText }]}>Salir de este evento</ThemedText>
       </TouchableOpacity>
     </AppLayout>
   );
@@ -85,7 +79,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     width: '100%',
     alignItems: 'center',
-    backgroundColor: '#b6eeb0',
     gap: 18,
   },
   opcionBtn: {

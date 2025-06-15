@@ -3,30 +3,9 @@ import { ThemedText } from '@/components/ThemedText';
 import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Platform, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { ColorMode } from '@/constants/Colors';
-import RNSlider from '@react-native-community/slider';
-
-let Slider: any;
-
-if (Platform.OS === 'web') {
-  const WebSlider = ({ value, onValueChange, minimumValue, maximumValue, step, style }: any) => (
-    <input
-      type="range"
-      min={minimumValue}
-      max={maximumValue}
-      step={step}
-      value={value}
-      onChange={e => onValueChange(Number(e.target.value))}
-      style={{ width: '100%', ...style }}
-    />
-  );
-  WebSlider.displayName = 'WebSlider';
-  Slider = WebSlider;
-} else {
-  Slider = RNSlider;
-}
+import { ColorMode, Colors } from '@/constants/Colors';
 
 // Opciones de accesibilidad visual
 const colorOptions: { key: ColorMode; label: string; description: string }[] = [
@@ -58,7 +37,7 @@ const colorOptions: { key: ColorMode; label: string; description: string }[] = [
 ];
 
 export default function ConfigScreen() {
-  const { themeSetting, setTheme, fontScale, setFontScale, colorMode, setColorMode } = useThemeCustom();
+  const { themeSetting, setTheme, fontScale, setFontScale, colorMode, setColorMode, theme } = useThemeCustom();
   const [darkMode, setDarkMode] = React.useState(themeSetting === 'dark');
 
   // Simula cambio de tema oscuro
@@ -67,11 +46,20 @@ export default function ConfigScreen() {
     setTheme(value ? 'dark' : 'light');
   };
 
+  const c = Colors[colorMode]?.[theme]?.Config || {
+    sectionBg: '#FFFFFF',
+    colorOptionBg: '#FFFFFF',
+    colorOptionSelected: '#FFD700',
+    colorRadio: '#000000',
+    colorRadioSelected: '#FFD700',
+    fontBtn: '#0000FF',
+    fontBtnText: '#FFFFFF',
+  };
+
   return (
     <AppLayout
       description="Preferencias de accesibilidad y visualización."
     >
-    
       <View style={styles.fontRow}>
         <ThemedText style={styles.fontLabel}>Tamaño fuente</ThemedText>
         <View style={styles.fontControls}>
@@ -107,7 +95,7 @@ export default function ConfigScreen() {
         />
         <Ionicons name="moon" size={28} color="#222" style={{ marginLeft: 8 }} />
       </View>
-      <View style={styles.section}>
+      <View style={[styles.section, { backgroundColor: c.sectionBg }]}>
         <ThemedText style={styles.fontLabel}>Opciones de color para accesibilidad</ThemedText>
         {colorOptions.map(opt => (
           <TouchableOpacity
@@ -265,3 +253,4 @@ const styles = StyleSheet.create({
     color: '#222',
   },
 });
+
