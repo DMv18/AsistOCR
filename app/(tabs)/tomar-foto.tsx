@@ -1,6 +1,7 @@
 import { AppLayout } from '@/components/AppLayout';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
@@ -10,15 +11,9 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function TomarFotoScreen() {
   const [foto, setFoto] = useState<string | null>(null);
   const router = useRouter();
-  const colorMode = 'light'; // Ajusta según tu lógica de tema actual
-  const theme = 'default'; // Ajusta según tu lógica de tema actual
-  const c = Colors[colorMode]?.[theme]?.TomarFoto || {
-    cameraBtnBg: '#4BE38A',
-    cameraBtnText: '#222222',
-    previewBorder: '#BBBBBB',
-    regresarBtnBg: '#2196F3',
-    regresarBtnText: '#FFFFFF',
-  };
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme].TomarFoto;
+  const cRoot = Colors[colorMode][theme];
 
   const handleTomarFoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -27,6 +22,7 @@ export default function TomarFotoScreen() {
     });
     if (!result.canceled && result.assets && result.assets.length > 0) {
       setFoto(result.assets[0].uri);
+      router.replace({ pathname: '/crear-asistencia', params: { foto: result.assets[0].uri } });
     }
   };
 
@@ -38,7 +34,7 @@ export default function TomarFotoScreen() {
           onPress={handleTomarFoto}
         >
           <Ionicons name="camera" size={40} color={c.cameraBtnText} />
-          <ThemedText style={styles.cameraBtnText}>Tomar foto</ThemedText>
+          <ThemedText style={[styles.cameraBtnText, { color: c.cameraBtnText }]}>Tomar foto</ThemedText>
         </TouchableOpacity>
         {foto && (
           <View style={styles.previewBlock}>
@@ -46,14 +42,14 @@ export default function TomarFotoScreen() {
               source={{ uri: foto }}
               style={[styles.previewImg, { borderColor: c.previewBorder }]}
             />
-            <ThemedText style={styles.previewLabel}>Foto tomada</ThemedText>
+            <ThemedText style={[styles.previewLabel, { color: cRoot.text }]}>Foto tomada</ThemedText>
           </View>
         )}
         <TouchableOpacity
           style={[styles.regresarBtn, { backgroundColor: c.regresarBtnBg }]}
           onPress={() => router.back()}
         >
-          <ThemedText style={styles.regresarBtnText}>Regresar</ThemedText>
+          <ThemedText style={[styles.regresarBtnText, { color: c.regresarBtnText }]}>Regresar</ThemedText>
         </TouchableOpacity>
       </View>
     </AppLayout>
@@ -76,7 +72,6 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   cameraBtnText: {
-    color: '#222',
     fontWeight: 'bold',
     fontSize: 18,
   },
@@ -92,7 +87,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   previewLabel: {
-    color: '#222',
     fontWeight: 'bold',
     fontSize: 16,
   },
@@ -104,9 +98,9 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   regresarBtnText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 18,
   },
 });
+
 

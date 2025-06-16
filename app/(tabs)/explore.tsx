@@ -9,6 +9,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 import { globalStyles } from '@/styles/globalStyles';
 import { router } from 'expo-router';
 
@@ -29,6 +30,7 @@ const eventosIniciales: Evento[] = [
 export default function TabTwoScreen() {
   const [eventos, setEventos] = useState(eventosIniciales);
   const [busqueda, setBusqueda] = useState('');
+  const { theme, colorMode } = useThemeCustom();
 
   const eventosFiltrados = eventos.filter(e =>
     e.nombre.toLowerCase().includes(busqueda.toLowerCase())
@@ -39,12 +41,12 @@ export default function TabTwoScreen() {
   };
 
   const handleEditar = (id: string) => {
-    // Aquí puedes navegar a la pantalla de edición
+  
     alert('Editar evento: ' + id);
   };
 
   const handleVer = (id: string) => {
-    // Aquí puedes navegar a la pantalla de visualización
+  
     alert('Ver evento: ' + id);
   };
 
@@ -131,12 +133,12 @@ export default function TabTwoScreen() {
           ),
         })}
       </Collapsible>
-      <View style={[globalStyles.container, { backgroundColor: '#18362a' }]}>
+      <View style={globalStyles.container}>
         <View style={globalStyles.header}>
           <ThemedText style={globalStyles.headerTitle}>AsistOCR</ThemedText>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableOpacity style={globalStyles.headerBtn} accessibilityLabel="Usuario">
-              <Ionicons name="person-circle-outline" size={20} color="#fff" />
+              <Ionicons name="person-circle-outline" size={20} />
               <ThemedText style={globalStyles.headerBtnText}>Usuario</ThemedText>
             </TouchableOpacity>
             <TouchableOpacity
@@ -144,13 +146,12 @@ export default function TabTwoScreen() {
               accessibilityLabel="Ajustes"
               onPress={() => router.push('/config')}
             >
-              <Ionicons name="settings" size={20} color="#fff" />
+              <Ionicons name="settings" size={20} />
               <ThemedText style={globalStyles.headerBtnText}>Ajustes</ThemedText>
             </TouchableOpacity>
           </View>
         </View>
         <View style={{
-          backgroundColor: '#fff',
           borderRadius: 20,
           padding: 16,
           marginTop: 16,
@@ -169,20 +170,18 @@ export default function TabTwoScreen() {
             </TouchableOpacity>
           </View>
           <View style={{
-            backgroundColor: '#d2f7c6',
             borderRadius: 18,
             padding: 12,
             marginBottom: 18,
           }}>
             <View style={{
-              backgroundColor: '#f3f3f3',
               borderRadius: 16,
               flexDirection: 'row',
               alignItems: 'center',
               marginBottom: 12,
               paddingHorizontal: 8,
             }}>
-              <Ionicons name="search" size={22} color="#888" />
+              <Ionicons name="search" size={22} />
               <TextInput
                 style={{
                   flex: 1,
@@ -191,10 +190,8 @@ export default function TabTwoScreen() {
                   backgroundColor: 'transparent',
                   borderRadius: 8,
                   marginLeft: 8,
-                  color: '#222',
                 }}
                 placeholder="Buscar evento..."
-                placeholderTextColor="#888"
                 value={busqueda}
                 onChangeText={setBusqueda}
               />
@@ -204,7 +201,6 @@ export default function TabTwoScreen() {
                 <View
                   key={evento.id}
                   style={{
-                    backgroundColor: '#6ee7b7',
                     borderRadius: 18,
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -217,12 +213,11 @@ export default function TabTwoScreen() {
                     width: 38,
                     height: 38,
                     borderRadius: 19,
-                    backgroundColor: evento.color || '#e1aaff',
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginRight: 8,
                   }}>
-                    <Ionicons name="document-text-outline" size={22} color="#fff" />
+                    <Ionicons name="document-text-outline" size={22} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <ThemedText style={{ fontWeight: 'bold', fontSize: 15 }}>
@@ -234,13 +229,12 @@ export default function TabTwoScreen() {
                     alignItems: 'flex-end',
                     marginRight: 8,
                   }}>
-                    <ThemedText style={{ fontWeight: 'bold', color: '#222', fontSize: 13 }}>
+                    <ThemedText style={{ fontWeight: 'bold', fontSize: 13 }}>
                       {evento.fecha}
                     </ThemedText>
                   </View>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: '#b6f3c2',
                       borderRadius: 8,
                       padding: 6,
                       marginHorizontal: 2,
@@ -248,11 +242,10 @@ export default function TabTwoScreen() {
                     onPress={() => handleEditar(evento.id)}
                     accessibilityLabel="Editar"
                   >
-                    <Ionicons name="pencil" size={22} color="#222" />
+                    <Ionicons name="pencil" size={22} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: '#f8c6c6',
                       borderRadius: 8,
                       padding: 6,
                       marginHorizontal: 2,
@@ -260,11 +253,10 @@ export default function TabTwoScreen() {
                     onPress={() => handleBorrar(evento.id)}
                     accessibilityLabel="Borrar"
                   >
-                    <Ionicons name="trash" size={22} color="#d32f2f" />
+                    <Ionicons name="trash" size={22} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: '#b6d0f3',
                       borderRadius: 8,
                       padding: 6,
                       marginHorizontal: 2,
@@ -272,7 +264,7 @@ export default function TabTwoScreen() {
                     onPress={() => handleVer(evento.id)}
                     accessibilityLabel="Ver"
                   >
-                    <Ionicons name="eye" size={22} color="#222" />
+                    <Ionicons name="eye" size={22} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -280,7 +272,6 @@ export default function TabTwoScreen() {
           </View>
           <TouchableOpacity
             style={{
-              backgroundColor: '#2196f3',
               borderRadius: 16,
               paddingVertical: 18,
               alignItems: 'center',
@@ -289,7 +280,7 @@ export default function TabTwoScreen() {
             onPress={() => router.back()}
             accessibilityLabel="Regresar"
           >
-            <ThemedText style={{ color: '#fff', fontWeight: 'bold', fontSize: 20 }}>Regresar</ThemedText>
+            <ThemedText style={{ fontWeight: 'bold', fontSize: 20 }}>Regresar</ThemedText>
           </TouchableOpacity>
         </View>
       </View>
@@ -309,3 +300,4 @@ const styles = StyleSheet.create({
     gap: 8,
   },
 });
+

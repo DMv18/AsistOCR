@@ -40,38 +40,38 @@ export default function ConfigScreen() {
   const { themeSetting, setTheme, fontScale, setFontScale, colorMode, setColorMode, theme } = useThemeCustom();
   const [darkMode, setDarkMode] = React.useState(themeSetting === 'dark');
 
-  // Simula cambio de tema oscuro
+  React.useEffect(() => {
+    setDarkMode(theme === 'dark');
+  }, [theme]);
+
+  
   const handleDarkMode = (value: boolean) => {
     setDarkMode(value);
     setTheme(value ? 'dark' : 'light');
   };
 
-  const c = Colors[colorMode]?.[theme]?.Config || {
-    sectionBg: '#FFFFFF',
-    colorOptionBg: '#FFFFFF',
-    colorOptionSelected: '#FFD700',
-    colorRadio: '#000000',
-    colorRadioSelected: '#FFD700',
-    fontBtn: '#0000FF',
-    fontBtnText: '#FFFFFF',
-  };
+  const c = Colors[colorMode][theme].Config;
 
   return (
-    <AppLayout
-      description="Preferencias de accesibilidad y visualización."
-    >
+    <AppLayout description="Preferencias de accesibilidad y visualización.">
       <View style={styles.fontRow}>
         <ThemedText style={styles.fontLabel}>Tamaño fuente</ThemedText>
-        <View style={styles.fontControls}>
+        <View style={[
+          styles.fontControls,
+          { backgroundColor: c.colorOptionBg, borderColor: c.colorRadio }
+        ]}>
           <TouchableOpacity
             style={styles.iconBtn}
             onPress={() => setFontScale(Math.min(fontScale + 0.05, 1.5))}
             accessibilityLabel="Aumentar fuente"
           >
-            <Ionicons name="add-circle-outline" size={28} color="#222" />
+            <Ionicons name="add-circle-outline" size={28} color={c.labelText} />
           </TouchableOpacity>
           <TextInput
-            style={styles.fontInput}
+            style={[
+              styles.fontInput,
+              { backgroundColor: c.sectionBg, borderColor: c.colorRadio, color: c.labelText }
+            ]}
             value={String(Math.round(fontScale * 16))}
             editable={false}
           />
@@ -80,7 +80,7 @@ export default function ConfigScreen() {
             onPress={() => setFontScale(Math.max(fontScale - 0.05, 0.8))}
             accessibilityLabel="Disminuir fuente"
           >
-            <Ionicons name="remove-circle-outline" size={28} color="#222" />
+            <Ionicons name="remove-circle-outline" size={28} color={c.labelText} />
           </TouchableOpacity>
         </View>
       </View>
@@ -89,11 +89,11 @@ export default function ConfigScreen() {
         <Switch
           value={darkMode}
           onValueChange={handleDarkMode}
-          thumbColor={darkMode ? '#222' : '#fff'}
-          trackColor={{ false: '#ccc', true: '#b6f3c2' }}
+          thumbColor={darkMode ? c.colorRadioSelected : c.sectionBg}
+          trackColor={{ false: c.colorRadio, true: c.colorOptionSelected }}
           accessibilityLabel="Modo oscuro"
         />
-        <Ionicons name="moon" size={28} color="#222" style={{ marginLeft: 8 }} />
+        <Ionicons name="moon" size={28} color={c.labelText} style={{ marginLeft: 8 }} />
       </View>
       <View style={[styles.section, { backgroundColor: c.sectionBg }]}>
         <ThemedText style={styles.fontLabel}>Opciones de color para accesibilidad</ThemedText>
@@ -102,22 +102,24 @@ export default function ConfigScreen() {
             key={opt.key}
             style={[
               styles.colorOption,
-              colorMode === opt.key && styles.colorOptionSelected,
+              { backgroundColor: c.colorOptionBg, borderColor: c.colorRadio },
+              colorMode === opt.key && { borderColor: c.colorOptionSelected, backgroundColor: c.colorOptionSelected }
             ]}
             onPress={() => setColorMode(opt.key)}
             accessibilityLabel={opt.label}
           >
             <View style={[
               styles.colorRadio,
-              colorMode === opt.key && styles.colorRadioSelected,
+              { backgroundColor: c.colorRadio, borderColor: c.colorRadio },
+              colorMode === opt.key && { backgroundColor: c.colorRadioSelected, borderColor: c.colorRadioSelected }
             ]}>
               {colorMode === opt.key && (
-                <Ionicons name="checkmark" size={18} color="#fff" />
+                <Ionicons name="checkmark" size={18} color={c.fontBtnText} />
               )}
             </View>
             <View style={{ flex: 1 }}>
-              <ThemedText style={styles.colorOptionLabel}>{opt.label}</ThemedText>
-              <ThemedText style={styles.colorOptionDesc}>{opt.description}</ThemedText>
+              <ThemedText style={[styles.colorOptionLabel, { color: c.labelText }]}>{opt.label}</ThemedText>
+              <ThemedText style={[styles.colorOptionDesc, { color: c.labelText }]}>{opt.description}</ThemedText>
             </View>
           </TouchableOpacity>
         ))}
@@ -165,11 +167,9 @@ const styles = StyleSheet.create({
   fontControls: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8c6c6',
     borderRadius: 12,
     padding: 8,
     borderWidth: 2,
-    borderColor: '#222',
     justifyContent: 'center',
   },
   iconBtn: {
@@ -178,10 +178,8 @@ const styles = StyleSheet.create({
   fontInput: {
     width: 48,
     height: 32,
-    backgroundColor: '#fff',
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#222',
     textAlign: 'center',
     fontSize: 18,
     marginHorizontal: 8,
@@ -199,7 +197,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   section: {
-    backgroundColor: '#e6e6e6',
     borderRadius: 18,
     padding: 16,
     marginBottom: 18,
@@ -213,44 +210,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 10,
     marginBottom: 6,
-    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#bbb',
     gap: 12,
   },
-  colorOptionSelected: {
-    borderColor: '#1976d2',
-    backgroundColor: '#e3f2fd',
-  },
+  colorOptionSelected: {},
   colorRadio: {
     width: 28,
     height: 28,
     borderRadius: 14,
     borderWidth: 2,
-    borderColor: '#bbb',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
-    backgroundColor: '#ccc',
   },
-  colorRadioSelected: {
-    backgroundColor: '#1976d2',
-    borderColor: '#1976d2',
-  },
+  colorRadioSelected: {},
   colorOptionLabel: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#222',
   },
   colorOptionDesc: {
     fontSize: 13,
-    color: '#555',
   },
   switchYes: {
     marginLeft: 8,
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#222',
   },
 });
 

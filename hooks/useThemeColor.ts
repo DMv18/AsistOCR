@@ -1,14 +1,13 @@
-/**
- * Learn more about light and dark modes:
- * https://docs.expo.dev/guides/color-schemes/
- */
+
 
 import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from './ThemeContext';
 
 type ColorKey =
   | keyof typeof Colors['normal']['light']
-  | `${keyof typeof Colors['normal']['light']}.${string}`;
+  | `${keyof typeof Colors['normal']['light']}.${string}`
+  | 'headerBtnBg'
+  | 'headerBtnText';
 
 export function useThemeColor(
   props: Partial<Record<'light' | 'dark', string>>,

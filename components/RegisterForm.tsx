@@ -13,38 +13,53 @@ export function RegisterForm() {
   const [contrasena, setContrasena] = useState('');
   const [confirmar, setConfirmar] = useState('');
   const { theme, colorMode } = useThemeCustom();
-  const c = Colors[colorMode]?.[theme]?.RegisterForm || {
-    iconCircle: '#FFFFFF',
-    inputBg: '#FFFFFF',
-    inputBorder: '#E2E8F0',
-    inputText: '#1A202C',
-    linkText: '#3182CE',
-  };
+  const c = Colors[colorMode][theme];
 
   return (
     <View style={styles.root}>
-      <View style={[styles.iconCircle, { backgroundColor: c.iconCircle }]}>
-        <Ionicons name="person-circle-outline" size={64} color="#888" />
+      <View style={[styles.iconCircle, { backgroundColor: c.formIconCircle ?? c.inputIconCircle }]}>
+        <Ionicons name="person-circle-outline" size={64} color={c.formIconCircleIcon ?? '#888'} />
       </View>
       <TextInput
-        style={[styles.input, { backgroundColor: c.inputBg, borderColor: c.inputBorder, color: c.inputText }]}
+        style={[
+          styles.input,
+          {
+            backgroundColor: c.inputBg,
+            borderColor: c.inputBorder,
+            color: c.inputText,
+          },
+        ]}
         placeholder="Correo"
-        placeholderTextColor={c.inputText}
+        placeholderTextColor={c.inputPlaceholder}
         value={correo}
         onChangeText={setCorreo}
       />
       <TextInput
-        style={[styles.input, { backgroundColor: c.inputBg, borderColor: c.inputBorder, color: c.inputText }]}
+        style={[
+          styles.input,
+          {
+            backgroundColor: c.inputBg,
+            borderColor: c.inputBorder,
+            color: c.inputText,
+          },
+        ]}
         placeholder="Contraseña"
-        placeholderTextColor={c.inputText}
+        placeholderTextColor={c.inputPlaceholder}
         value={contrasena}
         onChangeText={setContrasena}
         secureTextEntry
       />
       <TextInput
-        style={[styles.input, { backgroundColor: c.inputBg, borderColor: c.inputBorder, color: c.inputText }]}
+        style={[
+          styles.input,
+          {
+            backgroundColor: c.inputBg,
+            borderColor: c.inputBorder,
+            color: c.inputText,
+          },
+        ]}
         placeholder="Confirmar contraseña"
-        placeholderTextColor={c.inputText}
+        placeholderTextColor={c.inputPlaceholder}
         value={confirmar}
         onChangeText={setConfirmar}
         secureTextEntry
@@ -59,7 +74,7 @@ export function RegisterForm() {
         onPress={() => router.push('/login')}
         style={styles.linkBtn}
       >
-        <ThemedText style={[styles.linkText, { color: c.linkText }]}>
+        <ThemedText style={[styles.linkText, { color: c.inputLinkText }]}>
           Ya tienes una cuenta?
         </ThemedText>
       </TouchableOpacity>
@@ -108,3 +123,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+

@@ -1,7 +1,8 @@
+import React from 'react';
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
+import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from '@/hooks/ThemeContext';
-import { useThemeColor } from '@/hooks/useThemeColor';
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -16,23 +17,38 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
-  const { fontScale } = useThemeCustom();
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme];
+
+  let color = c.themedText?.default ?? c.text;
+  let fontWeight: any = undefined;
+  let fontSize: number | undefined = undefined;
+
+  if (type === 'title') {
+    color = c.themedText?.title ?? c.headerText ?? c.text;
+    fontWeight = 'bold';
+    fontSize = 22;
+  } else if (type === 'link') {
+    color = c.themedText?.link ?? c.inputLinkText ?? c.accent;
+    fontWeight = 'bold';
+  } else if (type === 'subtitle') {
+    color = c.themedText?.subtitle ?? c.text;
+    fontWeight = 'bold';
+    fontSize = 20;
+  } else if (type === 'defaultSemiBold') {
+    color = c.themedText?.defaultSemiBold ?? c.text;
+    fontWeight = '600';
+  }
 
   return (
     <Text
       accessible
       accessibilityRole="text"
       style={[
-        { color },
-        type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
-        type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
-        type === 'subtitle' ? styles.subtitle : undefined,
-        type === 'link' ? styles.link : undefined,
+        { color, fontWeight, fontSize },
+        styles.base,
         style,
         (() => {
-          // Soporta style como array o undefined
           let baseFontSize: number | undefined;
           let flatStyle: any = Array.isArray(style)
             ? Object.assign({}, ...style)
@@ -44,7 +60,7 @@ export function ThemedText({
           } else {
             baseFontSize = styles.default.fontSize;
           }
-          return { fontSize: baseFontSize ? baseFontSize * fontScale : undefined };
+          return { fontSize: baseFontSize ? baseFontSize : undefined };
         })(),
       ]}
       {...rest}
@@ -53,6 +69,9 @@ export function ThemedText({
 }
 
 const styles = StyleSheet.create({
+  base: {
+    fontSize: 16,
+  },
   default: {
     fontSize: 16,
     lineHeight: 24,

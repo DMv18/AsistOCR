@@ -40,7 +40,7 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
       ? (deviceScheme as ThemeName)
       : (themeSetting as ThemeName);
 
-  // Opcional: persistir en storage
+
 
   return (
     <ThemeContext.Provider

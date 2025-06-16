@@ -1,24 +1,28 @@
-import { Href, Link } from 'expo-router';
-import { openBrowserAsync } from 'expo-web-browser';
-import { type ComponentProps } from 'react';
-import { Platform } from 'react-native';
+import React from 'react';
+import { Linking, TouchableOpacity, ViewProps } from 'react-native';
 
-type Props = Omit<ComponentProps<typeof Link>, 'href'> & { href: Href & string };
+import { Colors } from '@/constants/Colors';
+import { useThemeCustom } from '@/hooks/ThemeContext';
+import { ThemedText } from './ThemedText';
 
-export function ExternalLink({ href, ...rest }: Props) {
+type Props = ViewProps & {
+  href: string;
+  children: React.ReactNode;
+};
+
+export function ExternalLink({ href, children, style, ...props }: Props) {
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme];
+  const linkColor = c.externalLink?.color ?? c.inputLinkText ?? c.accent;
+
   return (
-    <Link
-      target="_blank"
-      {...rest}
-      href={href}
-      onPress={async (event) => {
-        if (Platform.OS !== 'web') {
-          // Prevent the default behavior of linking to the default browser on native.
-          event.preventDefault();
-          // Open the link in an in-app browser.
-          await openBrowserAsync(href);
-        }
-      }}
-    />
+    <TouchableOpacity
+      {...props}
+      style={style}
+      onPress={() => Linking.openURL(href)}
+      accessibilityRole="link"
+    >
+      <ThemedText style={{ color: linkColor }}>{children}</ThemedText>
+    </TouchableOpacity>
   );
 }

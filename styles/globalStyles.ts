@@ -5,19 +5,19 @@ import { Dimensions, Platform, StyleSheet } from 'react-native';
 const { width, height } = Dimensions.get('window');
 const isWeb = Platform.OS === 'web';
 
-// Hook para obtener los colores actuales del tema
+
 export function useGlobalColors() {
   const { theme, colorMode } = useThemeCustom();
   const c = Colors[colorMode][theme];
   return {
     containerBg: c.background,
-    headerBg: c.tint,
+    headerBg: c.headerBg,
     headerBtnBg: c.accent,
     headerText: c.text,
-    btnPrimaryBg: c.btnPrimary,
-    btnPrimaryText: c.btnText,
-    btnSecondaryBg: c.btnSecondary,
-    btnSecondaryText: c.btnText,
+    btnPrimaryBg: c.btnPrimary,      // <-- color de fondo para btnPrimary
+    btnPrimaryText: c.btnText,       // <-- color de texto para btnPrimary
+    btnSecondaryBg: c.btnSecondary,  // <-- color de fondo para btnSecondary
+    btnSecondaryText: c.btnText,     // <-- color de texto para btnSecondary
     btnDangerBg: c.danger,
     btnDangerText: c.btnText,
     helpBtnBg: c.help,
@@ -25,7 +25,6 @@ export function useGlobalColors() {
   };
 }
 
-// Estilos base, los colores se deben aplicar en los componentes usando el hook
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -69,10 +68,12 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     marginVertical: 8,
+    backgroundColor: 'btnPrimaryBg', 
   },
   btnPrimaryText: {
     fontWeight: 'bold',
     fontSize: 18,
+    color: 'btnPrimaryText',         
   },
   btnSecondary: {
     borderRadius: 12,
@@ -80,10 +81,12 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     marginVertical: 8,
+    backgroundColor: 'btnSecondaryBg', 
   },
   btnSecondaryText: {
     fontWeight: 'bold',
     fontSize: 18,
+    color: 'btnSecondaryText',         
   },
   btnDanger: {
     borderRadius: 12,

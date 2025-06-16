@@ -1,6 +1,8 @@
 import { AppLayout } from '@/components/AppLayout';
 import { ListaEventos } from '@/components/ListaEventos';
 import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 import React, { useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
@@ -12,6 +14,9 @@ const eventosIniciales = [
 ];
 
 export default function HistorialScreen() {
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme];
+
   const [eventos, setEventos] = useState(eventosIniciales);
   const [modalVisible, setModalVisible] = useState(false);
   const [eventoAEliminar, setEventoAEliminar] = useState<string | null>(null);
@@ -51,25 +56,25 @@ export default function HistorialScreen() {
         onRequestClose={cancelarEliminar}
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <ThemedText style={styles.modalTitle}>
+          <View style={[styles.modalContent, { backgroundColor: c.card }]}>
+            <ThemedText style={[styles.modalTitle, { color: c.text }]}>
               ¿Estas seguro que desea eliminar este historial de asistencia?
             </ThemedText>
-            <ThemedText style={styles.modalSubtitle}>
+            <ThemedText style={[styles.modalSubtitle, { color: c.inputPlaceholder }]}>
               no lo podra recuperar despues.
             </ThemedText>
             <View style={styles.modalBtnRow}>
               <TouchableOpacity
-                style={[styles.modalBtn, styles.btnEliminar]}
+                style={[styles.modalBtn, { backgroundColor: c.btnDanger }]}
                 onPress={confirmarEliminar}
               >
-                <ThemedText style={styles.btnEliminarText}>Eliminar</ThemedText>
+                <ThemedText style={[styles.btnEliminarText, { color: c.btnDangerText }]}>Eliminar</ThemedText>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalBtn, styles.btnCancelar]}
+                style={[styles.modalBtn, { backgroundColor: c.btnPrimary }]}
                 onPress={cancelarEliminar}
               >
-                <ThemedText style={styles.btnCancelarText}>Cancelar</ThemedText>
+                <ThemedText style={[styles.btnCancelarText, { color: c.btnText }]}>Cancelar</ThemedText>
               </TouchableOpacity>
             </View>
           </View>
@@ -87,7 +92,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    backgroundColor: '#fff',
     borderRadius: 14,
     padding: 24,
     alignItems: 'center',
@@ -97,12 +101,10 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#222',
     marginBottom: 8,
     textAlign: 'center',
   },
   modalSubtitle: {
-    color: '#888',
     fontSize: 14,
     marginBottom: 18,
     textAlign: 'center',
@@ -121,18 +123,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
   },
   btnEliminar: {
-    backgroundColor: '#f44336',
+ 
   },
   btnEliminarText: {
-    color: '#fff',
+
     fontWeight: 'bold',
     fontSize: 16,
   },
   btnCancelar: {
-    backgroundColor: '#2196f3',
+  
   },
   btnCancelarText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },

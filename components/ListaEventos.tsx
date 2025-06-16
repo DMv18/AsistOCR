@@ -29,38 +29,21 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
   const { width } = useWindowDimensions();
   const isSmall = width < 500;
   const { theme, colorMode } = useThemeCustom();
-  const c = Colors[colorMode]?.[theme]?.ListaEventos || {
-    searchBar: '#FFFFFF',
-    eventoCard: '#FFFFFF',
-    iconTendencias: '#FFA500',
-    iconArquitectura: '#000000',
-    iconSoftware: '#0000FF',
-    iconRedes: '#008000',
-    eventoNombre: '#000000',
-    eventoFecha: '#000000',
-    btnEditar: '#008000',
-    btnBorrar: '#FF0000',
-    btnVer: '#0000FF',
-    btnIcon: '#FFFFFF',
-  };
+  const c = Colors[colorMode][theme];
   const router = useRouter();
 
   function getIconColor(nombre: string) {
-    if (nombre.includes('Tendencias')) return c.iconTendencias;
-    if (nombre.includes('Arquitectura')) return c.iconArquitectura;
-    if (nombre.includes('Software')) return c.iconSoftware;
-    if (nombre.includes('Redes')) return c.iconRedes;
-    return c.iconTendencias;
+    return c.listaEventosIcon;
   }
 
   return (
     <View style={styles.root}>
-      <View style={[styles.searchRow, { backgroundColor: c.searchBar }]}>
-        <Ionicons name="search" size={22} color={c.btnIcon} />
+      <View style={[styles.searchRow, { backgroundColor: c.listaEventosSearchBar }]}>
+        <Ionicons name="search" size={22} color={c.listaEventosBtnIcon} />
         <TextInput
-          style={[styles.input, { color: c.eventoNombre }]}
+          style={[styles.input, { color: c.listaEventosNombre }]}
           placeholder="Buscar evento..."
-          placeholderTextColor={c.eventoFecha}
+          placeholderTextColor={c.listaEventosFecha}
           value={busqueda}
           onChangeText={setBusqueda}
         />
@@ -139,7 +122,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderRadius: 8,
     marginLeft: 8,
-    color: '#222',
   },
   scrollContent: {
     gap: 12,
@@ -193,11 +175,8 @@ const styles = StyleSheet.create({
   eventoNombre: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#222',
   },
   eventoFecha: {
     fontSize: 13,
-    color: '#222',
   },
 });
-  

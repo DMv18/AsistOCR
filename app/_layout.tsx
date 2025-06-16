@@ -2,20 +2,31 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import React, { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { SplashScreen } from '@/components/SplashScreen';
 import { ThemeProviderCustom } from '@/hooks/ThemeContext';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function RootLayout() {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!loaded) {
-    // Async font loading only occurs in development.
     return null;
+  }
+
+  if (loading) {
+    return <SplashScreen />;
   }
 
   return (
@@ -26,6 +37,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />
+        {children}
       </ThemeProvider>
     </ThemeProviderCustom>
   );

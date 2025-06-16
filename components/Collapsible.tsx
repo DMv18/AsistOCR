@@ -1,44 +1,49 @@
-import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import React, { PropsWithChildren, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme];
+  const col = c.collapsible ?? {};
 
   return (
-    <ThemedView>
+    <View style={[styles.root, { backgroundColor: col.background ?? c.card }]}>
       <TouchableOpacity
-        style={styles.heading}
+        style={styles.header}
         onPress={() => setIsOpen((value) => !value)}
-        activeOpacity={0.8}>
-        <IconSymbol
-          name="chevron.right"
-          size={18}
-          weight="medium"
-          color={theme === 'light' ? '#222' : '#fff'}
-          style={{ transform: [{ rotate: isOpen ? '90deg' : '0deg' }] }}
-        />
-
-        <ThemedText type="defaultSemiBold">{title}</ThemedText>
+        accessibilityLabel={isOpen ? 'Cerrar sección' : 'Abrir sección'}>
+        <ThemedText style={[styles.title, { color: col.headerText ?? c.text }]}>{title}</ThemedText>
+        <Ionicons name={isOpen ? 'chevron-up' : 'chevron-down'} size={22} color={col.icon ?? c.text} />
       </TouchableOpacity>
-      {isOpen && <ThemedView style={styles.content}>{children}</ThemedView>}
-    </ThemedView>
+      {isOpen && <View style={styles.content}>{children}</View>}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  heading: {
+  root: {
+    borderRadius: 14,
+    marginVertical: 8,
+    overflow: 'hidden',
+  },
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    padding: 12,
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   content: {
-    marginTop: 6,
-    marginLeft: 24,
+    padding: 12,
+    paddingTop: 0,
   },
 });
