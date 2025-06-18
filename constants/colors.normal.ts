@@ -1,15 +1,13 @@
 // Paleta normal: colores suaves, modernos y accesibles, con buen contraste y jerarquía visual.
 
-export const colorsNormal = {
+const colorsNormal = {
   light: {
     // Fondo general de la app (área exterior)
     background: '#F7FAFC', // gris azulado muy claro
 
     // Fondo de los contenedores principales (cards, AppLayout, etc)
-    card: '#FFFFFF',           // blanco para cards
+    card: '#FFFFFF',
     appLayoutCard: '#FFFFFF',
-    homeCardBg: '#FFFFFF',
-    historialCardBg: '#FFFFFF',
 
     // Fondo de bloques funcionales internos (ej: bloque funcional principal)
     mainBlockBg: '#E3F2FD', // azul muy claro
@@ -71,7 +69,6 @@ export const colorsNormal = {
 
     // AppLayout (AppLayout.tsx)
     appLayoutBg: '#F7FAFC',
-    appLayoutCard: '#FFFFFF',
     appLayoutGreenBlock: '#E3F2FD',
     appLayoutRegresarBtn: '#3182CE',
     appLayoutRegresarBtnText: '#FFF',
@@ -108,7 +105,6 @@ export const colorsNormal = {
     configFontBtn: '#3182CE',
     configFontBtnText: '#FFF',
     configLabelText: '#1A202C',
-    mainBlockBg: '#E3F2FD', // Cambiado a b4cded
 
     // Historial (historial.tsx)
     historialMainBg: '#F7FAFC',
@@ -157,7 +153,6 @@ export const colorsNormal = {
       fontBtn: '#3182CE',
       fontBtnText: '#FFF',
       labelText: '#1A202C',
-      mainBlockBg: '#E3F2FD',
     },
 
     // LoginForm/RegisterForm (LoginForm.tsx, RegisterForm.tsx)
@@ -166,47 +161,49 @@ export const colorsNormal = {
 
     // ThemedText (ThemedText.tsx)
     themedText: {
-      default: '#1A202C',
+      default: '#3182CE',
       title: '#2B6CB0',
       link: '#3182CE',
       subtitle: '#1A202C',
       defaultSemiBold: '#1A202C',
     },
-
     // ThemedView (ThemedView.tsx)
-    themedView: {
-      background: '#F7FAFC',
-      card: '#FFFFFF',
-    },
-
-    // Collapsible (Collapsible.tsx)
-    collapsible: {
-      background: '#E3F2FD',
-      headerText: '#3182CE',
-      icon: '#3182CE',
-    },
+    themedView: '#F7FAFC',
 
     // ExternalLink (ExternalLink.tsx)
-    externalLink: {
-      color: '#3182CE',
-    },
+    externalLink: '#3182CE',
 
     // RegisterForm/LoginForm (LoginForm.tsx, RegisterForm.tsx)
     formIconCircle: '#E3F2FD',
     formIconCircleIcon: '#3182CE',
+
+    // Collapsible
+    collapsible: {
+      background: '#F7FAFC',
+      headerText: '#3182CE',
+      icon: '#3182CE',
+    },
+
+    // Historial (iconos individuales)
+    historialArchivoIconBg: '#1565c0',      
+    historialArchivoIconColor: '#FFFF',   
+    historialEditarIconBg: '#388e3c',      
+    historialEditarIconColor: '#FFFF',   
+    historialBorrarIconBg: '#d32f2f',       
+    historialBorrarIconColor: '#FFFF',    
+    historialObservarIconBg: '#1565c0',     
+    historialObservarIconColor: '#FFFF',    
   },
 
   dark: {
     // Fondo general de la app (área exterior)
-    background: '#274C77', // Fondo general oscuro (puedes ajustar según preferencia)
+    background: '#274C77', // Fondo general oscuro
 
-    // Fondo de los contenedores principales (cards, AppLayout, etc)
-    card: '#6096BA',       // Contenedores/card oscuro
-    appLayoutCard: '#6096BA',
-    homeCardBg: '#6096BA',
-    historialCardBg: '#6096BA',
+    // Fondo de los contenedores principales (cards, AppLayout)
+    card: '#6096BA',
+    appLayoutCard: '#2D3748',
 
-    // Fondo de bloques funcionales internos (ej: bloque azul claro de config)
+    // Fondo de bloques funcionales internos 
     mainBlockBg: '#365980', // Puedes ajustar este color según tu diseño
 
     // General
@@ -219,9 +216,9 @@ export const colorsNormal = {
     help: '#2D3748',
     btnPrimary: '#83c5be',
     btnSecondary: '#83c5be',
-    homeBtnBg: '#83c5be',
-    homeBtnText: '#222',
-    // ...existing code...
+    btnDanger: '#E53E3E',
+    btnText: '#222',
+   
 
     // Header/AppBar
     headerBg: '#274C77',   // Header oscuro
@@ -267,7 +264,6 @@ export const colorsNormal = {
 
     // AppLayout
     appLayoutBg: '#274C77',
-    appLayoutCard: '#6096BA',
     appLayoutGreenBlock: '#365980',
     appLayoutRegresarBtn: '#2563EB',
     appLayoutRegresarBtnText: '#FFF',
@@ -304,7 +300,6 @@ export const colorsNormal = {
     configFontBtn: '#2563EB',
     configFontBtnText: '#FFF',
     configLabelText: '#F7FAFC',
-    mainBlockBg: '#365980',
 
     // Historial
     historialMainBg: '#1A202C',
@@ -350,7 +345,6 @@ export const colorsNormal = {
       fontBtn: '#2563EB',
       fontBtnText: '#FFF',
       labelText: '#F7FAFC',
-      mainBlockBg: '#365980',
     },
 
     // Nuevas propiedades para login/register
@@ -359,7 +353,7 @@ export const colorsNormal = {
 
     // ThemedText
     themedText: {
-      default: '#F7FAFC',
+      default: '#63B3ED',
       title: '#63B3ED',
       link: '#63B3ED',
       subtitle: '#F7FAFC',
@@ -367,10 +361,7 @@ export const colorsNormal = {
     },
 
     // ThemedView
-    themedView: {
-      background: '#1A202C',
-      card: '#2D3748',
-    },
+    themedView: '#1A202C',
 
     // Collapsible
     collapsible: {
@@ -380,12 +371,22 @@ export const colorsNormal = {
     },
 
     // ExternalLink
-    externalLink: {
-      color: '#63B3ED',
-    },
+    externalLink: '#63B3ED',
 
     // RegisterForm/LoginForm
     formIconCircle: '#2D3748',
     formIconCircleIcon: '#888',
+
+    // Historial (iconos individuales)
+    historialArchivoIconBg: '#FFD600',
+    historialArchivoIconColor: '#1565c0',
+    historialEditarIconBg: '#388e3c',
+    historialEditarIconColor: '#fff',
+    historialBorrarIconBg: '#d32f2f',
+    historialBorrarIconColor: '#fff',
+    historialObservarIconBg: '#1565c0',
+    historialObservarIconColor: '#fff',
   },
 };
+
+export default colorsNormal;

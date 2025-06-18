@@ -16,9 +16,11 @@ export function ThemedView({ style, ...props }: ThemedViewProps) {
     <View
       {...props}
       style={[
-        { backgroundColor: c.themedView?.background ?? c.background },
+        { backgroundColor: c.themedView ?? c.background },
         style,
       ]}
     />
   );
 }
+
+

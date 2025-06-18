@@ -16,8 +16,8 @@ export function useThemeColor(
   const { theme, colorMode } = useThemeCustom();
   const colorFromProps = props[theme];
 
-  // Permite acceder a claves anidadas tipo "ListaEventos.eventoCard"
-  const colorObj: typeof Colors['normal']['light'] | typeof Colors['normal']['dark'] = Colors[colorMode][theme];
+
+  const colorObj = Colors[colorMode][theme];
   let color: string | undefined = undefined;
   if (colorName.includes('.')) {
     const [comp, sub] = colorName.split('.') as [string, string];

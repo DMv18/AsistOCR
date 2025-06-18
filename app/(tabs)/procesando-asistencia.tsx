@@ -1,38 +1,44 @@
 import { AppLayout } from '@/components/AppLayout';
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
+import { SERVER_URL } from '@/constants/server';
 import { useThemeCustom } from '@/hooks/ThemeContext';
-import { useRouter } from 'expo-router';
+import { segmentarFilas } from '@/IA/segmentarFilas';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 
-const getImagenesSubidas = (): string[] => {
-  return [
-  ];
-};
 
 export default function ProcesandoAsistenciaScreen() {
   const { theme, colorMode } = useThemeCustom();
   const c = Colors[colorMode][theme];
   const router = useRouter();
+  const params = useLocalSearchParams();
+  const uri = typeof params.uri === 'string' ? params.uri : undefined;
 
-
-  const [imagenes, setImagenes] = useState<string[]>(getImagenesSubidas());
+  const [filas, setFilas] = useState<string[]>([]);
+  const [excelUrl, setExcelUrl] = useState<string | null>(null);
+  const [respuestas, setRespuestas] = useState<string[]>([]); // Para cachear los nombres detectados
 
   const [progreso, setProgreso] = useState(0);
   const anim = useRef(new Animated.Value(0)).current;
+  const [procesandoInfo, setProcesandoInfo] = useState(false);
+  const [backendError, setBackendError] = useState<string | null>(null);
+
+  const imagenes: string[] = uri ? [uri] : [];
 
   useEffect(() => {
     setProgreso(0);
     anim.setValue(0);
 
     let percent = 0;
+    let backendRespondio = false;
     const interval = setInterval(() => {
+      if (backendRespondio) return;
       percent += Math.floor(Math.random() * 15) + 5;
-      if (percent >= 100) {
-        percent = 100;
-        clearInterval(interval);
+      if (percent >= 95) { // No llegues a 100% hasta que el backend termine
+        percent = 95;
       }
       setProgreso(percent);
       Animated.timing(anim, {
@@ -41,8 +47,33 @@ export default function ProcesandoAsistenciaScreen() {
         useNativeDriver: false,
       }).start();
     }, 700);
-    return () => clearInterval(interval);
-  }, [imagenes]);
+
+    if (uri) {
+      (async () => {
+        try {
+          // Elimina el replace de la IP, solo pasa uri directamente
+          const resultado = await segmentarFilas(uri);
+          backendRespondio = true;
+          setFilas(resultado.filas);
+          setExcelUrl(resultado.excel);
+          setRespuestas(resultado.nombresDetectados || []);
+          setProcesandoInfo(true);
+          setProgreso(100);
+          anim.setValue(100);
+        } catch {
+          backendRespondio = true;
+          setProcesandoInfo(false);
+          setBackendError('Ocurrió un error al procesar la imagen. Intenta de nuevo.');
+          setProgreso(0);
+          anim.setValue(0);
+        }
+      })();
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [uri, anim]); // Agrega anim a las dependencias
 
 
   const barWidth = anim.interpolate({
@@ -50,54 +81,101 @@ export default function ProcesandoAsistenciaScreen() {
     outputRange: ['0%', '100%'],
   });
 
+  const handleCancelar = async () => {
+    try {
+      await fetch(`${SERVER_URL}/cancelar-procesamiento`, { method: 'POST' });
+    } catch {
+      // Ignora errores de red
+    }
+    router.back();
+  };
+
   return (
     <AppLayout description="Creando asistencia...">
       <View style={styles.root}>
-        <ThemedText style={styles.title}>Espere unos segundos...</ThemedText>
-        <View style={[styles.card, { backgroundColor: c.formFotosBlock }]}>
-          <View style={styles.imagenesRow}>
-            {imagenes.length === 0 ? (
-              <ThemedText style={{ color: c.inputPlaceholder }}>No hay imágenes para procesar</ThemedText>
-            ) : (
-              imagenes.map((uri, idx) => (
-                <View key={uri} style={styles.imgBlock}>
-                  <Image
-                    source={{ uri }}
-                    style={styles.img}
-                  />
-                  {progreso >= 100 ? (
-                    <Ionicons name="checkmark" size={24} color={c.success} style={styles.imgCheck} />
-                  ) : (
-                    <Ionicons name="cloud-upload-outline" size={24} color={c.formAddBtnText} style={styles.imgCheck} />
-                  )}
-                </View>
-              ))
+        {backendError ? (
+          <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
+            <ThemedText style={{ color: 'red', fontWeight: 'bold', fontSize: 18, marginBottom: 16 }}>
+              {backendError}
+            </ThemedText>
+            <TouchableOpacity
+              style={[styles.cancelBtn, { backgroundColor: c.formBtnDanger, marginTop: 32 }]}
+              onPress={() => router.back()}
+            >
+              <ThemedText style={{ color: c.formBtnDangerText, fontWeight: 'bold', fontSize: 16 }}>Regresar</ThemedText>
+            </TouchableOpacity>
+          </View>
+        ) : !procesandoInfo || progreso < 100 ? (
+          // Pantalla de carga real
+          <>
+            <ThemedText style={styles.title}>Procesando imagen...</ThemedText>
+            <View style={{ alignItems: 'center', marginVertical: 24 }}>
+              {imagenes.length > 0 && (
+                <Image
+                  source={{ uri: imagenes[0] }}
+                  style={{
+                    width: 180,
+                    height: 180,
+                    borderRadius: 16,
+                    borderWidth: 2,
+                    borderColor: c.success,
+                    marginBottom: 12,
+                  }}
+                  resizeMode="contain"
+                />
+              )}
+            </View>
+            <ThemedText style={{ color: c.inputPlaceholder, marginBottom: 12 }}>
+              Esto puede tardar varios segundos dependiendo de la imagen.
+            </ThemedText>
+            <View style={styles.progressBlock}>
+              <ThemedText style={{ color: c.inputPlaceholder, marginBottom: 6 }}>
+                {progreso < 100 ? 'Procesando...' : '¡Completado!'}
+              </ThemedText>
+              <View style={[styles.progressBarBg, { backgroundColor: '#e0e0e0' }]}>
+                <Animated.View style={[
+                  styles.progressBar,
+                  { backgroundColor: c.success, width: barWidth }
+                ]} />
+              </View>
+              <ThemedText style={{ color: c.text, marginTop: 4, fontWeight: 'bold' }}>{progreso}%</ThemedText>
+            </View>
+          </>
+        ) : (
+          // Pantalla de "Continuar"
+          <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
+            <ActivityIndicator size="large" color={c.success} />
+            <ThemedText style={{ color: c.inputPlaceholder, marginTop: 24, fontWeight: 'bold', fontSize: 18 }}>
+              Procesando la información...
+            </ThemedText>
+            {excelUrl && (
+              <TouchableOpacity
+                style={[styles.cancelBtn, { backgroundColor: c.formBtnPrimary, marginTop: 32 }]}
+                onPress={() => {
+                  router.replace({
+                    pathname: '/resultado-asistencia',
+                    params: {
+                      excelUrl,
+                      respuestas: JSON.stringify(respuestas),
+                    }
+                  });
+                }}
+              >
+                <ThemedText style={{ color: c.formBtnPrimaryText, fontWeight: 'bold', fontSize: 16 }}>Continuar</ThemedText>
+              </TouchableOpacity>
             )}
+            <TouchableOpacity
+              style={[styles.cancelBtn, { backgroundColor: c.formBtnDanger, marginTop: 32 }]}
+              onPress={handleCancelar}
+            >
+              <ThemedText style={{ color: c.formBtnDangerText, fontWeight: 'bold', fontSize: 16 }}>Cancelar creación</ThemedText>
+            </TouchableOpacity>
           </View>
-          <ThemedText style={styles.subtitle}>Ya casi terminamos...</ThemedText>
-          <TouchableOpacity
-            style={[styles.cancelBtn, { backgroundColor: c.formBtnDanger }]}
-            onPress={() => router.back()}
-          >
-            <ThemedText style={{ color: c.formBtnDangerText, fontWeight: 'bold', fontSize: 16 }}>Cancelar creación</ThemedText>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.progressBlock}>
-          <ThemedText style={{ color: c.inputPlaceholder, marginBottom: 6 }}>Guardando...</ThemedText>
-          <View style={[styles.progressBarBg, { backgroundColor: '#e0e0e0' }]}>
-            <Animated.View style={[
-              styles.progressBar,
-              { backgroundColor: c.success, width: barWidth }
-            ]} />
-          </View>
-          <ThemedText style={{ color: c.text, marginTop: 4, fontWeight: 'bold' }}>{progreso}%</ThemedText>
-        </View>
+        )}
       </View>
     </AppLayout>
   );
 }
-
-import { Ionicons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   root: {
@@ -178,5 +256,30 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 18,
     borderRadius: 10,
+  },
+  segmentedRows: {
+    marginTop: 20,
+    width: '100%',
+    maxWidth: 400,
+  },
+  rowBlock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    borderRadius: 10,
+    overflow: 'hidden',
+    elevation: 1,
+    backgroundColor: '#fff',
+  },
+  rowImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  rowText: {
+    flex: 1,
+    fontWeight: '500',
+    color: '#333',
   },
 });

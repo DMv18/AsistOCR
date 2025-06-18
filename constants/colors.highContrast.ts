@@ -136,6 +136,36 @@ export const colorsHighContrast = {
     editarEventoIcon3Bg: '#FFD700',
 
     btnDangerText: '#FFF',
+
+    themedText: {
+      default: '#000',
+      title: '#0000FF',
+      link: '#0000FF',
+      subtitle: '#000',
+      defaultSemiBold: '#000',
+    },
+    themedView: '#FFF',
+    externalLink: '#0000FF',
+    formIconCircle: '#FFD700',
+    formIconCircleIcon: '#0000FF',
+
+    mainBlockBg: '#FFF',
+    iconCircle: '#FFD700',
+    iconCircleIcon: '#0000FF',
+    collapsible: {
+      background: '#FFF',
+      headerText: '#0000FF',
+      icon: '#0000FF',
+    },
+
+    historialArchivoIconBg: '#FFD700',
+    historialArchivoIconColor: '#000',
+    historialEditarIconBg: '#008000',
+    historialEditarIconColor: '#FFF',
+    historialBorrarIconBg: '#FF0000',
+    historialBorrarIconColor: '#FFF',
+    historialObservarIconBg: '#0000FF',
+    historialObservarIconColor: '#FFF',
   },
   dark: {
     text: '#000',
@@ -275,5 +305,35 @@ export const colorsHighContrast = {
     editarEventoIcon3Bg: '#FFD700',
 
     btnDangerText: '#FFF',
+
+    themedText: {
+      default: '#000',
+      title: '#0000FF',
+      link: '#0000FF',
+      subtitle: '#000',
+      defaultSemiBold: '#000',
+    },
+    themedView: '#FFFFE0',
+    externalLink: '#0000FF',
+    formIconCircle: '#FFD700',
+    formIconCircleIcon: '#0000FF',
+
+    mainBlockBg: '#FFFFE0',
+    iconCircle: '#FFD700',
+    iconCircleIcon: '#0000FF',
+    collapsible: {
+      background: '#FFFFE0',
+      headerText: '#0000FF',
+      icon: '#0000FF',
+    },
+
+    historialArchivoIconBg: '#FFD700',
+    historialArchivoIconColor: '#000',
+    historialEditarIconBg: '#008000',
+    historialEditarIconColor: '#FFF',
+    historialBorrarIconBg: '#FF0000',
+    historialBorrarIconColor: '#FFF',
+    historialObservarIconBg: '#0000FF',
+    historialObservarIconColor: '#FFF',
   },
 };

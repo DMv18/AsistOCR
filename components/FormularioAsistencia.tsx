@@ -1,13 +1,15 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
+import { SERVER_URL } from '@/constants/server';
 import { useThemeCustom } from '@/hooks/ThemeContext';
 import { globalStyles } from '@/styles/globalStyles';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, Alert, Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 type Foto = {
   uri: string;
@@ -40,7 +42,19 @@ function getExtension(uri: string): string {
 
 async function copyImageToApp(uri: string): Promise<string> {
   await ensureImagenesDir();
+  // Si la imagen ya está en la carpeta de la app, no la copies de nuevo
   if (uri.startsWith(IMAGENES_DIR)) {
+    return uri;
+  }
+  // Si la imagen viene de la cámara y es de MediaLibrary, verifica si existe antes de copiar
+  try {
+    const fileInfo = await FileSystem.getInfoAsync(uri);
+    if (!fileInfo.exists) {
+      // Si no existe, retorna la uri original (no intentes copiar)
+      return uri;
+    }
+  } catch {
+    // Si ocurre error, retorna la uri original
     return uri;
   }
   const ext = getExtension(uri);
@@ -54,85 +68,65 @@ async function copyImageToApp(uri: string): Promise<string> {
     }
     return dest;
   } catch (e) {
+    // Si falla copiar, retorna la uri original
     console.error('Error al copiar la imagen:', e, 'Origen:', uri, 'Destino:', dest);
-    throw e;
+    return uri;
   }
+}
+
+// Hook personalizado para limpiar la carpeta filas en el backend
+function useLimpiarFilasBackend() {
+  return useCallback(async () => {
+    try {
+      await fetch(`${SERVER_URL}/limpiar-filas`, { method: 'POST' });
+      console.log('Carpeta filas limpiada en el backend');
+    } catch (e) {
+      console.warn('No se pudo limpiar la carpeta filas en el backend:', e);
+    }
+  }, []);
 }
 
 export function FormularioAsistencia({ fotoCamara }: Props) {
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { theme, colorMode } = useThemeCustom();
   const c = Colors[colorMode][theme];
   const router = useRouter();
+  const limpiarFilasBackend = useLimpiarFilasBackend();
 
-  
-  const handleArchivos = async () => {
-    setModalVisible(false);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 0.7,
-    }) as ImagePicker.ImagePickerResult & {
-      assets?: { uri: string }[];
-    };
-
-    if (!result.canceled) {
-      const uris = result.assets ? result.assets.map(a => a.uri) : [];
-      for (const uri of uris) {
-        setFotos(prev => [...prev, { uri, status: 'pending' }]);
-      }
-    }
-  };
-
-  
+  // Si llega una foto desde la cámara, súbela y cópiala inmediatamente
   React.useEffect(() => {
     if (fotoCamara && !fotos.some(f => f.uri === fotoCamara)) {
-      setFotos(prev => [...prev, { uri: fotoCamara, status: 'pending' }]);
+      setFotos([{ uri: fotoCamara, status: 'pending' }]);
+      (async () => {
+        try {
+          const nuevaUri = await copyImageToApp(fotoCamara);
+          setFotos([{ uri: nuevaUri, status: 'success' }]);
+        } catch {
+          setFotos([{ uri: fotoCamara, status: 'error' }]);
+        }
+      })();
     }
-   
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fotoCamara]);
 
-
-  const handleGuardar = async () => {
-    if (fotos.length === 0) {
-      Alert.alert('Debe subir al menos una imagen', 'Por favor, suba una imagen antes de guardar la asistencia.');
+  // Procesar imagen: solo si hay una imagen y está en success
+  const handleProcesar = async () => {
+    if (fotos.length === 0 || fotos[0].status !== 'success') {
+      Alert.alert('Debe subir una imagen válida', 'Por favor, suba una imagen antes de procesar.');
       return;
     }
-    setIsSaving(true);
-    try {
-      let errores = false;
-      const nuevasFotos: Foto[] = [];
-      for (const foto of fotos) {
-        if (foto.uri.startsWith(IMAGENES_DIR)) {
-          nuevasFotos.push({ ...foto, status: 'success' });
-        } else {
-          try {
-            const nuevaUri = await copyImageToApp(foto.uri);
-            nuevasFotos.push({ uri: nuevaUri, status: 'success' });
-          } catch (e) {
-            nuevasFotos.push({ ...foto, status: 'error' });
-            errores = true;
-          }
-        }
-      }
-      setFotos(nuevasFotos);
+    setIsProcessing(true);
 
-      if (errores) {
-        Alert.alert('Error', 'Algunas imágenes no se guardaron correctamente');
-        setIsSaving(false);
-        return;
-      }
+    // Llama al hook para limpiar la carpeta filas en el backend antes de procesar
+    await limpiarFilasBackend();
 
-     
-      router.push('/procesando-asistencia');
-    } catch (error) {
-      console.error('Error al guardar:', error);
-      Alert.alert('Error', 'No se pudo guardar la asistencia');
-    } finally {
-      setIsSaving(false);
-    }
+    router.push({
+      pathname: '/procesando-asistencia',
+      params: { uri: fotos[0].uri }
+    });
+    setIsProcessing(false);
   };
 
   const handleAgregarFoto = () => {
@@ -144,19 +138,67 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
     router.push('/tomar-foto');
   };
 
+  // Permite subir desde galería
+  const handleGaleria = async () => {
+    setModalVisible(false);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permiso requerido', 'Se requiere permiso para acceder a la galería.');
+      return;
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      quality: 0.7,
+    });
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      setFotos([{ uri, status: 'pending' }]);
+      try {
+        const nuevaUri = await copyImageToApp(uri);
+        setFotos([{ uri: nuevaUri, status: 'success' }]);
+      } catch {
+        setFotos([{ uri, status: 'error' }]);
+      }
+    }
+  };
+
+  // Permite subir desde archivos (explorador)
+  const handleArchivoSistema = async () => {
+    setModalVisible(false);
+    // Usa DocumentPicker en todas las plataformas para máxima compatibilidad
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ['image/*'],
+      copyToCacheDirectory: true,
+      multiple: false,
+    });
+    if (result && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      setFotos([{ uri, status: 'pending' }]);
+      try {
+        const nuevaUri = await copyImageToApp(uri);
+        setFotos([{ uri: nuevaUri, status: 'success' }]);
+      } catch {
+        setFotos([{ uri, status: 'error' }]);
+      }
+    }
+  };
+
+  const handleQuitarFoto = (uri: string) => {
+    setFotos([]);
+  };
+
   return (
     <View style={styles.root}>
       <ThemedText type="title" style={{ marginBottom: 12 }}>
-        Subir fotos de una asistencia
+        Subir imagen para procesar
       </ThemedText>
-      
       <View style={[styles.fotosBlock, { backgroundColor: c.formFotosBlock }]}>
         {fotos.length === 0 && (
           <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginVertical: 16 }}>
-            No hay fotos agregadas aún
+            No hay imagen cargada aún
           </ThemedText>
         )}
-        
         {fotos.map((foto) => (
           <View
             key={foto.uri}
@@ -172,16 +214,17 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
             <View style={{ flex: 1 }}>
               {foto.status === 'success' && (
                 <ThemedText style={{ color: c.formBtnSecondary, fontWeight: 'bold' }}>
-                  <Ionicons name="checkmark-circle" size={18} color={c.formBtnSecondary} /> Foto subida exitosamente
+                  <Ionicons name="checkmark-circle" size={18} color={c.formBtnSecondary} /> Imagen lista para procesar
                 </ThemedText>
               )}
-              
               {foto.status === 'error' && (
-                <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold' }}>
-                  <Ionicons name="close-circle" size={18} color={c.formBtnDanger} /> No se pudo subir la imagen
-                </ThemedText>
+                <>
+                  <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold' }}>
+                    <Ionicons name="close-circle" size={18} color={c.formBtnDanger} /> Error al subir la imagen
+                  </ThemedText>
+                  {/* Puedes mostrar un mensaje adicional aquí si quieres */}
+                </>
               )}
-              
               {foto.status === 'pending' && (
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <ActivityIndicator size="small" color={c.formAddBtnText} />
@@ -190,47 +233,41 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
                   </ThemedText>
                 </View>
               )}
-              
               <TouchableOpacity
-                style={[globalStyles.btnDanger, { backgroundColor: c.btnDanger, marginTop: 8 }]} 
+                style={[globalStyles.btnDanger, { backgroundColor: c.formBtnDanger, marginTop: 8 }]} 
                 onPress={() => handleQuitarFoto(foto.uri)}
               >
-                <MaterialIcons name="delete" size={18} color={c.btnDangerText ?? c.btnText} />
-                <ThemedText style={[globalStyles.btnDangerText, { color: c.btnDangerText ?? c.btnText }]}>
+                <MaterialIcons name="delete" size={18} color={c.formBtnDangerText ?? c.btnText} />
+                <ThemedText style={[globalStyles.btnDangerText, { color: c.formBtnDangerText ?? c.btnText }]}>
                   Eliminar
                 </ThemedText>
               </TouchableOpacity>
             </View>
           </View>
         ))}
-        
         <TouchableOpacity
           style={[styles.addBtn, { backgroundColor: c.formAddBtn }]}
           onPress={handleAgregarFoto}
         >
           <Ionicons name="add-circle-outline" size={24} color={c.formAddBtnText} />
           <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: c.formAddBtnText }}>
-            Agregar foto
+            Subir imagen
           </ThemedText>
         </TouchableOpacity>
-        
-        {fotos.length > 0 && (
-          <TouchableOpacity
-            style={[globalStyles.btnPrimary, { backgroundColor: c.formBtnPrimary, marginTop: 16 }]}
-            onPress={handleGuardar}
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <ActivityIndicator color={c.formBtnPrimaryText} />
-            ) : (
-              <ThemedText style={[globalStyles.btnPrimaryText, { color: c.formBtnPrimaryText }]}>
-                Guardar asistencia
-              </ThemedText>
-            )}
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[globalStyles.btnPrimary, { backgroundColor: c.formBtnPrimary, marginTop: 16 }]}
+          onPress={handleProcesar}
+          disabled={isProcessing || fotos.length === 0 || fotos[0].status !== 'success'}
+        >
+          {isProcessing ? (
+            <ActivityIndicator color={c.formBtnPrimaryText} />
+          ) : (
+            <ThemedText style={[globalStyles.btnPrimaryText, { color: c.formBtnPrimaryText }]}>
+              Procesar
+            </ThemedText>
+          )}
+        </TouchableOpacity>
       </View>
-      
       <Modal
         visible={modalVisible}
         transparent
@@ -255,9 +292,8 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
               Seleccionar origen de la imagen
             </ThemedText>
             <ThemedText style={{ color: c.inputPlaceholder, fontSize: 15, marginBottom: 18, textAlign: 'center' }}>
-              Elija cómo desea agregar la foto
+              Elija cómo desea agregar la imagen
             </ThemedText>
-            
             <View style={{ flexDirection: 'row', gap: 18 }}>
               <TouchableOpacity
                 style={{
@@ -271,9 +307,8 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
                 onPress={handleCamara}
               >
                 <Ionicons name="camera-outline" size={28} color={c.btnText} />
-                <Text style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Cámara</Text>
+                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Cámara</ThemedText>
               </TouchableOpacity>
-              
               <TouchableOpacity
                 style={{
                   backgroundColor: c.btnPrimary,
@@ -283,18 +318,31 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
                   alignItems: 'center',
                   minWidth: 90,
                 }}
-                onPress={handleArchivos}
+                onPress={handleGaleria}
               >
                 <Ionicons name="folder-outline" size={28} color={c.btnText} />
-                <Text style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</Text>
+                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: c.btnPrimary,
+                  borderRadius: 12,
+                  paddingVertical: 14,
+                  paddingHorizontal: 24,
+                  alignItems: 'center',
+                  minWidth: 90,
+                }}
+                onPress={handleArchivoSistema}
+              >
+                <Ionicons name="document-outline" size={28} color={c.btnText} />
+                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Archivos</ThemedText>
               </TouchableOpacity>
             </View>
-            
             <TouchableOpacity
               style={{ marginTop: 18 }}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={{ color: c.btnPrimary, fontWeight: 'bold', fontSize: 16 }}>Cancelar</Text>
+              <ThemedText style={{ color: c.btnPrimary, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
             </TouchableOpacity>
           </View>
         </View>

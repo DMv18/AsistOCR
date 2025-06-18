@@ -4,25 +4,36 @@ import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function TomarFotoScreen() {
-  const [foto, setFoto] = useState<string | null>(null);
   const router = useRouter();
   const { theme, colorMode } = useThemeCustom();
   const c = Colors[colorMode][theme].TomarFoto;
-  const cRoot = Colors[colorMode][theme];
 
   const handleTomarFoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    const { status: mediaStatus } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted' || mediaStatus !== 'granted') {
+      alert('Se requiere permiso de cámara y galería');
+      return;
+    }
+
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.7,
     });
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      setFoto(result.assets[0].uri);
-      router.replace({ pathname: '/crear-asistencia', params: { foto: result.assets[0].uri } });
+      const uri = result.assets[0].uri;
+      try {
+        const asset = await MediaLibrary.createAssetAsync(uri);
+        router.replace({ pathname: '/crear-asistencia', params: { foto: asset.uri } });
+      } catch {
+        router.replace({ pathname: '/crear-asistencia', params: { foto: uri } });
+      }
     }
   };
 
@@ -36,15 +47,6 @@ export default function TomarFotoScreen() {
           <Ionicons name="camera" size={40} color={c.cameraBtnText} />
           <ThemedText style={[styles.cameraBtnText, { color: c.cameraBtnText }]}>Tomar foto</ThemedText>
         </TouchableOpacity>
-        {foto && (
-          <View style={styles.previewBlock}>
-            <Image
-              source={{ uri: foto }}
-              style={[styles.previewImg, { borderColor: c.previewBorder }]}
-            />
-            <ThemedText style={[styles.previewLabel, { color: cRoot.text }]}>Foto tomada</ThemedText>
-          </View>
-        )}
         <TouchableOpacity
           style={[styles.regresarBtn, { backgroundColor: c.regresarBtnBg }]}
           onPress={() => router.back()}
@@ -75,21 +77,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-  previewBlock: {
-    alignItems: 'center',
-    marginTop: 18,
-    gap: 8,
-  },
-  previewImg: {
-    width: 180,
-    height: 180,
-    borderRadius: 16,
-    borderWidth: 2,
-  },
-  previewLabel: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   regresarBtn: {
     borderRadius: 16,
     paddingVertical: 14,
@@ -102,5 +89,3 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
-
-

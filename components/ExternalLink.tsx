@@ -13,7 +13,7 @@ type Props = ViewProps & {
 export function ExternalLink({ href, children, style, ...props }: Props) {
   const { theme, colorMode } = useThemeCustom();
   const c = Colors[colorMode][theme];
-  const linkColor = c.externalLink?.color ?? c.inputLinkText ?? c.accent;
+  const linkColor = c.externalLink ?? c.inputLinkText ?? c.accent;
 
   return (
     <TouchableOpacity
@@ -26,3 +26,5 @@ export function ExternalLink({ href, children, style, ...props }: Props) {
     </TouchableOpacity>
   );
 }
+
+// Donde uses colors.externalLink, ahora funcionará porque existe en Colors

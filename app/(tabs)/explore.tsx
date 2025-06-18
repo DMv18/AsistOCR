@@ -9,7 +9,6 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useThemeCustom } from '@/hooks/ThemeContext';
 import { globalStyles } from '@/styles/globalStyles';
 import { router } from 'expo-router';
 
@@ -30,7 +29,6 @@ const eventosIniciales: Evento[] = [
 export default function TabTwoScreen() {
   const [eventos, setEventos] = useState(eventosIniciales);
   const [busqueda, setBusqueda] = useState('');
-  const { theme, colorMode } = useThemeCustom();
 
   const eventosFiltrados = eventos.filter(e =>
     e.nombre.toLowerCase().includes(busqueda.toLowerCase())

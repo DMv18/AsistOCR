@@ -18,8 +18,8 @@ export function useGlobalColors() {
     btnPrimaryText: c.btnText,       // <-- color de texto para btnPrimary
     btnSecondaryBg: c.btnSecondary,  // <-- color de fondo para btnSecondary
     btnSecondaryText: c.btnText,     // <-- color de texto para btnSecondary
-    btnDangerBg: c.danger,
-    btnDangerText: c.btnText,
+    btnDangerBg: c.formBtnDanger,        // <--- corregido
+    btnDangerText: c.formBtnDangerText,  
     helpBtnBg: c.help,
     helpBtnText: c.text,
   };
@@ -68,12 +68,12 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     marginVertical: 8,
-    backgroundColor: 'btnPrimaryBg', 
+    // El color de fondo se debe pasar desde el componente
   },
   btnPrimaryText: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: 'btnPrimaryText',         
+    // El color se debe pasar desde el componente
   },
   btnSecondary: {
     borderRadius: 12,
@@ -81,12 +81,12 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     alignItems: 'center',
     marginVertical: 8,
-    backgroundColor: 'btnSecondaryBg', 
+    // El color de fondo se debe pasar desde el componente
   },
   btnSecondaryText: {
     fontWeight: 'bold',
     fontSize: 18,
-    color: 'btnSecondaryText',         
+    // El color se debe pasar desde el componente
   },
   btnDanger: {
     borderRadius: 12,
@@ -94,10 +94,12 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 18,
     alignItems: 'center',
     marginHorizontal: 4,
+    // El color de fondo se debe pasar desde el componente
   },
   btnDangerText: {
     fontWeight: 'bold',
     fontSize: 16,
+    // El color se debe pasar desde el componente
   },
   helpBtn: {
     borderRadius: 18,
