@@ -17,7 +17,7 @@ export function LoginForm() {
   return (
     <View style={styles.root}>
       <View style={[styles.iconCircle, { backgroundColor: c.formIconCircle ?? c.inputIconCircle }]}>
-        <Ionicons name="person-circle-outline" size={64} color={c.formIconCircleIcon ?? '#888'} />
+        <Ionicons name="person-circle-outline" size={64} color={c.loginIconColor} />
       </View>
       <TextInput
         style={[
@@ -49,25 +49,21 @@ export function LoginForm() {
         secureTextEntry
       />
       <TouchableOpacity
-        style={globalStyles.btnPrimary}
+        style={[globalStyles.btnPrimary, { backgroundColor: c.loginBtnBg }]}
         accessibilityLabel="Iniciar sesión"
       >
-        <ThemedText style={globalStyles.btnPrimaryText}>Iniciar sesión</ThemedText>
+        <ThemedText style={[globalStyles.btnPrimaryText, { color: c.loginBtnText }]}>Iniciar sesión</ThemedText>
       </TouchableOpacity>
+      {/* Solo texto, sin TouchableOpacity */}
+      <ThemedText style={[styles.linkText, { color: c.loginLinkText }]}>
+        No tiene una cuenta?
+      </ThemedText>
       <TouchableOpacity
-        onPress={() => router.push('/register')}
-        style={styles.linkBtn}
-      >
-        <ThemedText style={[styles.linkText, { color: c.inputLinkText }]}>
-          No tiene una cuenta?
-        </ThemedText>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={globalStyles.btnSecondary}
+        style={[globalStyles.btnSecondary, { backgroundColor: c.loginCreateBtnBg }]}
         onPress={() => router.push('/register')}
         accessibilityLabel="Crear cuenta"
       >
-        <ThemedText style={globalStyles.btnSecondaryText}>Crear cuenta</ThemedText>
+        <ThemedText style={[globalStyles.btnSecondaryText, { color: c.loginCreateBtnText }]}>Crear cuenta</ThemedText>
       </TouchableOpacity>
     </View>
   );
@@ -107,3 +103,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+   

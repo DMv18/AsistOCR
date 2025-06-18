@@ -60,7 +60,7 @@ const colorsNormal = {
     formFotoRow: '#FFFFFF',
     formFotoRowBorder: '#CBD5E0',
     formAddBtn: '#63B3ED',
-    formAddBtnText: '#3182CE',
+    formAddBtnText: '#FFF', // <-- Cambiado a blanco
     formBtnDanger: '#E53E3E',
     formBtnDangerText: '#FFF',
     formBtnPrimary: '#3182CE',
@@ -159,6 +159,14 @@ const colorsNormal = {
     iconCircle: '#E3F2FD',
     iconCircleIcon: '#3182CE',
 
+    // LoginForm (colores específicos para botones y textos)
+    loginBtnBg: '#63B3ED',         // Botón "Iniciar sesión" fondo (azul claro)
+    loginBtnText: '#FFF',          // Botón "Iniciar sesión" texto (blanco)
+    loginLinkText: '#1A202C',      // "No tiene una cuenta?" (negro)
+    loginCreateBtnBg: '#63B3ED',   // Botón "Crear cuenta" fondo (azul claro)
+    loginCreateBtnText: '#FFF',    // Botón "Crear cuenta" texto (blanco)
+    loginIconColor: '#3182CE', // <-- icono persona en light
+
     // ThemedText (ThemedText.tsx)
     themedText: {
       default: '#3182CE',
@@ -193,171 +201,201 @@ const colorsNormal = {
     historialBorrarIconColor: '#FFFF',    
     historialObservarIconBg: '#1565c0',     
     historialObservarIconColor: '#FFFF',    
+
+    // ResultadoAsistencia (resultado-asistencia.tsx)
+    ResultadoAsistencia: {
+      infoInputBg: '#e8f5e9',
+      infoInputBorder: '#b4cded',
+      infoInputText: '#1A202C',
+      previewBlockBg: '#e8f5e9',
+      previewTitle: '#1565c0',
+      excelContainerBorder: '#43a047',
+      excelContainerBg: '#e8f5e9',
+      tablaBorder: '#b4cded',
+      tablaBg: '#fff',
+      tablaHeaderText: '#1565c0',
+      tablaCellText: '#222',
+      tablaRowBorder: '#b4cded',
+      nombreIndex: '#388e3c',
+      nombreText: '#222',
+      btnCancelarBg: '#2196f3',
+      btnCancelarText: '#fff',
+      btnContinuarBg: '#43a047',
+      btnContinuarText: '#fff',
+      checkIcon: 'green',
+    },
   },
 
   dark: {
     // Fondo general de la app (área exterior)
-    background: '#274C77', // Fondo general oscuro
+    background: '#1A202C', // Fondo principal oscuro
 
     // Fondo de los contenedores principales (cards, AppLayout)
-    card: '#6096BA',
+    card: '#2D3748',
     appLayoutCard: '#2D3748',
 
     // Fondo de bloques funcionales internos 
-    mainBlockBg: '#365980', // Puedes ajustar este color según tu diseño
+    mainBlockBg: '#1E365D',
 
     // General
-    text: '#F7FAFC',
+    text: '#E2E8F0',
     border: '#4A5568',
-    accent: '#2563EB',
-    danger: '#E53E3E',
-    warning: '#ECC94B',
-    success: '#38A169',
+    accent: '#63B3ED',
+    danger: '#F56565',
+    warning: '#F6E05E',
+    success: '#48BB78',
     help: '#2D3748',
-    btnPrimary: '#83c5be',
-    btnSecondary: '#83c5be',
-    btnDanger: '#E53E3E',
-    btnText: '#222',
-   
+    btnPrimary: '#63B3ED',
+    btnSecondary: '#90CDF4',
+    btnDanger: '#F56565',
+    btnText: '#FFF',
 
     // Header/AppBar
-    headerBg: '#274C77',   // Header oscuro
+    headerBg: '#1E4B8C',
     headerText: '#FFF',
-    headerBtnBg: '#2563EB',
+    headerBtnBg: '#63B3ED',
     headerBtnText: '#FFF',
     helpBtnBg: '#2D3748',
-    helpBtnText: '#FFF',
+    helpBtnText: '#CBD5E0',
 
     // Input
     inputBg: '#2D3748',
     inputBorder: '#4A5568',
-    inputText: '#F7FAFC',
-    inputPlaceholder: '#A0AEC0',
-    inputIcon: '#2563EB',
-    inputError: '#E53E3E',
-    inputFocus: '#2563EB',
-    inputIconCircle: '#2563EB',
-    inputLinkText: '#63B3ED',
+    inputText: '#E2E8F0',
+    inputPlaceholder: '#B3C7E6', // <-- Más claro para contraste en dark
+    inputIcon: '#63B3ED',
+    inputError: '#F56565',
+    inputFocus: '#63B3ED',
+    inputIconCircle: '#63B3ED',
+    inputLinkText: '#90CDF4',
 
     // ListaEventos
-    listaEventosSearchBar: '#234E52',
+    listaEventosSearchBar: '#1E365D',
     listaEventosCard: '#2D3748',
-    listaEventosIcon: '#2563EB',
-    listaEventosNombre: '#F7FAFC',
-    listaEventosFecha: '#A0AEC0',
-    listaEventosBtnEditar: '#38A169',
-    listaEventosBtnBorrar: '#E53E3E',
-    listaEventosBtnVer: '#2563EB',
+    listaEventosIcon: '#63B3ED',
+    listaEventosNombre: '#E2E8F0',
+    listaEventosFecha: '#718096',
+    listaEventosBtnEditar: '#48BB78',
+    listaEventosBtnBorrar: '#F56565',
+    listaEventosBtnVer: '#63B3ED',
     listaEventosBtnIcon: '#FFF',
 
     // FormularioAsistencia
-    formFotosBlock: '#234E52',
+    formFotosBlock: '#1E365D',
     formFotoRow: '#2D3748',
     formFotoRowBorder: '#4A5568',
-    formAddBtn: '#2D3748',
-    formAddBtnText: '#2563EB',
-    formBtnDanger: '#E53E3E',
+    formAddBtn: '#90CDF4', // <-- Azul más claro en dark
+    formAddBtnText: '#FFF', // <-- Cambiado a blanco
+    formBtnDanger: '#F56565',
     formBtnDangerText: '#FFF',
-    formBtnPrimary: '#38A169',
+    formBtnPrimary: '#63B3ED',
     formBtnPrimaryText: '#FFF',
-    formBtnSecondary: '#2563EB',
+    formBtnSecondary: '#90CDF4',
 
     // AppLayout
-    appLayoutBg: '#274C77',
-    appLayoutGreenBlock: '#365980',
-    appLayoutRegresarBtn: '#2563EB',
+    appLayoutBg: '#1A202C',
+    appLayoutGreenBlock: '#1E365D',
+    appLayoutRegresarBtn: '#63B3ED',
     appLayoutRegresarBtnText: '#FFF',
 
     // Home
-    homeCardBg: '#6096BA',
-    homeBtnText: '#222',
+    homeCardBg: '#2D3748',
+    homeBtnText: '#63B3ED',
 
     // TomarFoto
-    tomarFotoBtnBg: '#2563EB',
+    tomarFotoBtnBg: '#63B3ED',
     tomarFotoBtnText: '#FFF',
     tomarFotoPreviewBorder: '#4A5568',
-    tomarFotoRegresarBtnBg: '#38A169',
+    tomarFotoRegresarBtnBg: '#90CDF4',
     tomarFotoRegresarBtnText: '#FFF',
 
     // EditarEvento
-    editarEventoGreenBlock: '#234E52',
-    editarEventoRegresarBtn: '#2563EB',
+    editarEventoGreenBlock: '#1E365D',
+    editarEventoRegresarBtn: '#63B3ED',
     editarEventoRegresarBtnText: '#FFF',
     editarEventoOpcion1Bg: '#2D3748',
     editarEventoOpcion2Bg: '#2D3748',
     editarEventoOpcion3Bg: '#2D3748',
-    editarEventoOpcionText: '#F7FAFC',
-    editarEventoIcon1Bg: '#2563EB',
-    editarEventoIcon2Bg: '#38A169',
-    editarEventoIcon3Bg: '#ECC94B',
+    editarEventoOpcionText: '#E2E8F0',
+    editarEventoIcon1Bg: '#63B3ED',
+    editarEventoIcon2Bg: '#48BB78',
+    editarEventoIcon3Bg: '#F6E05E',
 
     // Config
     configSectionBg: '#2D3748',
-    configColorOptionBg: '#234E52',
+    configColorOptionBg: '#1E365D',
     configColorOptionSelected: '#4A5568',
     configColorRadio: '#4A5568',
-    configColorRadioSelected: '#2563EB',
-    configFontBtn: '#2563EB',
+    configColorRadioSelected: '#63B3ED',
+    configFontBtn: '#63B3ED',
     configFontBtnText: '#FFF',
-    configLabelText: '#F7FAFC',
+    configLabelText: '#E2E8F0',
 
     // Historial
     historialMainBg: '#1A202C',
-    historialCardBg: '#6096BA',
+    historialCardBg: '#2D3748',
 
     // ListaEventos
     eventoCard: '#2D3748',
-    btnIcon: '#2563EB',
-    eventoNombre: '#F7FAFC',
-    eventoFecha: '#A0AEC0',
-    btnEditar: '#38A169',
-    btnBorrar: '#E53E3E',
-    btnVer: '#2563EB',
-    iconTendencias: '#e1aaff',
+    btnIcon: '#63B3ED',
+    eventoNombre: '#E2E8F0',
+    eventoFecha: '#718096',
+    btnEditar: '#48BB78',
+    btnBorrar: '#F56565',
+    btnVer: '#63B3ED',
+    iconTendencias: '#90CDF4',
 
     TomarFoto: {
-      cameraBtnBg: '#2563EB',
+      cameraBtnBg: '#63B3ED',
       cameraBtnText: '#FFF',
       previewBorder: '#4A5568',
-      regresarBtnBg: '#38A169',
+      regresarBtnBg: '#90CDF4',
       regresarBtnText: '#FFF',
     },
 
     EditarEvento: {
-      greenBlock: '#234E52',
-      regresarBtn: '#2563EB',
+      greenBlock: '#1E365D',
+      regresarBtn: '#63B3ED',
       regresarBtnText: '#FFF',
       opcion1Bg: '#2D3748',
       opcion2Bg: '#2D3748',
       opcion3Bg: '#2D3748',
-      opcionText: '#F7FAFC',
-      icon1Bg: '#2563EB',
-      icon2Bg: '#38A169',
-      icon3Bg: '#ECC94B',
+      opcionText: '#E2E8F0',
+      icon1Bg: '#63B3ED',
+      icon2Bg: '#48BB78',
+      icon3Bg: '#F6E05E',
     },
 
     Config: {
       sectionBg: '#2D3748',
-      colorOptionBg: '#234E52',
+      colorOptionBg: '#1E365D',
       colorOptionSelected: '#4A5568',
       colorRadio: '#4A5568',
-      colorRadioSelected: '#2563EB',
-      fontBtn: '#2563EB',
+      colorRadioSelected: '#63B3ED',
+      fontBtn: '#63B3ED',
       fontBtnText: '#FFF',
-      labelText: '#F7FAFC',
+      labelText: '#E2E8F0',
     },
 
     // Nuevas propiedades para login/register
     iconCircle: '#2D3748',
-    iconCircleIcon: '#888',
+    iconCircleIcon: '#90CDF4',
+
+    // LoginForm (colores específicos para botones y textos)
+    loginBtnBg: '#90CDF4',         // Botón "Iniciar sesión" fondo (azul más claro)
+    loginBtnText: '#FFF',          // Botón "Iniciar sesión" texto (blanco)
+    loginLinkText: '#FFF',         // "No tiene una cuenta?" (blanco)
+    loginCreateBtnBg: '#90CDF4',   // Botón "Crear cuenta" fondo (azul más claro)
+    loginCreateBtnText: '#FFF',    // Botón "Crear cuenta" texto (blanco)
+    loginIconColor: '#FFF', // <-- icono persona en dark
 
     // ThemedText
     themedText: {
       default: '#63B3ED',
-      title: '#63B3ED',
+      title: '#E3F2FD', // <-- Azul muy claro, casi blanco, para el título en dark
       link: '#63B3ED',
-      subtitle: '#F7FAFC',
-      defaultSemiBold: '#F7FAFC',
+      subtitle: '#CBD5E0',
+      defaultSemiBold: '#E2E8F0',
     },
 
     // ThemedView
@@ -365,27 +403,50 @@ const colorsNormal = {
 
     // Collapsible
     collapsible: {
-      background: '#2D3748',
-      headerText: '#63B3ED',
-      icon: '#63B3ED',
+      background: '#1A202C',
+      headerText: '#90CDF4',
+      icon: '#90CDF4',
     },
 
     // ExternalLink
-    externalLink: '#63B3ED',
+    externalLink: '#90CDF4',
 
     // RegisterForm/LoginForm
     formIconCircle: '#2D3748',
-    formIconCircleIcon: '#888',
+    formIconCircleIcon: '#90CDF4',
 
     // Historial (iconos individuales)
-    historialArchivoIconBg: '#FFD600',
-    historialArchivoIconColor: '#1565c0',
-    historialEditarIconBg: '#388e3c',
-    historialEditarIconColor: '#fff',
-    historialBorrarIconBg: '#d32f2f',
-    historialBorrarIconColor: '#fff',
-    historialObservarIconBg: '#1565c0',
-    historialObservarIconColor: '#fff',
+    historialArchivoIconBg: '#4299E1',
+    historialArchivoIconColor: '#1A202C',
+    historialEditarIconBg: '#68D391',
+    historialEditarIconColor: '#1A202C',
+    historialBorrarIconBg: '#FC8181',
+    historialBorrarIconColor: '#1A202C',
+    historialObservarIconBg: '#4299E1',
+    historialObservarIconColor: '#1A202C',
+
+    // ResultadoAsistencia (resultado-asistencia.tsx)
+    ResultadoAsistencia: {
+      infoInputBg: '#1E365D',
+      infoInputBorder: '#4299E1',
+      infoInputText: '#E2E8F0',
+      previewBlockBg: '#1E365D',
+      previewTitle: '#63B3ED',
+      excelContainerBorder: '#4299E1',
+      excelContainerBg: '#1E365D',
+      tablaBorder: '#4299E1',
+      tablaBg: '#2D3748',
+      tablaHeaderText: '#63B3ED',
+      tablaCellText: '#E2E8F0',
+      tablaRowBorder: '#4299E1',
+      nombreIndex: '#68D391',
+      nombreText: '#E2E8F0',
+      btnCancelarBg: '#3182CE',
+      btnCancelarText: '#fff',
+      btnContinuarBg: '#68D391',
+      btnContinuarText: '#1A202C',
+      checkIcon: '#68D391',
+    },
   },
 };
 

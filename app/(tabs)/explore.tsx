@@ -19,15 +19,9 @@ type Evento = {
   color?: string;
 };
 
-const eventosIniciales: Evento[] = [
-  { id: '1', nombre: 'Tendencias Tecnológicas', fecha: '10/05/2025', color: '#e1aaff' },
-  { id: '2', nombre: 'Arquitectura de Maquinas III', fecha: '09/05/2025', color: '#aaffc3' },
-  { id: '3', nombre: 'Ingeniería de Software II', fecha: '06/05/2025', color: '#ffd6a5' },
-  { id: '4', nombre: 'Redes de Computadora', fecha: '09/05/2025', color: '#b5d0ff' },
-];
 
 export default function TabTwoScreen() {
-  const [eventos, setEventos] = useState(eventosIniciales);
+  const [eventos, setEventos] = useState<Evento[]>([]);
   const [busqueda, setBusqueda] = useState('');
 
   const eventosFiltrados = eventos.filter(e =>

@@ -1,6 +1,8 @@
 import { AppLayout } from '@/components/AppLayout';
 import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
 import { SERVER_URL } from '@/constants/server';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -10,6 +12,9 @@ export default function ResultadoAsistenciaScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { width, height } = useWindowDimensions();
+  const { theme, colorMode } = useThemeCustom();
+  const c = Colors[colorMode][theme];
+  const raColors = c.ResultadoAsistencia;
 
   // Obtener los nombres detectados desde los parámetros (respuestas)
   const nombresDetectados: string[] = (() => {
@@ -81,33 +86,63 @@ export default function ResultadoAsistenciaScreen() {
   return (
     <AppLayout description="Historial de asistencia procesado">
       <ScrollView contentContainerStyle={styles.container}>
-        <ThemedText type="title" style={{ marginBottom: 8, textAlign: 'center' }}>
+        <ThemedText
+          type="title"
+          style={{
+            marginBottom: 8,
+            textAlign: 'center',
+            color: c.text, // blanco en dark
+          }}
+        >
           Historial de &quot;{nombreEvento}&quot;
         </ThemedText>
         <View style={styles.infoBlock}>
           <View style={styles.infoCol}>
-            <ThemedText style={styles.infoLabel}>Nombre del evento:</ThemedText>
+            <ThemedText style={[styles.infoLabel, { color: c.text }]}>Nombre del evento:</ThemedText>
             <TextInput
-              style={styles.infoInput}
+              style={[
+                styles.infoInput,
+                {
+                  backgroundColor: raColors.infoInputBg,
+                  borderColor: raColors.infoInputBorder,
+                  color: c.text, // blanco en dark
+                },
+              ]}
               value={nombreEvento}
               onChangeText={setNombreEvento}
             />
           </View>
           <View style={styles.infoCol}>
-            <ThemedText style={styles.infoLabel}>Creacion del evento:</ThemedText>
+            <ThemedText style={[styles.infoLabel, { color: c.text }]}>Creacion del evento:</ThemedText>
             <TextInput
-              style={styles.infoInput}
+              style={[
+                styles.infoInput,
+                {
+                  backgroundColor: raColors.infoInputBg,
+                  borderColor: raColors.infoInputBorder,
+                  color: c.text, // blanco en dark
+                },
+              ]}
               value={fechaEvento}
               onChangeText={setFechaEvento}
             />
           </View>
         </View>
-        <ThemedText style={styles.infoLabel}>Descripción (opcional):</ThemedText>
+        <ThemedText style={[styles.infoLabel, { color: c.text }]}>Descripción (opcional):</ThemedText>
         <TextInput
-          style={[styles.infoInput, { minHeight: 40 }]}
+          style={[
+            styles.infoInput,
+            {
+              minHeight: 40,
+              backgroundColor: raColors.infoInputBg,
+              borderColor: raColors.infoInputBorder,
+              color: c.text, // blanco en dark
+            },
+          ]}
           value={''}
           onChangeText={() => {}}
           placeholder="Breve descripción del evento"
+          placeholderTextColor={c.inputPlaceholder}
           multiline
         />
         <View
@@ -118,10 +153,12 @@ export default function ResultadoAsistenciaScreen() {
               minHeight: Math.min(height * 0.5, 400),
               alignSelf: 'center',
               width: '100%',
+              borderColor: raColors.excelContainerBorder,
+              backgroundColor: raColors.excelContainerBg,
             },
           ]}
         >
-          <ThemedText style={styles.previewTitle}>Lista de nombres obtenidos:</ThemedText>
+          <ThemedText style={[styles.previewTitle, { color: c.text }]}>Lista de nombres obtenidos:</ThemedText>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={true}
@@ -135,14 +172,15 @@ export default function ResultadoAsistenciaScreen() {
                   minWidth: 480,
                   maxWidth: 900,
                   alignSelf: 'center',
-                  backgroundColor: '#fff',
+                  backgroundColor: raColors.tablaBg,
+                  borderColor: raColors.tablaBorder,
                 },
               ]}
             >
-              <View style={styles.tablaHeader}>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.15, minWidth: 40 }]}>N°</ThemedText>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.7, minWidth: 260 }]}>Nombre</ThemedText>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.3, minWidth: 100 }]}>{fechaEvento}</ThemedText>
+              <View style={[styles.tablaHeader, { borderColor: raColors.tablaBorder }]}>
+                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.15, minWidth: 40, color: c.text }]}>N°</ThemedText>
+                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.7, minWidth: 260, color: c.text }]}>Nombre</ThemedText>
+                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.3, minWidth: 100, color: c.text }]}>{fechaEvento}</ThemedText>
               </View>
               <ScrollView
                 style={{ height: 220 }}
@@ -151,17 +189,17 @@ export default function ResultadoAsistenciaScreen() {
               >
                 {resultado.length === 0 ? (
                   <View style={{ padding: 16 }}>
-                    <ThemedText style={{ color: '#888', textAlign: 'center' }}>
+                    <ThemedText style={{ color: c.text, textAlign: 'center' }}>
                       No se detectaron nombres.
                     </ThemedText>
                   </View>
                 ) : (
                   resultado.map((fila, idx) => (
-                    <View key={fila.nombre + idx} style={[styles.tablaRow, { justifyContent: 'flex-start' }]}>
+                    <View key={fila.nombre + idx} style={[styles.tablaRow, { justifyContent: 'flex-start', borderColor: raColors.tablaRowBorder }]}>
                       <ThemedText
                         style={[
                           styles.tablaCell,
-                          { flex: 0.3, textAlign: 'center', justifyContent: 'center', alignItems: 'center' }
+                          { flex: 0.3, textAlign: 'center', color: c.text }
                         ]}
                       >
                         {idx + 1}
@@ -173,7 +211,8 @@ export default function ResultadoAsistenciaScreen() {
                           contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}
                         >
                           <ThemedText
-                            style={[styles.tablaCell, { minWidth: 180, textAlign: 'left' }]}
+                            style={[styles.tablaCell, { minWidth: 180, textAlign: 'left', color: c.text }]
+                            }
                             numberOfLines={1}
                             ellipsizeMode="clip"
                           >
@@ -186,7 +225,7 @@ export default function ResultadoAsistenciaScreen() {
                         justifyContent: 'center',
                         alignItems: 'center'
                       }]}>
-                        <Ionicons name="checkmark" size={22} color="green" />
+                        <Ionicons name="checkmark" size={22} color={raColors.checkIcon} />
                       </View>
                     </View>
                   ))
@@ -196,11 +235,11 @@ export default function ResultadoAsistenciaScreen() {
           </ScrollView>
         </View>
         <View style={styles.btnRow}>
-          <TouchableOpacity style={styles.regresarBtn} onPress={handleCancelar}>
-            <ThemedText style={styles.regresarBtnText}>Cancelar</ThemedText>
+          <TouchableOpacity style={[styles.regresarBtn, { backgroundColor: raColors.btnCancelarBg }]} onPress={handleCancelar}>
+            <ThemedText style={[styles.regresarBtnText, { color: raColors.btnCancelarText }]}>Cancelar</ThemedText>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.importarBtn} onPress={handleFinalizar}>
-            <ThemedText style={styles.importarBtnText}>Continuar</ThemedText>
+          <TouchableOpacity style={[styles.importarBtn, { backgroundColor: raColors.btnContinuarBg }]} onPress={handleFinalizar}>
+            <ThemedText style={[styles.importarBtnText, { color: raColors.btnContinuarText }]}>Continuar</ThemedText>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -231,31 +270,31 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     marginBottom: 2,
+    // color se pasa inline usando raColors.infoInputText si se requiere
   },
   infoInput: {
     borderWidth: 1,
-    borderColor: '#b4cded',
     borderRadius: 8,
     padding: 6,
     fontSize: 15,
-    backgroundColor: '#e8f5e9',
     minWidth: 120,
     marginBottom: 6,
+    // backgroundColor, borderColor, color se pasan inline
   },
   previewBlock: {
     width: '100%',
-    backgroundColor: '#e8f5e9',
     borderRadius: 12,
     padding: 12,
     marginTop: 10,
     marginBottom: 10,
     alignItems: 'flex-start',
+    // backgroundColor se pasa inline
   },
   previewTitle: {
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 6,
-    color: '#1565c0',
+    // color se pasa inline
   },
   nombresList: {
     width: '100%',
@@ -269,18 +308,16 @@ const styles = StyleSheet.create({
   nombreIndex: {
     fontWeight: 'bold',
     marginRight: 6,
-    color: '#388e3c',
     fontSize: 15,
+    // color se pasa inline
   },
   nombreText: {
     fontSize: 15,
-    color: '#222',
+    // color se pasa inline
   },
   excelContainer: {
     borderWidth: 3,
-    borderColor: '#43a047',
     borderRadius: 18,
-    backgroundColor: '#e8f5e9',
     padding: 12,
     marginVertical: 10,
     alignItems: 'center',
@@ -288,42 +325,44 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     minHeight: 320,
     width: '100%',
+    // borderColor, backgroundColor se pasan inline
   },
   tabla: {
     borderWidth: 1,
-    borderColor: '#b4cded',
     borderRadius: 12,
     width: '100%',
     maxWidth: 340,
     marginTop: 0,
-    backgroundColor: '#fff',
     padding: 8,
+    // borderColor, backgroundColor se pasan inline
   },
   tablaHeader: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderColor: '#b4cded',
     paddingBottom: 4,
     marginBottom: 4,
+    // borderColor se pasa inline
   },
   tablaHeaderCell: {
     flex: 1,
     fontWeight: 'bold',
     fontSize: 15,
     textAlign: 'center',
+    // color se pasa inline
   },
   tablaRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderColor: '#b4cded',
     minHeight: 28,
     alignItems: 'center',
+    // borderColor se pasa inline
   },
   tablaCell: {
     flex: 1,
     fontSize: 14,
     textAlign: 'center',
     paddingVertical: 2,
+    // color se pasa inline
   },
   btnRow: {
     flexDirection: 'row',
@@ -333,28 +372,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   regresarBtn: {
-    backgroundColor: '#2196f3',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: 'center',
+    // backgroundColor se pasa inline
   },
   regresarBtnText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+    // color se pasa inline
   },
   importarBtn: {
-    backgroundColor: '#43a047',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
     alignItems: 'center',
+    // backgroundColor se pasa inline
   },
   importarBtnText: {
-    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+    // color se pasa inline
   },
 });
-    

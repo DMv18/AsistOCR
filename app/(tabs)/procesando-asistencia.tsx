@@ -95,7 +95,7 @@ export default function ProcesandoAsistenciaScreen() {
       <View style={styles.root}>
         {backendError ? (
           <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
-            <ThemedText style={{ color: 'red', fontWeight: 'bold', fontSize: 18, marginBottom: 16 }}>
+            <ThemedText style={{ color: c.danger, fontWeight: 'bold', fontSize: 18, marginBottom: 16 }}>
               {backendError}
             </ThemedText>
             <TouchableOpacity
@@ -108,7 +108,7 @@ export default function ProcesandoAsistenciaScreen() {
         ) : !procesandoInfo || progreso < 100 ? (
           // Pantalla de carga real
           <>
-            <ThemedText style={styles.title}>Procesando imagen...</ThemedText>
+            <ThemedText style={[styles.title, { color: c.text }]}>Procesando imagen...</ThemedText>
             <View style={{ alignItems: 'center', marginVertical: 24 }}>
               {imagenes.length > 0 && (
                 <Image
@@ -132,7 +132,7 @@ export default function ProcesandoAsistenciaScreen() {
               <ThemedText style={{ color: c.inputPlaceholder, marginBottom: 6 }}>
                 {progreso < 100 ? 'Procesando...' : '¡Completado!'}
               </ThemedText>
-              <View style={[styles.progressBarBg, { backgroundColor: '#e0e0e0' }]}>
+              <View style={[styles.progressBarBg, { backgroundColor: c.border }]}>
                 <Animated.View style={[
                   styles.progressBar,
                   { backgroundColor: c.success, width: barWidth }
@@ -198,6 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     gap: 12,
     elevation: 2,
+    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   imagenesRow: {
     flexDirection: 'row',
@@ -215,22 +216,23 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    // Quitar borderColor aquí, se debe poner inline usando c.border
   },
   imgCheck: {
     position: 'absolute',
     right: -8,
     top: -8,
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 2,
     elevation: 2,
+    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 16,
     marginVertical: 10,
     textAlign: 'center',
+    // Quitar color aquí, se debe poner inline usando c.text
   },
   cancelBtn: {
     borderRadius: 10,
@@ -239,6 +241,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     width: 200,
+    // backgroundColor se define inline con c.formBtnDanger o c.formBtnPrimary
   },
   progressBlock: {
     marginTop: 18,
@@ -251,11 +254,12 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#e0e0e0',
+    // Quitar backgroundColor aquí, se debe poner inline usando c.border
   },
   progressBar: {
     height: 18,
     borderRadius: 10,
+    // backgroundColor se define inline con c.success
   },
   segmentedRows: {
     marginTop: 20,
@@ -269,7 +273,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 1,
-    backgroundColor: '#fff',
+    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   rowImage: {
     width: 60,
@@ -280,6 +284,6 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     fontWeight: '500',
-    color: '#333',
+    // Quitar color aquí, se debe poner inline usando c.inputText
   },
 });
