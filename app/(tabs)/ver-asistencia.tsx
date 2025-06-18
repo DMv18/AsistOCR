@@ -151,7 +151,7 @@ export default function VerAsistenciaScreen() {
                 </View>
               ) : (
                 <>
-                  {excelData.length > 0 && Array.isArray(excelData[0]) ? (
+                  {excelData && Array.isArray(excelData) && excelData.length > 0 && Array.isArray(excelData[0]) && excelData[0].length > 0 ? (
                     <>
                       {/* Header */}
                       <View style={{ flexDirection: 'row' }}>
@@ -175,7 +175,6 @@ export default function VerAsistenciaScreen() {
                                 color: c.ResultadoAsistencia?.tablaHeaderText ?? c.text,
                                 textAlign: idx === 1 ? 'left' : 'center',
                               }}
-                              // Elimina numberOfLines y ellipsizeMode para mostrar todo el encabezado
                             >
                               {col}
                             </ThemedText>
@@ -227,9 +226,12 @@ export default function VerAsistenciaScreen() {
                       </ScrollView>
                     </>
                   ) : (
-                    <View style={{ padding: 24, alignItems: 'center' }}>
-                      <ThemedText style={{ color: c.text, textAlign: 'center' }}>
-                        No se pudo leer el contenido del archivo o está vacío.
+                    <View style={{ padding: 32, alignItems: 'center' }}>
+                      <ThemedText style={{ color: c.danger, textAlign: 'center', fontWeight: 'bold' }}>
+                        No se detectó ninguna tabla válida en el archivo.
+                      </ThemedText>
+                      <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginTop: 8 }}>
+                        Verifica que el archivo tenga al menos una fila de encabezado y datos.
                       </ThemedText>
                     </View>
                   )}

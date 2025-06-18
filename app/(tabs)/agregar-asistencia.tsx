@@ -126,7 +126,6 @@ export default function AgregarAsistenciaScreen() {
         const idx = tabla.findIndex((fila, i) => i > 0 && fila[colNombre]?.trim().toLowerCase() === nombreDetectado.trim().toLowerCase());
         if (idx === -1) {
           // No existe, agrega nueva fila
-          // Rellena todas las columnas menos la de nombre y la nueva columna con "x"
           const nuevaFila = [];
           for (let i = 0; i < tabla[0].length; i++) {
             if (i === 0) {
@@ -136,13 +135,13 @@ export default function AgregarAsistenciaScreen() {
             } else if (i === tabla[0].length - 1) {
               nuevaFila.push('✓'); // check en la nueva columna
             } else {
+              // Para columnas anteriores, pon 'x'
               nuevaFila.push('x');
             }
           }
           tabla.push(nuevaFila);
         } else {
           // Ya existe, pon check en la nueva columna
-          // Asegura que la fila tenga la longitud correcta
           while (tabla[idx].length < tabla[0].length) {
             tabla[idx].push('');
           }
@@ -152,7 +151,6 @@ export default function AgregarAsistenciaScreen() {
 
       // Para los que no están en nuevosNombres, pon 'x' en la nueva columna
       for (let i = 1; i < tabla.length; i++) {
-        // Asegura que la fila tenga la longitud correcta
         while (tabla[i].length < tabla[0].length) {
           tabla[i].push('');
         }
