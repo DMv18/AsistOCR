@@ -365,6 +365,15 @@ def crear_asistencia():
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 500
 
+@app.route('/asistencias/<filename>', methods=['PUT'])
+def sobrescribir_asistencia(filename):
+    excel_path = os.path.join(ASISTENCIAS_FOLDER, filename)
+    if 'file' not in request.files:
+        return jsonify({'error': 'No se envió ningún archivo'}), 400
+    file = request.files['file']
+    file.save(excel_path)
+    return jsonify({'ok': True})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
     app.run(host='0.0.0.0', port=5000)

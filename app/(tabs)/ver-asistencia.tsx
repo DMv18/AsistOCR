@@ -6,10 +6,8 @@ import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import XLSX from 'xlsx';
-
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { read, utils } from 'xlsx';
 
 export default function VerAsistenciaScreen() {
   const params = useLocalSearchParams();
@@ -43,14 +41,14 @@ export default function VerAsistenciaScreen() {
             const data = e.target.result;
             let workbook;
             if (typeof data === 'string') {
-              workbook = XLSX.read(data, { type: 'binary' });
+              workbook = read(data, { type: 'binary' });
             } else {
               const uint8Array = new Uint8Array(data);
-              workbook = XLSX.read(uint8Array, { type: 'array' });
+              workbook = read(uint8Array, { type: 'array' });
             }
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            const json = utils.sheet_to_json(worksheet, { header: 1 });
             setExcelData(json as string[][]);
 
             // Calcular el ancho de cada columna según el dato más largo
@@ -301,4 +299,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-   
+

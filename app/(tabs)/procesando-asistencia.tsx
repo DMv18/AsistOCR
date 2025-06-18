@@ -17,7 +17,6 @@ export default function ProcesandoAsistenciaScreen() {
   const params = useLocalSearchParams();
   const uri = typeof params.uri === 'string' ? params.uri : undefined;
 
-  const [filas, setFilas] = useState<string[]>([]);
   const [excelUrl, setExcelUrl] = useState<string | null>(null);
   const [respuestas, setRespuestas] = useState<string[]>([]); // Para cachear los nombres detectados
 
@@ -54,7 +53,6 @@ export default function ProcesandoAsistenciaScreen() {
           // Elimina el replace de la IP, solo pasa uri directamente
           const resultado = await segmentarFilas(uri);
           backendRespondio = true;
-          setFilas(resultado.filas);
           setExcelUrl(resultado.excel);
           setRespuestas(resultado.nombresDetectados || []);
           setProcesandoInfo(true);

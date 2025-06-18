@@ -9,7 +9,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { globalStyles } from '@/styles/globalStyles';
+import { useGlobalStyles } from '@/styles/globalStyles';
 import { router } from 'expo-router';
 
 type Evento = {
@@ -41,6 +41,8 @@ export default function TabTwoScreen() {
   
     alert('Ver evento: ' + id);
   };
+
+  const globalStyles = useGlobalStyles();
 
   return (
     <ParallaxScrollView

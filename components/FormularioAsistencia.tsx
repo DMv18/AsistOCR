@@ -1,14 +1,13 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
-import { SERVER_URL } from '@/constants/server';
 import { useThemeCustom } from '@/hooks/ThemeContext';
-import { globalStyles } from '@/styles/globalStyles';
+import { useLimpiarFilasBackend } from '@/hooks/useLimpiarFilasBackend';
+import { useGlobalColors, useGlobalStyles } from '@/styles/globalStyles';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 type Foto = {
@@ -76,24 +75,14 @@ async function copyImageToApp(uri: string): Promise<string> {
   }
 }
 
-// Hook personalizado para limpiar la carpeta filas en el backend
-function useLimpiarFilasBackend() {
-  return useCallback(async () => {
-    try {
-      await fetch(`${SERVER_URL}/limpiar-filas`, { method: 'POST' });
-      console.log('Carpeta filas limpiada en el backend');
-    } catch (e) {
-      console.warn('No se pudo limpiar la carpeta filas en el backend:', e);
-    }
-  }, []);
-}
-
 export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaDia }: Props) {
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
+  const colors = useGlobalColors();
+  const globalStyles = useGlobalStyles();
   const router = useRouter();
   const limpiarFilasBackend = useLimpiarFilasBackend();
 
@@ -168,27 +157,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
     }
   };
 
-  // Permite subir desde archivos (explorador)
-  const handleArchivoSistema = async () => {
-    setModalVisible(false);
-    // Usa DocumentPicker en todas las plataformas para máxima compatibilidad
-    const result = await DocumentPicker.getDocumentAsync({
-      type: ['image/*'],
-      copyToCacheDirectory: true,
-      multiple: false,
-    });
-    if (result && result.assets && result.assets.length > 0) {
-      const uri = result.assets[0].uri;
-      setFotos([{ uri, status: 'pending' }]);
-      try {
-        const nuevaUri = await copyImageToApp(uri);
-        setFotos([{ uri: nuevaUri, status: 'success' }]);
-      } catch {
-        setFotos([{ uri, status: 'error' }]);
-      }
-    }
-  };
-
   const handleQuitarFoto = (uri: string) => {
     setFotos([]);
   };
@@ -239,11 +207,11 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
                 </View>
               )}
               <TouchableOpacity
-                style={[globalStyles.btnDanger, { backgroundColor: c.formBtnDanger, marginTop: 8 }]} 
+                style={[globalStyles.btnDanger, { backgroundColor: colors.btnDangerBg, marginTop: 8 }]} 
                 onPress={() => handleQuitarFoto(foto.uri)}
               >
-                <MaterialIcons name="delete" size={18} color={c.formBtnDangerText ?? c.btnText} />
-                <ThemedText style={[globalStyles.btnDangerText, { color: c.formBtnDangerText ?? c.btnText }]}>
+                <MaterialIcons name="delete" size={18} color={colors.btnDangerText} />
+                <ThemedText style={[globalStyles.btnDangerText, { color: colors.btnDangerText }]}>
                   Eliminar
                 </ThemedText>
               </TouchableOpacity>
@@ -260,14 +228,14 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[globalStyles.btnPrimary, { backgroundColor: c.formBtnPrimary, marginTop: 16 }]}
+          style={[globalStyles.btnPrimary, { backgroundColor: colors.btnPrimaryBg, marginTop: 16 }]}
           onPress={handleProcesar}
           disabled={isProcessing || fotos.length === 0 || fotos[0].status !== 'success'}
         >
           {isProcessing ? (
-            <ActivityIndicator color={c.formBtnPrimaryText} />
+            <ActivityIndicator color={colors.btnPrimaryText} />
           ) : (
-            <ThemedText style={[globalStyles.btnPrimaryText, { color: c.formBtnPrimaryText }]}>
+            <ThemedText style={[globalStyles.btnPrimaryText, { color: colors.btnPrimaryText }]}>
               Procesar
             </ThemedText>
           )}
@@ -328,7 +296,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
                 <Ionicons name="folder-outline" size={28} color={c.btnText} />
                 <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</ThemedText>
               </TouchableOpacity>
-              {/* Botón de archivos eliminado */}
             </View>
             <TouchableOpacity
               style={{ marginTop: 18 }}

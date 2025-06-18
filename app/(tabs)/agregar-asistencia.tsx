@@ -7,7 +7,7 @@ import { segmentarFilas } from '@/IA/segmentarFilas';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Animated, TextInput, TouchableOpacity, View } from 'react-native';
-import XLSX from 'xlsx';
+import { read, utils, write } from 'xlsx';
 
 export default function AgregarAsistenciaScreen() {
   const { theme, colorMode } = useThemeCustom();
@@ -69,14 +69,14 @@ export default function AgregarAsistenciaScreen() {
             const data = e.target.result;
             let workbook;
             if (typeof data === 'string') {
-              workbook = XLSX.read(data, { type: 'binary' });
+              workbook = read(data, { type: 'binary' });
             } else {
               const uint8Array = new Uint8Array(data);
-              workbook = XLSX.read(uint8Array, { type: 'array' });
+              workbook = read(uint8Array, { type: 'array' });
             }
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            const tabla = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
+            const tabla = utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
 
             // Encuentra el índice de la columna "Nombre"
             const colNombre = tabla[0].findIndex(h => h.toLowerCase().includes('nombre'));
@@ -91,13 +91,13 @@ export default function AgregarAsistenciaScreen() {
             setBarra(100);
             anim.setValue(100);
           } catch (err) {
-            Alert.alert('Error', 'No se pudo actualizar la asistencia.');
+            Alert.alert('Error', 'No se pudo actualizar la asistencia: ' + (err instanceof Error ? err.message : 'Error desconocido'));
             router.back();
           }
         };
         reader.readAsArrayBuffer(blob);
       } catch (err) {
-        Alert.alert('Error', 'No se pudo procesar la imagen.');
+        Alert.alert('Error', 'No se pudo procesar la imagen: ' + (err instanceof Error ? err.message : 'Error desconocido'));
         router.back();
       }
     })();
@@ -105,7 +105,7 @@ export default function AgregarAsistenciaScreen() {
     return () => {
       clearInterval(interval);
     };
-  }, [eventoId, uri]);
+  }, [eventoId, uri, anim, router]);
 
   const barWidth = anim.interpolate({
     inputRange: [0, 100],
@@ -116,7 +116,8 @@ export default function AgregarAsistenciaScreen() {
     if (!procesado) return;
     try {
       const { nuevosNombres, tabla, colNombre } = procesado;
-      // Agrega la nueva columna de fecha
+
+      // Siempre agrega la nueva columna, aunque el encabezado ya exista
       tabla[0].push(fecha);
 
       // Para cada nombre detectado
@@ -125,29 +126,46 @@ export default function AgregarAsistenciaScreen() {
         const idx = tabla.findIndex((fila, i) => i > 0 && fila[colNombre]?.trim().toLowerCase() === nombreDetectado.trim().toLowerCase());
         if (idx === -1) {
           // No existe, agrega nueva fila
-          const nuevaFila = Array(tabla[0].length).fill('x');
-          nuevaFila[colNombre] = nombreDetectado;
-          nuevaFila[0] = (tabla.length).toString(); // N°
-          nuevaFila[tabla[0].length - 1] = '✓'; // check en la nueva columna
+          // Rellena todas las columnas menos la de nombre y la nueva columna con "x"
+          const nuevaFila = [];
+          for (let i = 0; i < tabla[0].length; i++) {
+            if (i === 0) {
+              nuevaFila.push((tabla.length).toString()); // N°
+            } else if (i === colNombre) {
+              nuevaFila.push(nombreDetectado);
+            } else if (i === tabla[0].length - 1) {
+              nuevaFila.push('✓'); // check en la nueva columna
+            } else {
+              nuevaFila.push('x');
+            }
+          }
           tabla.push(nuevaFila);
         } else {
           // Ya existe, pon check en la nueva columna
+          // Asegura que la fila tenga la longitud correcta
+          while (tabla[idx].length < tabla[0].length) {
+            tabla[idx].push('');
+          }
           tabla[idx][tabla[0].length - 1] = '✓';
         }
       });
 
       // Para los que no están en nuevosNombres, pon 'x' en la nueva columna
       for (let i = 1; i < tabla.length; i++) {
+        // Asegura que la fila tenga la longitud correcta
+        while (tabla[i].length < tabla[0].length) {
+          tabla[i].push('');
+        }
         if (!nuevosNombres.some(n => n.trim().toLowerCase() === (tabla[i][colNombre] || '').trim().toLowerCase())) {
           tabla[i][tabla[0].length - 1] = 'x';
         }
       }
 
       // Sube el nuevo Excel al backend (sobrescribe)
-      const ws = XLSX.utils.aoa_to_sheet(tabla);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
+      const ws = utils.aoa_to_sheet(tabla);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, 'Sheet1');
+      const wbout = write(wb, { type: 'base64', bookType: 'xlsx' });
       const formData = new FormData();
       formData.append('file', {
         uri: `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${wbout}`,
@@ -156,15 +174,15 @@ export default function AgregarAsistenciaScreen() {
       } as any);
 
       await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId)}`, {
-        method: 'POST',
+        method: 'PUT', // <--- Cambia POST por PUT
         body: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
+        // No pongas headers: Content-Type
       });
 
       // Redirige a ver-asistencia
       router.replace({ pathname: '/ver-asistencia', params: { nombre: eventoId } });
     } catch (err) {
-      Alert.alert('Error', 'No se pudo guardar la asistencia.');
+      Alert.alert('Error', 'No se pudo guardar la asistencia: ' + (err instanceof Error ? err.message : 'Error desconocido'));
       router.back();
     }
   };

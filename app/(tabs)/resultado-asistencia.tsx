@@ -74,7 +74,7 @@ export default function ResultadoAsistenciaScreen() {
         return;
       }
       router.replace('/historial');
-    } catch (e) {
+    } catch {
       Alert.alert('Error', 'No se pudo crear la asistencia.');
     }
   };
@@ -379,4 +379,3 @@ const styles = StyleSheet.create({
     // color se pasa inline
   },
 });
-    

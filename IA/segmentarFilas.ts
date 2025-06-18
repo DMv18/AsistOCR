@@ -1,7 +1,8 @@
 import { SERVER_URL } from '@/constants/server';
 
-
-export async function segmentarFilas(uri: string): Promise<{ filas: string[]; excel: string; nombresDetectados: string[] }> {
+// Stub para evitar error de importación. Implementa la lógica real según tu backend.
+export async function segmentarFilas(uri: string): Promise<{ excel: string; nombresDetectados: string[] }> {
+  // Sube la imagen al backend y espera la respuesta real
   const formData = new FormData();
   formData.append('imagen', {
     uri,
@@ -9,18 +10,23 @@ export async function segmentarFilas(uri: string): Promise<{ filas: string[]; ex
     type: 'image/png',
   } as any);
 
-  const response = await fetch(`${SERVER_URL}/segmentar`, {
+  const res = await fetch(`${SERVER_URL}/segmentar`, {
     method: 'POST',
     body: formData,
     headers: {
-      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+      // 'Content-Type' NO debe estar presente para FormData en React Native
     },
   });
-  const data = await response.json();
+
+  if (!res.ok) {
+    throw new Error('Error al procesar la imagen');
+  }
+
+  const data = await res.json();
   return {
-    filas: data.filas,
     excel: data.excel,
-    nombresDetectados: data.nombresDetectados ?? [],
+    nombresDetectados: data.nombresDetectados || [],
   };
 }
 

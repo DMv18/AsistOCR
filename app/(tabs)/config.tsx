@@ -3,7 +3,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ColorMode, Colors } from '@/constants/Colors';
 
@@ -44,13 +44,20 @@ export default function ConfigScreen() {
     setDarkMode(theme === 'dark');
   }, [theme]);
 
-  
   const handleDarkMode = (value: boolean) => {
     setDarkMode(value);
     setTheme(value ? 'dark' : 'light');
   };
 
   const c = Colors[colorMode][theme].Config;
+
+  // Calcula el máximo permitido según la plataforma
+  const maxFontSize = Platform.OS === 'web' ? 24 : 22;
+  const minFontSize = 12;
+
+  // Calcula el fontScale máximo y mínimo según el tamaño base (16)
+  const maxFontScale = maxFontSize / 16;
+  const minFontScale = minFontSize / 16;
 
   return (
     <AppLayout description="Preferencias de accesibilidad y visualización.">
@@ -62,8 +69,9 @@ export default function ConfigScreen() {
         ]}>
           <TouchableOpacity
             style={[styles.iconBtn, { minWidth: 48, minHeight: 48, borderRadius: 24 }]}
-            onPress={() => setFontScale(Math.min(fontScale + 0.05, 1.5))}
+            onPress={() => setFontScale(Math.min(fontScale + 0.05, maxFontScale))}
             accessibilityLabel="Aumentar fuente"
+            disabled={fontScale * 16 >= maxFontSize}
           >
             <Ionicons name="add-circle-outline" size={28 * fontScale} color={c.labelText} />
           </TouchableOpacity>
@@ -84,8 +92,9 @@ export default function ConfigScreen() {
           />
           <TouchableOpacity
             style={[styles.iconBtn, { minWidth: 48, minHeight: 48, borderRadius: 24 }]}
-            onPress={() => setFontScale(Math.max(fontScale - 0.05, 0.8))}
+            onPress={() => setFontScale(Math.max(fontScale - 0.05, minFontScale))}
             accessibilityLabel="Disminuir fuente"
+            disabled={fontScale * 16 <= minFontSize}
           >
             <Ionicons name="remove-circle-outline" size={28 * fontScale} color={c.labelText} />
           </TouchableOpacity>

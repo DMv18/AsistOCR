@@ -1,7 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from '@/hooks/ThemeContext';
-import { globalStyles } from '@/styles/globalStyles';
+import { useGlobalStyles } from '@/styles/globalStyles';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
@@ -31,6 +31,7 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
   const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
   const router = useRouter();
+  const globalStyles = useGlobalStyles();
 
   function getIconColor(nombre: string) {
     return c.listaEventosIcon;

@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Modal, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { read, utils, write } from 'xlsx';
 
 export default function EditarEventoScreen() {
   const router = useRouter();
@@ -54,16 +55,16 @@ export default function EditarEventoScreen() {
           const data = e.target.result;
           let workbook;
           if (typeof data === 'string') {
-            workbook = require('xlsx').read(data, { type: 'binary' });
+            workbook = read(data, { type: 'binary' });
           } else {
             const uint8Array = new Uint8Array(data);
-            workbook = require('xlsx').read(uint8Array, { type: 'array' });
+            workbook = read(uint8Array, { type: 'array' });
           }
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const json = require('xlsx').utils.sheet_to_json(worksheet, { header: 1 });
+          const json = utils.sheet_to_json(worksheet, { header: 1 });
           setExcelData(json as string[][]);
-        } catch (err) {
+        } catch {
           setExcelData([]);
         }
         setLoadingExcel(false);
@@ -109,34 +110,33 @@ export default function EditarEventoScreen() {
       const nuevaTabla = [...excelData, nuevaFila];
 
       // Enviar al backend para sobrescribir el archivo
-      // (puedes adaptar el endpoint según tu backend)
       const formData = new FormData();
-      const XLSX = require('xlsx');
-      const ws = XLSX.utils.aoa_to_sheet(nuevaTabla);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-      const wbout = XLSX.write(wb, { type: 'base64', bookType: 'xlsx' });
+      const ws = utils.aoa_to_sheet(nuevaTabla);
+      const wb = utils.book_new();
+      utils.book_append_sheet(wb, ws, 'Sheet1');
+      const wbout = write(wb, { type: 'base64', bookType: 'xlsx' });
       formData.append('file', {
         uri: `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${wbout}`,
         name: eventoId,
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       } as any);
 
-      // Si PATCH, PUT y POST dan 405, tu backend no permite sobrescribir archivos por HTTP.
-      // Aquí dejamos el método POST (el más común para upload), pero debes modificar tu backend Flask
-      // para aceptar POST en /asistencias/<archivo> y sobrescribir el archivo.
-      await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId!)}`, {
-        method: 'POST',
+      // Usa PUT y no pongas Content-Type manualmente
+      const res = await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId!)}`, {
+        method: 'PUT',
         body: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
       });
+
+      if (!res.ok) {
+        throw new Error('No se pudo guardar el archivo en el servidor');
+      }
 
       setAgregarPersona(false);
       setLoadingExcel(false);
       router.back();
     } catch (err) {
       setLoadingExcel(false);
-      Alert.alert('Error', 'No se pudo agregar el nombre al archivo.');
+      Alert.alert('Error', 'No se pudo agregar el nombre al archivo: ' + (err instanceof Error ? err.message : 'Error desconocido'));
     }
   };
 
@@ -317,7 +317,7 @@ export default function EditarEventoScreen() {
                   ¿Está seguro de agregar este nuevo nombre?
                 </ThemedText>
                 <ThemedText style={{ fontSize: 15, marginBottom: 18, color: c.inputPlaceholder }}>
-                  Se agregará "{nuevoNombre}" a la lista.
+                  Se agregará &quot;{nuevoNombre}&quot; a la lista.
                 </ThemedText>
                 <View style={{ flexDirection: 'row', gap: 18 }}>
                   <TouchableOpacity
