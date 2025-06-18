@@ -12,7 +12,7 @@ export function RegisterForm() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [confirmar, setConfirmar] = useState('');
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
   return (
@@ -71,7 +71,7 @@ export function RegisterForm() {
         <ThemedText style={[globalStyles.btnPrimaryText, { color: c.loginBtnText }]}>Crear cuenta</ThemedText>
       </TouchableOpacity>
       {/* Solo texto, sin TouchableOpacity */}
-      <ThemedText style={[styles.linkText, { color: c.loginLinkText }]}>
+      <ThemedText style={[styles.linkText, { color: c.loginLinkText, fontSize: 16 * fontScale }]}>
         Ya tienes una cuenta?
       </ThemedText>
       <TouchableOpacity
@@ -116,7 +116,6 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 16, // Se sobreescribe inline con fontScale
   },
 });
-  

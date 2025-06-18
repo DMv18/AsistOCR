@@ -28,7 +28,7 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
   );
   const { width } = useWindowDimensions();
   const isSmall = width < 500;
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
   const router = useRouter();
 
@@ -62,10 +62,16 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
               <Ionicons name="document-text-outline" size={22} color={c.btnIcon} style={{ marginRight: 8 }} />
             </View>
             <View style={[styles.infoCol, isSmall && { marginBottom: 6 }]}>
-              <ThemedText style={[styles.eventoNombre, { color: c.eventoNombre }, isSmall && { fontSize: 14 }]}>
+              <ThemedText style={[
+                styles.eventoNombre,
+                { color: c.eventoNombre, fontSize: (isSmall ? 14 : 16) * fontScale }
+              ]}>
                 {evento.nombre}
               </ThemedText>
-              <ThemedText style={[styles.eventoFecha, { color: c.eventoFecha }, isSmall && { fontSize: 12 }]}>
+              <ThemedText style={[
+                styles.eventoFecha,
+                { color: c.eventoFecha, fontSize: (isSmall ? 12 : 13) * fontScale }
+              ]}>
                 {evento.fecha}
               </ThemedText>
             </View>
@@ -174,9 +180,9 @@ const styles = StyleSheet.create({
   },
   eventoNombre: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 16, // Se sobreescribe inline con fontScale
   },
   eventoFecha: {
-    fontSize: 13,
+    fontSize: 13, // Se sobreescribe inline con fontScale
   },
 });

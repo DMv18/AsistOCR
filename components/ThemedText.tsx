@@ -17,7 +17,7 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
   let color = c.themedText?.default ?? c.text;
@@ -27,17 +27,21 @@ export function ThemedText({
   if (type === 'title') {
     color = c.themedText?.title ?? c.headerText ?? c.text;
     fontWeight = 'bold';
-    fontSize = 22;
+    fontSize = 22 * fontScale;
   } else if (type === 'link') {
     color = c.themedText?.link ?? c.inputLinkText ?? c.accent;
     fontWeight = 'bold';
+    fontSize = 16 * fontScale;
   } else if (type === 'subtitle') {
     color = c.themedText?.subtitle ?? c.text;
     fontWeight = 'bold';
-    fontSize = 20;
+    fontSize = 20 * fontScale;
   } else if (type === 'defaultSemiBold') {
     color = c.themedText?.defaultSemiBold ?? c.text;
     fontWeight = '600';
+    fontSize = 16 * fontScale;
+  } else {
+    fontSize = 16 * fontScale;
   }
 
   return (
@@ -54,11 +58,11 @@ export function ThemedText({
             ? Object.assign({}, ...style)
             : style || {};
           if (flatStyle && typeof flatStyle.fontSize === 'number') {
-            baseFontSize = flatStyle.fontSize;
+            baseFontSize = flatStyle.fontSize * fontScale;
           } else if (type && styles[type]?.fontSize) {
-            baseFontSize = styles[type].fontSize;
+            baseFontSize = styles[type].fontSize * fontScale;
           } else {
-            baseFontSize = styles.default.fontSize;
+            baseFontSize = styles.default.fontSize * fontScale;
           }
           return { fontSize: baseFontSize ? baseFontSize : undefined };
         })(),

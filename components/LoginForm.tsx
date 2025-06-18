@@ -11,7 +11,7 @@ export function LoginForm() {
   const router = useRouter();
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
   return (
@@ -55,7 +55,7 @@ export function LoginForm() {
         <ThemedText style={[globalStyles.btnPrimaryText, { color: c.loginBtnText }]}>Iniciar sesión</ThemedText>
       </TouchableOpacity>
       {/* Solo texto, sin TouchableOpacity */}
-      <ThemedText style={[styles.linkText, { color: c.loginLinkText }]}>
+      <ThemedText style={[styles.linkText, { color: c.loginLinkText, fontSize: 16 * fontScale }]}>
         No tiene una cuenta?
       </ThemedText>
       <TouchableOpacity
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 16, // Se sobreescribe inline con fontScale
   },
 });
-   

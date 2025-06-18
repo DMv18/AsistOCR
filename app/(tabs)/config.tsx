@@ -55,37 +55,44 @@ export default function ConfigScreen() {
   return (
     <AppLayout description="Preferencias de accesibilidad y visualización.">
       <View style={styles.fontRow}>
-        <ThemedText style={styles.fontLabel}>Tamaño fuente</ThemedText>
+        <ThemedText style={[styles.fontLabel, { fontSize: 16 * fontScale }]}>Tamaño fuente</ThemedText>
         <View style={[
           styles.fontControls,
           { backgroundColor: c.colorOptionBg, borderColor: c.colorRadio }
         ]}>
           <TouchableOpacity
-            style={styles.iconBtn}
+            style={[styles.iconBtn, { minWidth: 48, minHeight: 48, borderRadius: 24 }]}
             onPress={() => setFontScale(Math.min(fontScale + 0.05, 1.5))}
             accessibilityLabel="Aumentar fuente"
           >
-            <Ionicons name="add-circle-outline" size={28} color={c.labelText} />
+            <Ionicons name="add-circle-outline" size={28 * fontScale} color={c.labelText} />
           </TouchableOpacity>
           <TextInput
             style={[
               styles.fontInput,
-              { backgroundColor: c.sectionBg, borderColor: c.colorRadio, color: c.labelText }
+              {
+                backgroundColor: c.sectionBg,
+                borderColor: c.colorRadio,
+                color: c.labelText,
+                height: 44,
+                fontSize: 22 * fontScale, // aplica el escalado aquí
+                paddingVertical: 0,
+              }
             ]}
             value={String(Math.round(fontScale * 16))}
             editable={false}
           />
           <TouchableOpacity
-            style={styles.iconBtn}
+            style={[styles.iconBtn, { minWidth: 48, minHeight: 48, borderRadius: 24 }]}
             onPress={() => setFontScale(Math.max(fontScale - 0.05, 0.8))}
             accessibilityLabel="Disminuir fuente"
           >
-            <Ionicons name="remove-circle-outline" size={28} color={c.labelText} />
+            <Ionicons name="remove-circle-outline" size={28 * fontScale} color={c.labelText} />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.switchRow}>
-        <ThemedText style={styles.switchLabel}>Modo oscuro</ThemedText>
+        <ThemedText style={[styles.switchLabel, { fontSize: 16 * fontScale }]}>Modo oscuro</ThemedText>
         <Switch
           value={darkMode}
           onValueChange={handleDarkMode}
@@ -93,10 +100,10 @@ export default function ConfigScreen() {
           trackColor={{ false: c.colorRadio, true: c.colorOptionSelected }}
           accessibilityLabel="Modo oscuro"
         />
-        <Ionicons name="moon" size={28} color={c.labelText} style={{ marginLeft: 8 }} />
+        <Ionicons name="moon" size={28 * fontScale} color={c.labelText} style={{ marginLeft: 8 }} />
       </View>
       <View style={[styles.section, { backgroundColor: c.sectionBg }]}>
-        <ThemedText style={styles.fontLabel}>Opciones de color para accesibilidad</ThemedText>
+        <ThemedText style={[styles.fontLabel, { fontSize: 16 * fontScale }]}>Opciones de color para accesibilidad</ThemedText>
         {colorOptions.map(opt => (
           <TouchableOpacity
             key={opt.key}
@@ -114,12 +121,12 @@ export default function ConfigScreen() {
               colorMode === opt.key && { backgroundColor: c.colorRadioSelected, borderColor: c.colorRadioSelected }
             ]}>
               {colorMode === opt.key && (
-                <Ionicons name="checkmark" size={18} color={c.fontBtnText} />
+                <Ionicons name="checkmark" size={18 * fontScale} color={c.fontBtnText} />
               )}
             </View>
             <View style={{ flex: 1 }}>
-              <ThemedText style={[styles.colorOptionLabel, { color: c.labelText }]}>{opt.label}</ThemedText>
-              <ThemedText style={[styles.colorOptionDesc, { color: c.labelText }]}>{opt.description}</ThemedText>
+              <ThemedText style={[styles.colorOptionLabel, { color: c.labelText, fontSize: 16 * fontScale }]}>{opt.label}</ThemedText>
+              <ThemedText style={[styles.colorOptionDesc, { color: c.labelText, fontSize: 13 * fontScale }]}>{opt.description}</ThemedText>
             </View>
           </TouchableOpacity>
         ))}

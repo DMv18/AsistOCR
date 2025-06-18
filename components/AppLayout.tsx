@@ -85,8 +85,15 @@ export function AppLayout({ children, description, showBack = true }: Props) {
               animationType="fade"
               onRequestClose={() => setMenuVisible(false)}
             >
-              <Pressable style={styles.menuOverlay} onPress={() => setMenuVisible(false)}>
-                <View style={[styles.menuPopup, { backgroundColor: cardColor }]}>
+              <Pressable style={[styles.menuOverlay, { justifyContent: 'flex-start', alignItems: 'flex-end' }]} onPress={() => setMenuVisible(false)}>
+                <View style={[
+                  styles.menuPopup,
+                  {
+                    backgroundColor: cardColor,
+                    marginTop: 40, // más arriba aún
+                    alignSelf: 'flex-end',
+                  }
+                ]}>
                   <TouchableOpacity
                     style={styles.menuOption}
                     onPress={() => {
@@ -300,6 +307,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
+    // marginTop se sobreescribe inline para subir el menú
   },
   menuOption: {
     flexDirection: 'row',
@@ -373,4 +381,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-   

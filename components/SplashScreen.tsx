@@ -5,16 +5,16 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 
 export function SplashScreen() {
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
-      <View style={styles.logoCircle}>
-        <ThemedText style={[styles.logoText, { color: c.accent }]}>AsistOCR</ThemedText>
+      <View style={[styles.logoCircle]}>
+        <ThemedText style={[styles.logoText, { color: c.accent, fontSize: 32 * fontScale } ]}>AsistOCR</ThemedText>
       </View>
       <ActivityIndicator size="large" color={c.accent} style={{ marginTop: 24 }} />
-      <ThemedText style={[styles.loadingText, { color: c.text }]}>
+      <ThemedText style={[styles.loadingText, { color: c.text, fontSize: 18 * fontScale }]}>
         Cargando...
       </ThemedText>
     </View>
@@ -41,12 +41,10 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontWeight: 'bold',
-    fontSize: 32,
     letterSpacing: 2,
   },
   loadingText: {
     marginTop: 18,
-    fontSize: 18,
     fontWeight: 'bold',
   },
 });

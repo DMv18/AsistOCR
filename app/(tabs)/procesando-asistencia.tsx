@@ -6,7 +6,7 @@ import { useThemeCustom } from '@/hooks/ThemeContext';
 import { segmentarFilas } from '@/IA/segmentarFilas';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 
 
@@ -144,9 +144,23 @@ export default function ProcesandoAsistenciaScreen() {
         ) : (
           // Pantalla de "Continuar"
           <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
-            <ActivityIndicator size="large" color={c.success} />
+            {/* Solo muestra la imagen procesada, NO el ActivityIndicator */}
+            {imagenes.length > 0 && (
+              <Image
+                source={{ uri: imagenes[0] }}
+                style={{
+                  width: 180,
+                  height: 180,
+                  borderRadius: 16,
+                  borderWidth: 2,
+                  borderColor: c.success,
+                  marginBottom: 12,
+                }}
+                resizeMode="contain"
+              />
+            )}
             <ThemedText style={{ color: c.inputPlaceholder, marginTop: 24, fontWeight: 'bold', fontSize: 18 }}>
-              Procesando la información...
+              Imagen procesada
             </ThemedText>
             {excelUrl && (
               <TouchableOpacity

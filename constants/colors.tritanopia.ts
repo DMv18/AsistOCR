@@ -1,4 +1,4 @@
-// Paleta tritanopia: basada en colors.normal, pero adaptada para personas con tritanopia (evita azules y verdes puros).
+// Paleta tritanopia: basada en colors.normal, con azules/verdes reemplazados por púrpuras y marrón-anaranjado.
 
 const colorsTritanopia = {
   light: {
@@ -10,23 +10,23 @@ const colorsTritanopia = {
     appLayoutCard: '#FFFFFF',
 
     // Fondo de bloques funcionales internos (ej: bloque funcional principal)
-    mainBlockBg: '#F9EAF3', // rosa muy claro
+    mainBlockBg: '#F9EAF3', // Rosa muy claro
 
     // General (usado en toda la app)
     text: '#1A202C',
     border: '#CBD5E0',
-    accent: '#B46FC2', // púrpura
-    danger: '#E53E3E',
-    warning: '#ECC94B',
-    success: '#D17C3A', // marrón anaranjado
-    help: '#F5E9F7', // gris rosado claro
-    btnPrimary: '#B46FC2', // púrpura
-    btnSecondary: '#D17C3A', // marrón anaranjado
+    accent: '#B46FC2',      // Púrpura
+    danger: '#E53E3E',      // Rojo
+    warning: '#D17C3A',     // Marrón-anaranjado
+    success: '#8E44AD',     // Púrpura oscuro
+    help: '#F5E9F7',        // Rosa claro
+    btnPrimary: '#B46FC2',  // Púrpura
+    btnSecondary: '#D17C3A', // Marrón-anaranjado
     btnDanger: '#E53E3E',
     btnText: '#FFF',
 
     // Header/AppBar (AppLayout, globalStyles)
-    headerBg: '#8E44AD', // púrpura oscuro
+    headerBg: '#8E44AD',
     headerText: '#FFF',
     headerBtnBg: '#B46FC2',
     headerBtnText: '#FFF',
@@ -50,16 +50,16 @@ const colorsTritanopia = {
     listaEventosIcon: '#B46FC2',
     listaEventosNombre: '#1A202C',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#D17C3A',
-    listaEventosBtnBorrar: '#E53E3E',
-    listaEventosBtnVer: '#B46FC2',
+    listaEventosBtnEditar: '#D17C3A',  // Marrón-anaranjado
+    listaEventosBtnBorrar: '#E53E3E',  // Rojo
+    listaEventosBtnVer: '#B46FC2',     // Púrpura
     listaEventosBtnIcon: '#FFF',
 
     // FormularioAsistencia
     formFotosBlock: '#F9EAF3',
     formFotoRow: '#FFFFFF',
     formFotoRowBorder: '#CBD5E0',
-    formAddBtn: '#E09AC7', // rosa
+    formAddBtn: '#E09AC7', // Rosa
     formAddBtnText: '#FFF',
     formBtnDanger: '#E53E3E',
     formBtnDangerText: '#FFF',
@@ -94,7 +94,7 @@ const colorsTritanopia = {
     editarEventoOpcionText: '#1A202C',
     editarEventoIcon1Bg: '#B46FC2',
     editarEventoIcon2Bg: '#D17C3A',
-    editarEventoIcon3Bg: '#ECC94B',
+    editarEventoIcon3Bg: '#D17C3A',
 
     // Config
     configSectionBg: '#FFFFFF',
@@ -140,7 +140,7 @@ const colorsTritanopia = {
       opcionText: '#1A202C',
       icon1Bg: '#B46FC2',
       icon2Bg: '#D17C3A',
-      icon3Bg: '#ECC94B',
+      icon3Bg: '#D17C3A',
     },
 
     // Config
@@ -240,20 +240,20 @@ const colorsTritanopia = {
     // General
     text: '#E2E8F0',
     border: '#4A5568',
-    accent: '#B46FC2',
-    danger: '#F56565',
-    warning: '#F6E05E',
-    success: '#D17C3A',
+    accent: '#E09AC7',      // Rosa púrpura
+    danger: '#F56565',      // Rojo brillante
+    warning: '#D17C3A',     // Marrón-anaranjado
+    success: '#9C27B0',     // Púrpura vibrante
     help: '#2D3748',
-    btnPrimary: '#B46FC2',
-    btnSecondary: '#E09AC7',
+    btnPrimary: '#E09AC7',
+    btnSecondary: '#D17C3A',
     btnDanger: '#F56565',
     btnText: '#FFF',
 
     // Header/AppBar
-    headerBg: '#8E44AD',
+    headerBg: '#6A1B9A',    // Púrpura oscuro
     headerText: '#FFF',
-    headerBtnBg: '#B46FC2',
+    headerBtnBg: '#E09AC7',
     headerBtnText: '#FFF',
     helpBtnBg: '#3B2C3F',
     helpBtnText: '#CBD5E0',
@@ -263,21 +263,21 @@ const colorsTritanopia = {
     inputBorder: '#4A5568',
     inputText: '#E2E8F0',
     inputPlaceholder: '#B3A6C7',
-    inputIcon: '#B46FC2',
+    inputIcon: '#E09AC7',
     inputError: '#F56565',
-    inputFocus: '#B46FC2',
-    inputIconCircle: '#B46FC2',
+    inputFocus: '#E09AC7',
+    inputIconCircle: '#E09AC7',
     inputLinkText: '#E09AC7',
 
     // ListaEventos
     listaEventosSearchBar: '#3B2C3F',
     listaEventosCard: '#2D3748',
-    listaEventosIcon: '#B46FC2',
+    listaEventosIcon: '#E09AC7',
     listaEventosNombre: '#E2E8F0',
     listaEventosFecha: '#718096',
     listaEventosBtnEditar: '#D17C3A',
     listaEventosBtnBorrar: '#F56565',
-    listaEventosBtnVer: '#B46FC2',
+    listaEventosBtnVer: '#E09AC7',
     listaEventosBtnIcon: '#FFF',
 
     // FormularioAsistencia
@@ -288,22 +288,22 @@ const colorsTritanopia = {
     formAddBtnText: '#FFF',
     formBtnDanger: '#F56565',
     formBtnDangerText: '#FFF',
-    formBtnPrimary: '#B46FC2',
+    formBtnPrimary: '#E09AC7',
     formBtnPrimaryText: '#FFF',
-    formBtnSecondary: '#E09AC7',
+    formBtnSecondary: '#D17C3A',
 
     // AppLayout
     appLayoutBg: '#1A202C',
     appLayoutGreenBlock: '#3B2C3F',
-    appLayoutRegresarBtn: '#B46FC2',
+    appLayoutRegresarBtn: '#E09AC7',
     appLayoutRegresarBtnText: '#FFF',
 
     // Home
     homeCardBg: '#2D3748',
-    homeBtnText: '#B46FC2',
+    homeBtnText: '#E09AC7',
 
     // TomarFoto
-    tomarFotoBtnBg: '#B46FC2',
+    tomarFotoBtnBg: '#E09AC7',
     tomarFotoBtnText: '#FFF',
     tomarFotoPreviewBorder: '#4A5568',
     tomarFotoRegresarBtnBg: '#D17C3A',
@@ -311,23 +311,23 @@ const colorsTritanopia = {
 
     // EditarEvento
     editarEventoGreenBlock: '#3B2C3F',
-    editarEventoRegresarBtn: '#B46FC2',
+    editarEventoRegresarBtn: '#E09AC7',
     editarEventoRegresarBtnText: '#FFF',
     editarEventoOpcion1Bg: '#2D3748',
     editarEventoOpcion2Bg: '#2D3748',
     editarEventoOpcion3Bg: '#2D3748',
     editarEventoOpcionText: '#E2E8F0',
-    editarEventoIcon1Bg: '#B46FC2',
+    editarEventoIcon1Bg: '#E09AC7',
     editarEventoIcon2Bg: '#D17C3A',
-    editarEventoIcon3Bg: '#F6E05E',
+    editarEventoIcon3Bg: '#D17C3A',
 
     // Config
     configSectionBg: '#2D3748',
     configColorOptionBg: '#3B2C3F',
-    configColorOptionSelected: '#4A5568',
+    configColorOptionSelected: '#E09AC7',
     configColorRadio: '#4A5568',
-    configColorRadioSelected: '#B46FC2',
-    configFontBtn: '#B46FC2',
+    configColorRadioSelected: '#E09AC7',
+    configFontBtn: '#E09AC7',
     configFontBtnText: '#FFF',
     configLabelText: '#E2E8F0',
 
@@ -337,16 +337,16 @@ const colorsTritanopia = {
 
     // ListaEventos
     eventoCard: '#2D3748',
-    btnIcon: '#B46FC2',
+    btnIcon: '#E09AC7',
     eventoNombre: '#E2E8F0',
     eventoFecha: '#718096',
     btnEditar: '#D17C3A',
     btnBorrar: '#F56565',
-    btnVer: '#B46FC2',
+    btnVer: '#E09AC7',
     iconTendencias: '#E09AC7',
 
     TomarFoto: {
-      cameraBtnBg: '#B46FC2',
+      cameraBtnBg: '#E09AC7',
       cameraBtnText: '#FFF',
       previewBorder: '#4A5568',
       regresarBtnBg: '#D17C3A',
@@ -355,24 +355,24 @@ const colorsTritanopia = {
 
     EditarEvento: {
       greenBlock: '#3B2C3F',
-      regresarBtn: '#B46FC2',
+      regresarBtn: '#E09AC7',
       regresarBtnText: '#FFF',
       opcion1Bg: '#2D3748',
       opcion2Bg: '#2D3748',
       opcion3Bg: '#2D3748',
       opcionText: '#E2E8F0',
-      icon1Bg: '#B46FC2',
+      icon1Bg: '#E09AC7',
       icon2Bg: '#D17C3A',
-      icon3Bg: '#F6E05E',
+      icon3Bg: '#D17C3A',
     },
 
     Config: {
       sectionBg: '#2D3748',
       colorOptionBg: '#3B2C3F',
-      colorOptionSelected: '#4A5568',
+      colorOptionSelected: '#E09AC7',
       colorRadio: '#4A5568',
-      colorRadioSelected: '#B46FC2',
-      fontBtn: '#B46FC2',
+      colorRadioSelected: '#E09AC7',
+      fontBtn: '#E09AC7',
       fontBtnText: '#FFF',
       labelText: '#E2E8F0',
     },
@@ -391,14 +391,12 @@ const colorsTritanopia = {
 
     // ThemedText
     themedText: {
-      default: '#B46FC2',
-      title: '#F9EAF3',
-      link: '#B46FC2',
+      default: '#E09AC7',
+      title: '#6A1B9A',
+      link: '#E09AC7',
       subtitle: '#CBD5E0',
       defaultSemiBold: '#E2E8F0',
     },
-
-    // ThemedView
     themedView: '#1A202C',
 
     // Collapsible
@@ -416,32 +414,32 @@ const colorsTritanopia = {
     formIconCircleIcon: '#E09AC7',
 
     // Historial (iconos individuales)
-    historialArchivoIconBg: '#8E44AD',
+    historialArchivoIconBg: '#6A1B9A',
     historialArchivoIconColor: '#1A202C',
     historialEditarIconBg: '#D17C3A',
     historialEditarIconColor: '#1A202C',
-    historialBorrarIconBg: '#FC8181',
+    historialBorrarIconBg: '#F56565',
     historialBorrarIconColor: '#1A202C',
-    historialObservarIconBg: '#8E44AD',
+    historialObservarIconBg: '#6A1B9A',
     historialObservarIconColor: '#1A202C',
 
     // ResultadoAsistencia
     ResultadoAsistencia: {
       infoInputBg: '#3B2C3F',
-      infoInputBorder: '#B46FC2',
+      infoInputBorder: '#E09AC7',
       infoInputText: '#E2E8F0',
       previewBlockBg: '#3B2C3F',
-      previewTitle: '#B46FC2',
+      previewTitle: '#E09AC7',
       excelContainerBorder: '#D17C3A',
       excelContainerBg: '#3B2C3F',
-      tablaBorder: '#B46FC2',
+      tablaBorder: '#E09AC7',
       tablaBg: '#2D3748',
-      tablaHeaderText: '#B46FC2',
+      tablaHeaderText: '#E09AC7',
       tablaCellText: '#E2E8F0',
-      tablaRowBorder: '#B46FC2',
+      tablaRowBorder: '#E09AC7',
       nombreIndex: '#D17C3A',
       nombreText: '#E2E8F0',
-      btnCancelarBg: '#B46FC2',
+      btnCancelarBg: '#E09AC7',
       btnCancelarText: '#fff',
       btnContinuarBg: '#D17C3A',
       btnContinuarText: '#1A202C',

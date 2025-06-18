@@ -1,4 +1,4 @@
-// Paleta para deuteranopía: evita confusión rojo-verde, usa azules, mostazas y buen contraste.
+// Paleta para deuteranopía: basada en colors.normal, con verdes reemplazados por azules y rojos más oscuros.
 
 const colorsDeuteranopia = {
   light: {
@@ -9,14 +9,14 @@ const colorsDeuteranopia = {
 
     text: '#1A202C',
     border: '#CBD5E0',
-    accent: '#3182CE', // azul principal
-    danger: '#C53030', // rojo oscuro, menos saturado
-    warning: '#D69E2E', // mostaza, visible para deuteranopía
-    success: '#2B6CB0', // azul fuerte en vez de verde
+    accent: '#3182CE',
+    danger: '#9B2C2C', // Rojo vino
+    warning: '#D69E2E', // Mostaza
+    success: '#2B6CB0', // Azul oscuro en vez de verde
     help: '#EDF2F7',
     btnPrimary: '#3182CE',
-    btnSecondary: '#4299E1', // azul vibrante
-    btnDanger: '#C53030',
+    btnSecondary: '#4299E1', // Azul claro, más contraste
+    btnDanger: '#9B2C2C',
     btnText: '#FFF',
 
     headerBg: '#2B6CB0',
@@ -31,7 +31,7 @@ const colorsDeuteranopia = {
     inputText: '#1A202C',
     inputPlaceholder: '#A0AEC0',
     inputIcon: '#3182CE',
-    inputError: '#C53030',
+    inputError: '#9B2C2C',
     inputFocus: '#3182CE',
     inputIconCircle: '#3182CE',
     inputLinkText: '#3182CE',
@@ -41,8 +41,8 @@ const colorsDeuteranopia = {
     listaEventosIcon: '#3182CE',
     listaEventosNombre: '#1A202C',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#2B6CB0', // azul fuerte
-    listaEventosBtnBorrar: '#9B2C2C', // rojo vino
+    listaEventosBtnEditar: '#2B6CB0', // Azul fuerte
+    listaEventosBtnBorrar: '#9B2C2C', // Rojo vino
     listaEventosBtnVer: '#3182CE',
     listaEventosBtnIcon: '#FFF',
 
@@ -50,8 +50,8 @@ const colorsDeuteranopia = {
     formFotoRow: '#FFFFFF',
     formFotoRowBorder: '#CBD5E0',
     formAddBtn: '#4299E1',
-    formAddBtnText: '#3182CE',
-    formBtnDanger: '#C53030',
+    formAddBtnText: '#FFF',
+    formBtnDanger: '#9B2C2C',
     formBtnDangerText: '#FFF',
     formBtnPrimary: '#3182CE',
     formBtnPrimaryText: '#FFF',
@@ -79,8 +79,8 @@ const colorsDeuteranopia = {
     editarEventoOpcion3Bg: '#F7FAFC',
     editarEventoOpcionText: '#1A202C',
     editarEventoIcon1Bg: '#3182CE',
-    editarEventoIcon2Bg: '#2B6CB0', // azul fuerte
-    editarEventoIcon3Bg: '#D69E2E', // mostaza
+    editarEventoIcon2Bg: '#2B6CB0', // Azul fuerte
+    editarEventoIcon3Bg: '#D69E2E', // Mostaza
 
     configSectionBg: '#FFFFFF',
     configColorOptionBg: '#E3F2FD',
@@ -164,14 +164,14 @@ const colorsDeuteranopia = {
       icon: '#3182CE',
     },
 
-    historialArchivoIconBg: '#3182CE',
-    historialArchivoIconColor: '#FFF',
-    historialEditarIconBg: '#2B6CB0',
-    historialEditarIconColor: '#FFF',
+    historialArchivoIconBg: '#1565c0',
+    historialArchivoIconColor: '#FFFF',
+    historialEditarIconBg: '#2B6CB0', // Azul fuerte en vez de verde
+    historialEditarIconColor: '#FFFF',
     historialBorrarIconBg: '#9B2C2C',
-    historialBorrarIconColor: '#FFF',
-    historialObservarIconBg: '#3182CE',
-    historialObservarIconColor: '#FFF',
+    historialBorrarIconColor: '#FFFF',
+    historialObservarIconBg: '#1565c0',
+    historialObservarIconColor: '#FFFF',
 
     ResultadoAsistencia: {
       infoInputBg: '#e3f2fd',
@@ -205,13 +205,13 @@ const colorsDeuteranopia = {
     text: '#E2E8F0',
     border: '#4A5568',
     accent: '#63B3ED',
-    danger: '#F56565',
+    danger: '#C53030', // Rojo oscuro
     warning: '#D69E2E',
-    success: '#4299E1', // azul claro en vez de verde
+    success: '#4299E1', // Azul claro en vez de verde
     help: '#2D3748',
     btnPrimary: '#63B3ED',
     btnSecondary: '#4299E1',
-    btnDanger: '#FC8181',
+    btnDanger: '#C53030',
     btnText: '#FFF',
 
     headerBg: '#1E365D',
@@ -226,7 +226,7 @@ const colorsDeuteranopia = {
     inputText: '#E2E8F0',
     inputPlaceholder: '#718096',
     inputIcon: '#63B3ED',
-    inputError: '#F56565',
+    inputError: '#C53030',
     inputFocus: '#63B3ED',
     inputIconCircle: '#63B3ED',
     inputLinkText: '#63B3ED',
@@ -236,8 +236,8 @@ const colorsDeuteranopia = {
     listaEventosIcon: '#63B3ED',
     listaEventosNombre: '#E2E8F0',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#68D391', // verde-azul claro
-    listaEventosBtnBorrar: '#FEB2B2', // rojo pastel
+    listaEventosBtnEditar: '#4299E1', // Azul claro en vez de verde
+    listaEventosBtnBorrar: '#C53030', // Rojo oscuro
     listaEventosBtnVer: '#63B3ED',
     listaEventosBtnIcon: '#FFF',
 
@@ -246,7 +246,7 @@ const colorsDeuteranopia = {
     formFotoRowBorder: '#4A5568',
     formAddBtn: '#4299E1',
     formAddBtnText: '#63B3ED',
-    formBtnDanger: '#FC8181',
+    formBtnDanger: '#C53030',
     formBtnDangerText: '#FFF',
     formBtnPrimary: '#63B3ED',
     formBtnPrimaryText: '#FFF',
@@ -274,7 +274,7 @@ const colorsDeuteranopia = {
     editarEventoOpcion3Bg: '#2D3748',
     editarEventoOpcionText: '#E2E8F0',
     editarEventoIcon1Bg: '#63B3ED',
-    editarEventoIcon2Bg: '#68D391',
+    editarEventoIcon2Bg: '#4299E1', // Azul claro en vez de verde
     editarEventoIcon3Bg: '#D69E2E',
 
     configSectionBg: '#2D3748',
@@ -293,8 +293,8 @@ const colorsDeuteranopia = {
     btnIcon: '#63B3ED',
     eventoNombre: '#E2E8F0',
     eventoFecha: '#718096',
-    btnEditar: '#68D391',
-    btnBorrar: '#FEB2B2',
+    btnEditar: '#4299E1', // Azul claro en vez de verde
+    btnBorrar: '#C53030',
     btnVer: '#63B3ED',
     iconTendencias: '#4299E1',
 
@@ -315,7 +315,7 @@ const colorsDeuteranopia = {
       opcion3Bg: '#2D3748',
       opcionText: '#E2E8F0',
       icon1Bg: '#63B3ED',
-      icon2Bg: '#68D391',
+      icon2Bg: '#4299E1',
       icon3Bg: '#D69E2E',
     },
 
@@ -361,9 +361,9 @@ const colorsDeuteranopia = {
 
     historialArchivoIconBg: '#63B3ED',
     historialArchivoIconColor: '#1A202C',
-    historialEditarIconBg: '#68D391',
+    historialEditarIconBg: '#4299E1',
     historialEditarIconColor: '#1A202C',
-    historialBorrarIconBg: '#FEB2B2',
+    historialBorrarIconBg: '#C53030',
     historialBorrarIconColor: '#1A202C',
     historialObservarIconBg: '#63B3ED',
     historialObservarIconColor: '#1A202C',

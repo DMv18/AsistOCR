@@ -9,9 +9,11 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/ThemedText';
+import { useThemeCustom } from '@/hooks/ThemeContext';
 
 export function HelloWave() {
   const rotationAnimation = useSharedValue(0);
+  const { fontScale } = useThemeCustom();
 
   useEffect(() => {
     rotationAnimation.value = withRepeat(
@@ -26,15 +28,13 @@ export function HelloWave() {
 
   return (
     <Animated.View style={animatedStyle}>
-      <ThemedText style={styles.text}>👋</ThemedText>
+      <ThemedText style={[styles.text, { fontSize: 28 * fontScale, lineHeight: 32 * fontScale }]}>👋</ThemedText>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 28,
-    lineHeight: 32,
     marginTop: -6,
   },
 });

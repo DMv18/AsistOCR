@@ -41,17 +41,14 @@ export default function TomarFotoScreen() {
     <AppLayout description="Toma una foto para subir a la asistencia.">
       <View style={styles.container}>
         <TouchableOpacity
-          style={[styles.cameraBtn, { backgroundColor: c.cameraBtnBg }]}
+          style={[
+            styles.cameraBtn,
+            { backgroundColor: c.cameraBtnBg, alignSelf: 'center', justifyContent: 'center' }
+          ]}
           onPress={handleTomarFoto}
         >
           <Ionicons name="camera" size={40} color={c.cameraBtnText} />
           <ThemedText style={[styles.cameraBtnText, { color: c.cameraBtnText }]}>Tomar foto</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.regresarBtn, { backgroundColor: c.regresarBtnBg }]}
-          onPress={() => router.back()}
-        >
-          <ThemedText style={[styles.regresarBtnText, { color: c.regresarBtnText }]}>Regresar</ThemedText>
         </TouchableOpacity>
       </View>
     </AppLayout>
@@ -61,9 +58,10 @@ export default function TomarFotoScreen() {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    gap: 18,
+    justifyContent: 'center', // centra verticalmente
+    flex: 1, // ocupa todo el alto disponible
     width: '100%',
-    marginTop: 24,
+    marginTop: 0,
   },
   cameraBtn: {
     borderRadius: 16,
@@ -72,19 +70,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: 12,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   cameraBtnText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  regresarBtn: {
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    alignItems: 'center',
-    marginTop: 18,
-  },
-  regresarBtnText: {
     fontWeight: 'bold',
     fontSize: 18,
   },

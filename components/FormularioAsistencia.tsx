@@ -18,6 +18,8 @@ type Foto = {
 
 type Props = {
   fotoCamara?: string;
+  onProcesar?: (uri: string) => void;
+  modoAgregarListaDia?: boolean;
 };
 
 
@@ -86,11 +88,11 @@ function useLimpiarFilasBackend() {
   }, []);
 }
 
-export function FormularioAsistencia({ fotoCamara }: Props) {
+export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaDia }: Props) {
   const [fotos, setFotos] = useState<Foto[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
   const router = useRouter();
   const limpiarFilasBackend = useLimpiarFilasBackend();
@@ -119,13 +121,16 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
     }
     setIsProcessing(true);
 
-    // Llama al hook para limpiar la carpeta filas en el backend antes de procesar
     await limpiarFilasBackend();
 
-    router.push({
-      pathname: '/procesando-asistencia',
-      params: { uri: fotos[0].uri }
-    });
+    if (onProcesar) {
+      onProcesar(fotos[0].uri);
+    } else {
+      router.push({
+        pathname: '/procesando-asistencia',
+        params: { uri: fotos[0].uri }
+      });
+    }
     setIsProcessing(false);
   };
 
@@ -190,12 +195,12 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
 
   return (
     <View style={styles.root}>
-      <ThemedText type="title" style={{ marginBottom: 12 }}>
+      <ThemedText type="title" style={{ marginBottom: 12, fontSize: 22 * fontScale }}>
         Subir imagen para procesar
       </ThemedText>
       <View style={[styles.fotosBlock, { backgroundColor: c.formFotosBlock }]}>
         {fotos.length === 0 && (
-          <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginVertical: 16 }}>
+          <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginVertical: 16, fontSize: 16 * fontScale }}>
             No hay imagen cargada aún
           </ThemedText>
         )}
@@ -213,13 +218,13 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
             />
             <View style={{ flex: 1 }}>
               {foto.status === 'success' && (
-                <ThemedText style={{ color: c.formBtnSecondary, fontWeight: 'bold' }}>
+                <ThemedText style={{ color: c.formBtnSecondary, fontWeight: 'bold', fontSize: 16 * fontScale }}>
                   <Ionicons name="checkmark-circle" size={18} color={c.formBtnSecondary} /> Imagen lista para procesar
                 </ThemedText>
               )}
               {foto.status === 'error' && (
                 <>
-                  <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold' }}>
+                  <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold', fontSize: 16 * fontScale }}>
                     <Ionicons name="close-circle" size={18} color={c.formBtnDanger} /> Error al subir la imagen
                   </ThemedText>
                   {/* Puedes mostrar un mensaje adicional aquí si quieres */}
@@ -250,7 +255,7 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
           onPress={handleAgregarFoto}
         >
           <Ionicons name="add-circle-outline" size={24} color={c.formAddBtnText} />
-          <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16, color: c.formAddBtnText }}>
+          <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16 * fontScale, color: c.formAddBtnText }}>
             Subir imagen
           </ThemedText>
         </TouchableOpacity>
@@ -323,20 +328,7 @@ export function FormularioAsistencia({ fotoCamara }: Props) {
                 <Ionicons name="folder-outline" size={28} color={c.btnText} />
                 <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</ThemedText>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: c.btnPrimary,
-                  borderRadius: 12,
-                  paddingVertical: 14,
-                  paddingHorizontal: 24,
-                  alignItems: 'center',
-                  minWidth: 90,
-                }}
-                onPress={handleArchivoSistema}
-              >
-                <Ionicons name="document-outline" size={28} color={c.btnText} />
-                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Archivos</ThemedText>
-              </TouchableOpacity>
+              {/* Botón de archivos eliminado */}
             </View>
             <TouchableOpacity
               style={{ marginTop: 18 }}

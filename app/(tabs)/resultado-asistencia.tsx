@@ -128,23 +128,6 @@ export default function ResultadoAsistenciaScreen() {
             />
           </View>
         </View>
-        <ThemedText style={[styles.infoLabel, { color: c.text }]}>Descripción (opcional):</ThemedText>
-        <TextInput
-          style={[
-            styles.infoInput,
-            {
-              minHeight: 40,
-              backgroundColor: raColors.infoInputBg,
-              borderColor: raColors.infoInputBorder,
-              color: c.text, // blanco en dark
-            },
-          ]}
-          value={''}
-          onChangeText={() => {}}
-          placeholder="Breve descripción del evento"
-          placeholderTextColor={c.inputPlaceholder}
-          multiline
-        />
         <View
           style={[
             styles.excelContainer,
@@ -396,3 +379,4 @@ const styles = StyleSheet.create({
     // color se pasa inline
   },
 });
+    
