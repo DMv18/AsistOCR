@@ -132,12 +132,13 @@ export default function ResultadoAsistenciaScreen() {
           style={[
             styles.excelContainer,
             {
-              maxWidth: Math.min(width * 0.78, 370),
-              minHeight: Math.min(height * 0.5, 400),
+              maxWidth: 900,
+              minWidth: 480,
               alignSelf: 'center',
               width: '100%',
               borderColor: raColors.excelContainerBorder,
               backgroundColor: raColors.excelContainerBg,
+              flex: 1,
             },
           ]}
         >
@@ -149,25 +150,68 @@ export default function ResultadoAsistenciaScreen() {
             contentContainerStyle={{ minWidth: 480 }}
           >
             <View
-              style={[
-                styles.tabla,
-                {
-                  minWidth: 480,
-                  maxWidth: 900,
-                  alignSelf: 'center',
-                  backgroundColor: raColors.tablaBg,
-                  borderColor: raColors.tablaBorder,
-                },
-              ]}
+              style={{
+                borderWidth: 1,
+                borderColor: raColors.tablaBorder,
+                backgroundColor: '#fff',
+                minWidth: 480,
+                maxWidth: 900,
+                alignSelf: 'center',
+                flex: 1,
+              }}
             >
-              <View style={[styles.tablaHeader, { borderColor: raColors.tablaBorder }]}>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.15, minWidth: 40, color: c.text }]}>N°</ThemedText>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.7, minWidth: 260, color: c.text }]}>Nombre</ThemedText>
-                <ThemedText style={[styles.tablaHeaderCell, { flex: 0.3, minWidth: 100, color: c.text }]}>{fechaEvento}</ThemedText>
+              {/* Header */}
+              <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: raColors.tablaBorder,
+                    backgroundColor: '#f3f6fa',
+                    width: 80,
+                    minHeight: 44,
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'center' }}>
+                    N°
+                  </ThemedText>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: raColors.tablaBorder,
+                    backgroundColor: '#f3f6fa',
+                    width: 260,
+                    minHeight: 44,
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'left' }}>
+                    Nombre
+                  </ThemedText>
+                </View>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: raColors.tablaBorder,
+                    backgroundColor: '#f3f6fa',
+                    width: 120,
+                    minHeight: 44,
+                    justifyContent: 'center',
+                    paddingHorizontal: 8,
+                  }}
+                >
+                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'center' }}>
+                    {fechaEvento}
+                  </ThemedText>
+                </View>
               </View>
+              {/* Filas */}
               <ScrollView
-                style={{ height: 220 }}
-                contentContainerStyle={{}}
+                style={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
                 showsVerticalScrollIndicator={true}
               >
                 {resultado.length === 0 ? (
@@ -178,36 +222,50 @@ export default function ResultadoAsistenciaScreen() {
                   </View>
                 ) : (
                   resultado.map((fila, idx) => (
-                    <View key={fila.nombre + idx} style={[styles.tablaRow, { justifyContent: 'flex-start', borderColor: raColors.tablaRowBorder }]}>
-                      <ThemedText
-                        style={[
-                          styles.tablaCell,
-                          { flex: 0.3, textAlign: 'center', color: c.text }
-                        ]}
+                    <View key={fila.nombre + idx} style={{ flexDirection: 'row' }}>
+                      <View
+                        style={{
+                          borderWidth: 1,
+                          borderColor: raColors.tablaBorder,
+                          backgroundColor: '#fff',
+                          width: 80,
+                          minHeight: 44,
+                          justifyContent: 'center',
+                          paddingHorizontal: 8,
+                        }}
                       >
-                        {idx + 1}
-                      </ThemedText>
-                      <View style={{ flex: 1, minWidth: 0 }}>
-                        <ScrollView
-                          horizontal
-                          showsHorizontalScrollIndicator={true}
-                          contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-start' }}
-                        >
-                          <ThemedText
-                            style={[styles.tablaCell, { minWidth: 180, textAlign: 'left', color: c.text }]
-                            }
-                            numberOfLines={1}
-                            ellipsizeMode="clip"
-                          >
-                            {fila.nombre}
-                          </ThemedText>
-                        </ScrollView>
+                        <ThemedText style={{ fontSize: 14, color: c.text, textAlign: 'center' }} numberOfLines={1} ellipsizeMode="tail">
+                          {idx + 1}
+                        </ThemedText>
                       </View>
-                      <View style={[styles.tablaCell, {
-                        flex: 0.5,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                      }]}>
+                      <View
+                        style={{
+                          borderWidth: 1,
+                          borderColor: raColors.tablaBorder,
+                          backgroundColor: '#fff',
+                          width: 260,
+                          minHeight: 44,
+                          justifyContent: 'center',
+                          paddingHorizontal: 8,
+                        }}
+                      >
+                        <ThemedText style={{ fontSize: 14, color: c.text, textAlign: 'left' }} numberOfLines={1} ellipsizeMode="tail">
+                          {fila.nombre}
+                        </ThemedText>
+                      </View>
+                      <View
+                        style={{
+                          borderWidth: 1,
+                          borderColor: raColors.tablaBorder,
+                          backgroundColor: '#fff',
+                          width: 120,
+                          minHeight: 44,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          paddingHorizontal: 8,
+                        }}
+                      >
                         <Ionicons name="checkmark" size={22} color={raColors.checkIcon} />
                       </View>
                     </View>
@@ -379,3 +437,4 @@ const styles = StyleSheet.create({
     // color se pasa inline
   },
 });
+

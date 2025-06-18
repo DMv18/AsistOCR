@@ -217,26 +217,97 @@ export default function EditarEventoScreen() {
           {loadingExcel ? (
             <ActivityIndicator color={c.text} />
           ) : (
-            <ScrollView horizontal style={{ width: '100%', marginBottom: 12 }}>
-              <View>
-                {excelData.length > 0 && (
-                  <>
-                    <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: c.border, marginBottom: 4 }}>
-                      {excelData[0].map((col, idx) => (
-                        <ThemedText key={idx} style={{ fontWeight: 'bold', minWidth: 90, textAlign: 'center', color: c.text }}>{col}</ThemedText>
-                      ))}
-                    </View>
-                    {excelData.slice(1).map((fila, idx) => (
-                      <View key={idx} style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: c.border }}>
-                        {fila.map((celda, j) => (
-                          <ThemedText key={j} style={{ minWidth: 90, textAlign: 'center', color: c.text }}>{celda}</ThemedText>
+            <View style={{ width: '100%', flex: 1, minHeight: 200 }}>
+              <ScrollView horizontal style={{ width: '100%' }}>
+                <View
+                  style={{
+                    borderWidth: 1,
+                    borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                    backgroundColor: '#fff',
+                    minWidth: 480,
+                    maxWidth: 900,
+                    alignSelf: 'center',
+                    flex: 1,
+                  }}
+                >
+                  {excelData.length > 0 && (
+                    <>
+                      {/* Header */}
+                      <View style={{ flexDirection: 'row' }}>
+                        {excelData[0].map((col, idx) => (
+                          <View
+                            key={idx}
+                            style={{
+                              borderWidth: 1,
+                              borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                              backgroundColor: '#f3f6fa',
+                              width: idx === 1 ? 260 : 80,
+                              minHeight: 44,
+                              justifyContent: 'center',
+                              paddingHorizontal: 8,
+                            }}
+                          >
+                            <ThemedText
+                              style={{
+                                fontWeight: 'bold',
+                                fontSize: 15,
+                                color: c.ResultadoAsistencia?.tablaHeaderText ?? c.text,
+                                textAlign: idx === 1 ? 'left' : 'center',
+                              }}
+                            >
+                              {col}
+                            </ThemedText>
+                          </View>
                         ))}
                       </View>
-                    ))}
-                  </>
-                )}
-              </View>
-            </ScrollView>
+                      {/* Filas */}
+                      <ScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={true}
+                      >
+                        {excelData.slice(1).map((fila, idx) => {
+                          const celdas = [];
+                          for (let j = 0; j < excelData[0].length; j++) {
+                            celdas.push(
+                              <View
+                                key={j}
+                                style={{
+                                  borderWidth: 1,
+                                  borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                                  backgroundColor: '#fff',
+                                  width: j === 1 ? 260 : 80,
+                                  minHeight: 44,
+                                  justifyContent: 'center',
+                                  paddingHorizontal: 8,
+                                }}
+                              >
+                                <ThemedText
+                                  style={{
+                                    fontSize: 14,
+                                    color: c.ResultadoAsistencia?.tablaCellText ?? c.text,
+                                    textAlign: j === 1 ? 'left' : 'center',
+                                  }}
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail"
+                                >
+                                  {fila[j] ?? ''}
+                                </ThemedText>
+                              </View>
+                            );
+                          }
+                          return (
+                            <View key={idx} style={{ flexDirection: 'row' }}>
+                              {celdas}
+                            </View>
+                          );
+                        })}
+                      </ScrollView>
+                    </>
+                  )}
+                </View>
+              </ScrollView>
+            </View>
           )}
           <View style={{ width: '100%', marginBottom: 12 }}>
             <ThemedText style={{ fontWeight: 'bold', marginBottom: 4, color: c.text }}>Nuevo nombre:</ThemedText>
@@ -410,4 +481,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
+ 

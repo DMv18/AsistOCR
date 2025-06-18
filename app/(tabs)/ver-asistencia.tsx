@@ -131,66 +131,113 @@ export default function VerAsistenciaScreen() {
           </View>
         </View>
         {/* Tabla con el contenido del Excel */}
-        <ScrollView horizontal style={{ width: '100%' }}>
-          <View style={[styles.tabla, { borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border, backgroundColor: c.ResultadoAsistencia?.tablaBg ?? c.card }]}>
-            {loading ? (
-              <View style={{ padding: 32, alignItems: 'center' }}>
-                <ActivityIndicator color={c.accent} />
-                <ThemedText style={{ color: c.text, marginTop: 12 }}>Cargando...</ThemedText>
-              </View>
-            ) : (
-              <>
-                {excelData.length > 0 && Array.isArray(excelData[0]) ? (
-                  <>
-                    <View style={[styles.tablaHeader, { borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border }]}>
-                      {excelData[0].map((col, idx) => (
-                        <ThemedText
-                          key={idx}
-                          style={[
-                            styles.tablaHeaderCell,
-                            { color: c.ResultadoAsistencia?.tablaHeaderText ?? c.text, width: colWidths[idx] ?? 120 }
-                          ]}
-                        >
-                          {col}
-                        </ThemedText>
-                      ))}
-                    </View>
-                    <ScrollView style={{ maxHeight: 260 }}>
-                      {excelData.slice(1).map((fila, idx) => (
-                        <View key={idx} style={[styles.tablaRow, { borderColor: c.ResultadoAsistencia?.tablaRowBorder ?? c.border }]}>
-                          {Array.isArray(fila) ? fila.map((celda, j) => (
+        <View style={{ width: '100%', flex: 1, minHeight: 200 }}>
+          <ScrollView horizontal style={{ width: '100%' }}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                backgroundColor: '#fff',
+                minWidth: 480,
+                maxWidth: 900,
+                alignSelf: 'center',
+                flex: 1,
+              }}
+            >
+              {loading ? (
+                <View style={{ padding: 32, alignItems: 'center' }}>
+                  <ActivityIndicator color={c.accent} />
+                  <ThemedText style={{ color: c.text, marginTop: 12 }}>Cargando...</ThemedText>
+                </View>
+              ) : (
+                <>
+                  {excelData.length > 0 && Array.isArray(excelData[0]) ? (
+                    <>
+                      {/* Header */}
+                      <View style={{ flexDirection: 'row' }}>
+                        {excelData[0].map((col, idx) => (
+                          <View
+                            key={idx}
+                            style={{
+                              borderWidth: 1,
+                              borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                              backgroundColor: '#f3f6fa',
+                              width: idx === 1 ? 260 : 80,
+                              minHeight: 44,
+                              justifyContent: 'center',
+                              paddingHorizontal: 8,
+                            }}
+                          >
                             <ThemedText
-                              key={j}
-                              style={[
-                                styles.tablaCell,
-                                {
-                                  color: c.ResultadoAsistencia?.tablaCellText ?? c.text,
-                                  width: colWidths[j] ?? 120,
-                                  textAlign:
-                                    excelData[0][j]?.toString().toLowerCase().includes('nombre')
-                                      ? 'left'
-                                      : 'center'
-                                }
-                              ]}
+                              style={{
+                                fontWeight: 'bold',
+                                fontSize: 15,
+                                color: c.ResultadoAsistencia?.tablaHeaderText ?? c.text,
+                                textAlign: idx === 1 ? 'left' : 'center',
+                              }}
+                              // Elimina numberOfLines y ellipsizeMode para mostrar todo el encabezado
                             >
-                              {celda}
+                              {col}
                             </ThemedText>
-                          )) : null}
-                        </View>
-                      ))}
-                    </ScrollView>
-                  </>
-                ) : (
-                  <View style={{ padding: 24, alignItems: 'center' }}>
-                    <ThemedText style={{ color: c.text, textAlign: 'center' }}>
-                      No se pudo leer el contenido del archivo o está vacío.
-                    </ThemedText>
-                  </View>
-                )}
-              </>
-            )}
-          </View>
-        </ScrollView>
+                          </View>
+                        ))}
+                      </View>
+                      {/* Filas */}
+                      <ScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={true}
+                      >
+                        {excelData.slice(1).map((fila, idx) => {
+                          const celdas = [];
+                          for (let j = 0; j < excelData[0].length; j++) {
+                            celdas.push(
+                              <View
+                                key={j}
+                                style={{
+                                  borderWidth: 1,
+                                  borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                                  backgroundColor: '#fff',
+                                  width: j === 1 ? 260 : 80,
+                                  minHeight: 44,
+                                  justifyContent: 'center',
+                                  paddingHorizontal: 8,
+                                }}
+                              >
+                                <ThemedText
+                                  style={{
+                                    fontSize: 14,
+                                    color: c.ResultadoAsistencia?.tablaCellText ?? c.text,
+                                    textAlign: j === 1 ? 'left' : 'center',
+                                  }}
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail"
+                                >
+                                  {fila[j] ?? ''}
+                                </ThemedText>
+                              </View>
+                            );
+                          }
+                          return (
+                            <View key={idx} style={{ flexDirection: 'row' }}>
+                              {celdas}
+                            </View>
+                          );
+                        })}
+                      </ScrollView>
+                    </>
+                  ) : (
+                    <View style={{ padding: 24, alignItems: 'center' }}>
+                      <ThemedText style={{ color: c.text, textAlign: 'center' }}>
+                        No se pudo leer el contenido del archivo o está vacío.
+                      </ThemedText>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
+          </ScrollView>
+        </View>
         {/* Botones de acción */}
         <View style={styles.btnRow}>
           <TouchableOpacity
@@ -299,4 +346,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
