@@ -6,15 +6,13 @@ import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TextInput, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Alert, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ResultadoAsistenciaScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { width, height } = useWindowDimensions();
-  const { theme, colorMode } = useThemeCustom();
+  const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
-  const raColors = c.ResultadoAsistencia;
 
   // Obtener los nombres detectados desde los parámetros (respuestas)
   const nombresDetectados: string[] = (() => {
@@ -44,7 +42,7 @@ export default function ResultadoAsistenciaScreen() {
       ? params.nombreEvento
       : 'Evento_' + new Date().toISOString().slice(0, 10)
   );
-  const [fechaEvento, setFechaEvento] = useState(new Date().toISOString().slice(0, 10));
+  const [fechaEvento] = useState(new Date().toISOString().slice(0, 10));
 
   const handleFinalizar = async () => {
     if (!nombreEvento || !nombreEvento.trim()) {
@@ -52,7 +50,6 @@ export default function ResultadoAsistenciaScreen() {
       return;
     }
     const nombreExcel = nombreEvento.trim().replace(/[^a-zA-Z0-9_\-]/g, '_') + '.xlsx';
-    // Usa la lista de nombres detectados
     const nombres = resultado.map(f => f.nombre);
     try {
       const res = await fetch(`${SERVER_URL}/crear-asistencia`, {
@@ -83,76 +80,69 @@ export default function ResultadoAsistenciaScreen() {
     router.replace('/historial');
   };
 
+  // Construir datos tipo excelData: encabezado + filas
+  const excelData: string[][] = [
+    ['N°', 'Nombre', fechaEvento],
+    ...resultado.map((fila, idx) => [
+      (idx + 1).toString(),
+      fila.nombre,
+      '✓'
+    ])
+  ];
+
   return (
     <AppLayout description="Historial de asistencia procesado">
-      <ScrollView contentContainerStyle={styles.container}>
-        <ThemedText
-          type="title"
-          style={{
-            marginBottom: 8,
-            textAlign: 'center',
-            color: c.text, // blanco en dark
-          }}
-        >
-          Historial de &quot;{nombreEvento}&quot;
-        </ThemedText>
-        <View style={styles.infoBlock}>
-          <View style={styles.infoCol}>
-            <ThemedText style={[styles.infoLabel, { color: c.text }]}>Nombre del evento:</ThemedText>
+      <View style={{ width: '100%', alignItems: 'center' }}>
+        {/* Bloque superior igual que ver-asistencia */}
+        <View style={{
+          borderRadius: 14,
+          padding: 12,
+          marginBottom: 8,
+          width: '100%',
+          backgroundColor: c.ResultadoAsistencia?.tablaBg ?? c.background,
+          alignItems: 'center',
+        }}>
+          <ThemedText type="title" style={{ color: c.ResultadoAsistencia?.previewTitle, marginBottom: 4, fontSize: 20 * fontScale, alignContent: 'center' }}>
+            {"Nombre del evento: '"+nombreEvento+"'"}
+          </ThemedText>
+          <View style={{ width: '100%', maxWidth: 420, alignItems: 'center' }}>
             <TextInput
-              style={[
-                styles.infoInput,
-                {
-                  backgroundColor: raColors.infoInputBg,
-                  borderColor: raColors.infoInputBorder,
-                  color: c.text, // blanco en dark
-                },
-              ]}
+              style={{
+                borderWidth: 1,
+                borderColor: c.ResultadoAsistencia?.infoInputBorder,
+                backgroundColor: c.ResultadoAsistencia?.infoInputBg,
+                color: c.ResultadoAsistencia?.infoInputText,
+                borderRadius: 24,
+                paddingVertical: 10,
+                paddingHorizontal: 18,
+                fontSize: 16 * fontScale,
+                marginBottom: 4,
+                width: '100%',
+                maxWidth: 350,
+                textAlign: 'center',
+              }}
               value={nombreEvento}
               onChangeText={setNombreEvento}
-            />
-          </View>
-          <View style={styles.infoCol}>
-            <ThemedText style={[styles.infoLabel, { color: c.text }]}>Creacion del evento:</ThemedText>
-            <TextInput
-              style={[
-                styles.infoInput,
-                {
-                  backgroundColor: raColors.infoInputBg,
-                  borderColor: raColors.infoInputBorder,
-                  color: c.text, // blanco en dark
-                },
-              ]}
-              value={fechaEvento}
-              onChangeText={setFechaEvento}
+              placeholder="Nombre del evento"
+              placeholderTextColor={c.ResultadoAsistencia?.infoInputText}
             />
           </View>
         </View>
-        <View
-          style={[
-            styles.excelContainer,
-            {
-              maxWidth: 900,
-              minWidth: 480,
-              alignSelf: 'center',
-              width: '100%',
-              borderColor: raColors.excelContainerBorder,
-              backgroundColor: raColors.excelContainerBg,
-              flex: 1,
-            },
-          ]}
-        >
-          <ThemedText style={[styles.previewTitle, { color: c.text }]}>Lista de nombres obtenidos:</ThemedText>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={true}
-            style={{ width: '100%', maxWidth: '100%' }}
-            contentContainerStyle={{ minWidth: 480 }}
-          >
+        {/* Tabla - Actualizada para coincidir con AgregarPersona */}
+        <View style={{ width: '100%', flex: 1, minHeight: 200 }}>
+          <ThemedText style={{ 
+            fontWeight: 'bold', 
+            fontSize: 16 * fontScale, 
+            marginBottom: 8 * fontScale,
+            color: c.text
+          }}>
+            Lista de nombres obtenidos:
+          </ThemedText>
+          <ScrollView horizontal style={{ width: '100%' }}>
             <View
               style={{
                 borderWidth: 1,
-                borderColor: raColors.tablaBorder,
+                borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
                 backgroundColor: '#fff',
                 minWidth: 480,
                 maxWidth: 900,
@@ -160,281 +150,161 @@ export default function ResultadoAsistenciaScreen() {
                 flex: 1,
               }}
             >
-              {/* Header */}
-              <View style={{ flexDirection: 'row' }}>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderColor: raColors.tablaBorder,
-                    backgroundColor: '#f3f6fa',
-                    width: 80,
-                    minHeight: 44,
-                    justifyContent: 'center',
-                    paddingHorizontal: 8,
-                  }}
-                >
-                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'center' }}>
-                    N°
-                  </ThemedText>
-                </View>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderColor: raColors.tablaBorder,
-                    backgroundColor: '#f3f6fa',
-                    width: 260,
-                    minHeight: 44,
-                    justifyContent: 'center',
-                    paddingHorizontal: 8,
-                  }}
-                >
-                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'left' }}>
-                    Nombre
-                  </ThemedText>
-                </View>
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderColor: raColors.tablaBorder,
-                    backgroundColor: '#f3f6fa',
-                    width: 120,
-                    minHeight: 44,
-                    justifyContent: 'center',
-                    paddingHorizontal: 8,
-                  }}
-                >
-                  <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.text, textAlign: 'center' }}>
-                    {fechaEvento}
-                  </ThemedText>
-                </View>
-              </View>
-              {/* Filas */}
-              <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={{ flexGrow: 1 }}
-                showsVerticalScrollIndicator={true}
-              >
-                {resultado.length === 0 ? (
-                  <View style={{ padding: 16 }}>
-                    <ThemedText style={{ color: c.text, textAlign: 'center' }}>
-                      No se detectaron nombres.
-                    </ThemedText>
+              {excelData.length > 0 && (
+                <>
+                  {/* Header */}
+                  <View style={{ flexDirection: 'row' }}>
+                    {excelData[0].map((col, idx) => (
+                      <View
+                        key={idx}
+                        style={{
+                          borderWidth: 1,
+                          borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                          backgroundColor: '#f3f6fa',
+                          width: idx === 1 ? 260 : 80,
+                          minHeight: 44,
+                          justifyContent: 'center',
+                          paddingHorizontal: 8,
+                        }}
+                      >
+                        <ThemedText
+                          style={{
+                            fontWeight: 'bold',
+                            fontSize: 15 * fontScale,
+                            color: c.ResultadoAsistencia?.tablaHeaderText ?? c.text,
+                            textAlign: idx === 1 ? 'left' : 'center',
+                          }}
+                        >
+                          {col}
+                        </ThemedText>
+                      </View>
+                    ))}
                   </View>
-                ) : (
-                  resultado.map((fila, idx) => (
-                    <View key={fila.nombre + idx} style={{ flexDirection: 'row' }}>
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: raColors.tablaBorder,
-                          backgroundColor: '#fff',
-                          width: 80,
-                          minHeight: 44,
-                          justifyContent: 'center',
-                          paddingHorizontal: 8,
-                        }}
-                      >
-                        <ThemedText style={{ fontSize: 14, color: c.text, textAlign: 'center' }} numberOfLines={1} ellipsizeMode="tail">
-                          {idx + 1}
+                  {/* Filas */}
+                  <ScrollView
+                    style={{ flex: 1 }}
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={true}
+                  >
+                    {excelData.slice(1).length === 0 ? (
+                      <View style={{ padding: 16 }}>
+                        <ThemedText style={{ 
+                          color: c.ResultadoAsistencia?.tablaCellText ?? c.text, 
+                          textAlign: 'center', 
+                          fontSize: 14 * fontScale 
+                        }}>
+                          No se detectaron nombres.
                         </ThemedText>
                       </View>
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: raColors.tablaBorder,
-                          backgroundColor: '#fff',
-                          width: 260,
-                          minHeight: 44,
-                          justifyContent: 'center',
-                          paddingHorizontal: 8,
-                        }}
-                      >
-                        <ThemedText style={{ fontSize: 14, color: c.text, textAlign: 'left' }} numberOfLines={1} ellipsizeMode="tail">
-                          {fila.nombre}
-                        </ThemedText>
-                      </View>
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: raColors.tablaBorder,
-                          backgroundColor: '#fff',
-                          width: 120,
-                          minHeight: 44,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          flexDirection: 'row',
-                          paddingHorizontal: 8,
-                        }}
-                      >
-                        <Ionicons name="checkmark" size={22} color={raColors.checkIcon} />
-                      </View>
-                    </View>
-                  ))
-                )}
-              </ScrollView>
+                    ) : (
+                      excelData.slice(1).map((fila, idx) => {
+                        const celdas = [];
+                        for (let j = 0; j < excelData[0].length; j++) {
+                          celdas.push(
+                            <View
+                              key={j}
+                              style={{
+                                borderWidth: 1,
+                                borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
+                                backgroundColor: '#fff',
+                                width: j === 1 ? 260 : 80,
+                                minHeight: 44,
+                                justifyContent: 'center',
+                                paddingHorizontal: 8,
+                              }}
+                            >
+                              {j === 2 ? (
+                                <Ionicons 
+                                  name="checkmark" 
+                                  size={22 * fontScale} 
+                                  color={c.ResultadoAsistencia?.checkIcon ?? c.success} 
+                                  style={{ alignSelf: 'center' }}
+                                />
+                              ) : (
+                                <ThemedText
+                                  style={{
+                                    fontSize: 14 * fontScale,
+                                    color: c.ResultadoAsistencia?.tablaCellText ?? c.text,
+                                    textAlign: j === 1 ? 'left' : 'center',
+                                  }}
+                                  numberOfLines={1}
+                                  ellipsizeMode="tail"
+                                >
+                                  {fila[j] ?? ''}
+                                </ThemedText>
+                              )}
+                            </View>
+                          );
+                        }
+                        return (
+                          <View key={idx} style={{ flexDirection: 'row' }}>
+                            {celdas}
+                          </View>
+                        );
+                      })
+                    )}
+                  </ScrollView>
+                </>
+              )}
             </View>
           </ScrollView>
         </View>
-        <View style={styles.btnRow}>
-          <TouchableOpacity style={[styles.regresarBtn, { backgroundColor: raColors.btnCancelarBg }]} onPress={handleCancelar}>
-            <ThemedText style={[styles.regresarBtnText, { color: raColors.btnCancelarText }]}>Cancelar</ThemedText>
+        {/* Botones */}
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 18 * fontScale,
+            marginTop: 18 * fontScale,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'stretch',
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flexGrow: 1,
+              minWidth: 160,
+              borderRadius: 12,
+              paddingVertical: 12 * fontScale,
+              paddingHorizontal: 24 * fontScale,
+              alignItems: 'center',
+              backgroundColor: c.ResultadoAsistencia?.btnCancelarBg,
+              marginBottom: 0,
+            }}
+            onPress={handleCancelar}
+          >
+            <ThemedText style={{
+              color: c.ResultadoAsistencia?.btnCancelarText,
+              fontWeight: 'bold',
+              fontSize: 16 * fontScale
+            }}>
+              Cancelar
+            </ThemedText>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.importarBtn, { backgroundColor: raColors.btnContinuarBg }]} onPress={handleFinalizar}>
-            <ThemedText style={[styles.importarBtnText, { color: raColors.btnContinuarText }]}>Continuar</ThemedText>
+          <TouchableOpacity
+            style={{
+              flexGrow: 1,
+              minWidth: 160,
+              borderRadius: 12,
+              paddingVertical: 12 * fontScale,
+              paddingHorizontal: 24 * fontScale,
+              alignItems: 'center',
+              backgroundColor: c.ResultadoAsistencia?.btnContinuarBg,
+              marginBottom: 0,
+            }}
+            onPress={handleFinalizar}
+          >
+            <ThemedText style={{
+              color: c.ResultadoAsistencia?.btnContinuarText,
+              fontWeight: 'bold',
+              fontSize: 16 * fontScale
+            }}>
+              Continuar
+            </ThemedText>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </AppLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: 12,
-    width: '100%',
-    paddingBottom: 24,
-  },
-  infoBlock: {
-    flexDirection: 'row',
-    gap: 16,
-    marginBottom: 8,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  infoCol: {
-    flex: 1,
-    alignItems: 'flex-start',
-    minWidth: 120,
-  },
-  infoLabel: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    marginBottom: 2,
-    // color se pasa inline usando raColors.infoInputText si se requiere
-  },
-  infoInput: {
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 6,
-    fontSize: 15,
-    minWidth: 120,
-    marginBottom: 6,
-    // backgroundColor, borderColor, color se pasan inline
-  },
-  previewBlock: {
-    width: '100%',
-    borderRadius: 12,
-    padding: 12,
-    marginTop: 10,
-    marginBottom: 10,
-    alignItems: 'flex-start',
-    // backgroundColor se pasa inline
-  },
-  previewTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 6,
-    // color se pasa inline
-  },
-  nombresList: {
-    width: '100%',
-    gap: 2,
-  },
-  nombreRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
-  },
-  nombreIndex: {
-    fontWeight: 'bold',
-    marginRight: 6,
-    fontSize: 15,
-    // color se pasa inline
-  },
-  nombreText: {
-    fontSize: 15,
-    // color se pasa inline
-  },
-  excelContainer: {
-    borderWidth: 3,
-    borderRadius: 18,
-    padding: 12,
-    marginVertical: 10,
-    alignItems: 'center',
-    maxWidth: 420,
-    alignSelf: 'center',
-    minHeight: 320,
-    width: '100%',
-    // borderColor, backgroundColor se pasan inline
-  },
-  tabla: {
-    borderWidth: 1,
-    borderRadius: 12,
-    width: '100%',
-    maxWidth: 340,
-    marginTop: 0,
-    padding: 8,
-    // borderColor, backgroundColor se pasan inline
-  },
-  tablaHeader: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    paddingBottom: 4,
-    marginBottom: 4,
-    // borderColor se pasa inline
-  },
-  tablaHeaderCell: {
-    flex: 1,
-    fontWeight: 'bold',
-    fontSize: 15,
-    textAlign: 'center',
-    // color se pasa inline
-  },
-  tablaRow: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    minHeight: 28,
-    alignItems: 'center',
-    // borderColor se pasa inline
-  },
-  tablaCell: {
-    flex: 1,
-    fontSize: 14,
-    textAlign: 'center',
-    paddingVertical: 2,
-    // color se pasa inline
-  },
-  btnRow: {
-    flexDirection: 'row',
-    gap: 18,
-    marginTop: 18,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  regresarBtn: {
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    // backgroundColor se pasa inline
-  },
-  regresarBtnText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    // color se pasa inline
-  },
-  importarBtn: {
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    // backgroundColor se pasa inline
-  },
-  importarBtnText: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    // color se pasa inline
-  },
-});
-

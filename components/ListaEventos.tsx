@@ -69,12 +69,6 @@ export function ListaEventos({ eventos, onEditar, onBorrar, onVer }: Props) {
               ]}>
                 {evento.nombre}
               </ThemedText>
-              <ThemedText style={[
-                styles.eventoFecha,
-                { color: c.eventoFecha, fontSize: (isSmall ? 12 : 13) * fontScale }
-              ]}>
-                {evento.fecha}
-              </ThemedText>
             </View>
             <View style={[styles.btnsCol, isSmall && { flexDirection: 'row', flexWrap: 'wrap', width: '100%', gap: 4, marginTop: 4 }]}>
               <TouchableOpacity

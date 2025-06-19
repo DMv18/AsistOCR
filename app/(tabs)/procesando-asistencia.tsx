@@ -36,8 +36,8 @@ export default function ProcesandoAsistenciaScreen() {
     const interval = setInterval(() => {
       if (backendRespondio) return;
       percent += Math.floor(Math.random() * 15) + 5;
-      if (percent >= 95) { // No llegues a 100% hasta que el backend termine
-        percent = 95;
+      if (percent >= 60) { // No llegues a 100% hasta que el backend termine
+        percent = 60;
       }
       setProgreso(percent);
       Animated.timing(anim, {
@@ -71,8 +71,7 @@ export default function ProcesandoAsistenciaScreen() {
     return () => {
       clearInterval(interval);
     };
-  }, [uri, anim]); // Agrega anim a las dependencias
-
+  }, [uri, anim]); 
 
   const barWidth = anim.interpolate({
     inputRange: [0, 100],

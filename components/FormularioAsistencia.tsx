@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { CopilotStep, walkthroughable } from 'react-native-copilot';
 
 type Foto = {
   uri: string;
@@ -74,6 +75,9 @@ async function copyImageToApp(uri: string): Promise<string> {
     return uri;
   }
 }
+
+const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
+const WalkthroughableView = walkthroughable(View);
 
 export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaDia }: Props) {
   const [fotos, setFotos] = useState<Foto[]>([]);
@@ -167,145 +171,185 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
         Subir imagen para procesar
       </ThemedText>
       <View style={[styles.fotosBlock, { backgroundColor: c.formFotosBlock }]}>
-        {fotos.length === 0 && (
-          <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginVertical: 16, fontSize: 16 * fontScale }}>
-            No hay imagen cargada aún
-          </ThemedText>
-        )}
-        {fotos.map((foto) => (
-          <View
-            key={foto.uri}
-            style={[
-              styles.fotoRow,
-              { borderColor: c.formFotoRowBorder, backgroundColor: c.formFotoRow }
-            ]}
+        {/* Feedback de imagen subida/error o mensaje de vacío */}
+        {fotos.length === 0 ? (
+          <CopilotStep
+            text="Aquí verás si la imagen se subió correctamente o si hubo un error. Si no hay imagen cargada, verás este mensaje."
+            order={3}
+            name="feedbackImagen"
           >
-            <Image
-              source={{ uri: foto.uri }}
-              style={[styles.fotoImg, { borderColor: c.formFotoRowBorder }]}
-            />
-            <View style={{ flex: 1 }}>
-              {foto.status === 'success' && (
-                <ThemedText style={{ color: c.formBtnSecondary, fontWeight: 'bold', fontSize: 16 * fontScale }}>
-                  <Ionicons name="checkmark-circle" size={18} color={c.formBtnSecondary} /> Imagen lista para procesar
-                </ThemedText>
-              )}
-              {foto.status === 'error' && (
-                <>
-                  <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold', fontSize: 16 * fontScale }}>
-                    <Ionicons name="close-circle" size={18} color={c.formBtnDanger} /> Error al subir la imagen
-                  </ThemedText>
-                  {/* Puedes mostrar un mensaje adicional aquí si quieres */}
-                </>
-              )}
-              {foto.status === 'pending' && (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <ActivityIndicator size="small" color={c.formAddBtnText} />
-                  <ThemedText style={{ color: c.formAddBtnText, fontWeight: 'bold', marginLeft: 6 }}>
-                    Subiendo...
-                  </ThemedText>
-                </View>
-              )}
-              <TouchableOpacity
-                style={[globalStyles.btnDanger, { backgroundColor: colors.btnDangerBg, marginTop: 8 }]} 
-                onPress={() => handleQuitarFoto(foto.uri)}
-              >
-                <MaterialIcons name="delete" size={18} color={colors.btnDangerText} />
-                <ThemedText style={[globalStyles.btnDangerText, { color: colors.btnDangerText }]}>
-                  Eliminar
-                </ThemedText>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
-        <TouchableOpacity
-          style={[styles.addBtn, { backgroundColor: c.formAddBtn }]}
-          onPress={handleAgregarFoto}
-        >
-          <Ionicons name="add-circle-outline" size={24} color={c.formAddBtnText} />
-          <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16 * fontScale, color: c.formAddBtnText }}>
-            Subir imagen
-          </ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[globalStyles.btnPrimary, { backgroundColor: colors.btnPrimaryBg, marginTop: 16 }]}
-          onPress={handleProcesar}
-          disabled={isProcessing || fotos.length === 0 || fotos[0].status !== 'success'}
-        >
-          {isProcessing ? (
-            <ActivityIndicator color={colors.btnPrimaryText} />
-          ) : (
-            <ThemedText style={[globalStyles.btnPrimaryText, { color: colors.btnPrimaryText }]}>
-              Procesar
-            </ThemedText>
-          )}
-        </TouchableOpacity>
-      </View>
-      <Modal
-        visible={modalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={{
-          flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-          <View style={{
-            backgroundColor: c.card,
-            borderRadius: 16,
-            padding: 24,
-            alignItems: 'center',
-            minWidth: 260,
-            elevation: 8,
-          }}>
-            <ThemedText style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 8, textAlign: 'center', color: c.text }}>
-              Seleccionar origen de la imagen
-            </ThemedText>
-            <ThemedText style={{ color: c.inputPlaceholder, fontSize: 15, marginBottom: 18, textAlign: 'center' }}>
-              Elija cómo desea agregar la imagen
-            </ThemedText>
-            <View style={{ flexDirection: 'row', gap: 18 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: c.btnPrimary,
-                  borderRadius: 12,
-                  paddingVertical: 14,
-                  paddingHorizontal: 24,
-                  alignItems: 'center',
-                  minWidth: 90,
-                }}
-                onPress={handleCamara}
-              >
-                <Ionicons name="camera-outline" size={28} color={c.btnText} />
-                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Cámara</ThemedText>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: c.btnPrimary,
-                  borderRadius: 12,
-                  paddingVertical: 14,
-                  paddingHorizontal: 24,
-                  alignItems: 'center',
-                  minWidth: 90,
-                }}
-                onPress={handleGaleria}
-              >
-                <Ionicons name="folder-outline" size={28} color={c.btnText} />
-                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</ThemedText>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              style={{ marginTop: 18 }}
-              onPress={() => setModalVisible(false)}
+            <WalkthroughableView>
+              <ThemedText style={{ color: c.inputPlaceholder, textAlign: 'center', marginVertical: 16, fontSize: 16 * fontScale }}>
+                No hay imagen cargada aún
+              </ThemedText>
+            </WalkthroughableView>
+          </CopilotStep>
+        ) : (
+          fotos.map((foto) => (
+            <CopilotStep
+              key={foto.uri}
+              text="Aquí verás si la imagen se subió correctamente o si hubo un error. Si hay un error, intenta subir otra imagen."
+              order={3}
+              name="feedbackImagen"
             >
-              <ThemedText style={{ color: c.btnPrimary, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+              <WalkthroughableView>
+                <View
+                  style={[
+                    styles.fotoRow,
+                    { borderColor: c.formFotoRowBorder, backgroundColor: c.formFotoRow }
+                  ]}
+                >
+                  <Image
+                    source={{ uri: foto.uri }}
+                    style={[styles.fotoImg, { borderColor: c.formFotoRowBorder }]}
+                  />
+                  <View style={{ flex: 1 }}>
+                    {foto.status === 'success' && (
+                      <ThemedText style={{ color: c.formBtnSecondary, fontWeight: 'bold', fontSize: 16 * fontScale }}>
+                        <Ionicons name="checkmark-circle" size={18} color={c.formBtnSecondary} /> Imagen lista para procesar
+                      </ThemedText>
+                    )}
+                    {foto.status === 'error' && (
+                      <>
+                        <ThemedText style={{ color: c.formBtnDanger, fontWeight: 'bold', fontSize: 16 * fontScale }}>
+                          <Ionicons name="close-circle" size={18} color={c.formBtnDanger} /> Error al subir la imagen
+                        </ThemedText>
+                      </>
+                    )}
+                    {foto.status === 'pending' && (
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <ActivityIndicator size="small" color={c.formAddBtnText} />
+                        <ThemedText style={{ color: c.formAddBtnText, fontWeight: 'bold', marginLeft: 6 }}>
+                          Subiendo...
+                        </ThemedText>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={[globalStyles.btnDanger, { backgroundColor: colors.btnDangerBg, marginTop: 8 }]} 
+                      onPress={() => handleQuitarFoto(foto.uri)}
+                    >
+                      <MaterialIcons name="delete" size={18} color={colors.btnDangerText} />
+                      <ThemedText style={[globalStyles.btnDangerText, { color: colors.btnDangerText }]}>
+                        Eliminar
+                      </ThemedText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </WalkthroughableView>
+            </CopilotStep>
+          ))
+        )}
+        {/* Botón subir imagen */}
+        <CopilotStep
+          text="Pulsa aquí para subir una imagen de la lista de asistencia. Se abrirá un menú para elegir entre cámara o galería."
+          order={1}
+          name="subirImagenBtn"
+        >
+          <WalkthroughableTouchableOpacity
+            style={[styles.addBtn, { backgroundColor: c.formAddBtn }]}
+            onPress={handleAgregarFoto}
+          >
+            <Ionicons name="add-circle-outline" size={24} color={c.formAddBtnText} />
+            <ThemedText style={{ marginLeft: 8, fontWeight: 'bold', fontSize: 16 * fontScale, color: c.formAddBtnText }}>
+              Subir imagen
+            </ThemedText>
+          </WalkthroughableTouchableOpacity>
+        </CopilotStep>
+        {/* Botón procesar */}
+        <CopilotStep
+          text="Cuando la imagen esté lista, este botón se activará. Pulsa 'Procesar' para que el sistema interprete la lista de asistencia."
+          order={4}
+          name="procesarBtn"
+        >
+          <WalkthroughableTouchableOpacity
+            style={[globalStyles.btnPrimary, { backgroundColor: colors.btnPrimaryBg, marginTop: 16 }]}
+            onPress={handleProcesar}
+            disabled={isProcessing || fotos.length === 0 || fotos[0].status !== 'success'}
+          >
+            {isProcessing ? (
+              <ActivityIndicator color={colors.btnPrimaryText} />
+            ) : (
+              <ThemedText style={[globalStyles.btnPrimaryText, { color: colors.btnPrimaryText }]}>
+                Procesar
+              </ThemedText>
+            )}
+          </WalkthroughableTouchableOpacity>
+        </CopilotStep>
+      </View>
+      {/* Modal de selección de origen */}
+      <CopilotStep
+        text="Elige si deseas tomar una foto con la cámara o seleccionar una imagen desde la galería."
+        order={2}
+        name="modalOrigenImagen"
+      >
+        <WalkthroughableView>
+          <Modal
+            visible={modalVisible}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <View style={{
+                backgroundColor: c.card,
+                borderRadius: 16,
+                padding: 24,
+                alignItems: 'center',
+                minWidth: 260,
+                elevation: 8,
+              }}>
+                <ThemedText style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 8, textAlign: 'center', color: c.text }}>
+                  Seleccionar origen de la imagen
+                </ThemedText>
+                <ThemedText style={{ color: c.inputPlaceholder, fontSize: 15, marginBottom: 18, textAlign: 'center' }}>
+                  Elija cómo desea agregar la imagen
+                </ThemedText>
+                <View style={{ flexDirection: 'row', gap: 18 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: c.btnPrimary,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      paddingHorizontal: 24,
+                      alignItems: 'center',
+                      minWidth: 90,
+                    }}
+                    onPress={handleCamara}
+                  >
+                    <Ionicons name="camera-outline" size={28} color={c.btnText} />
+                    <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Cámara</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: c.btnPrimary,
+                      borderRadius: 12,
+                      paddingVertical: 14,
+                      paddingHorizontal: 24,
+                      alignItems: 'center',
+                      minWidth: 90,
+                    }}
+                    onPress={handleGaleria}
+                  >
+                    <Ionicons name="folder-outline" size={28} color={c.btnText} />
+                    <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16, marginTop: 4 }}>Galería</ThemedText>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  style={{ marginTop: 18 }}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <ThemedText style={{ color: c.btnPrimary, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </WalkthroughableView>
+      </CopilotStep>
     </View>
   );
 }

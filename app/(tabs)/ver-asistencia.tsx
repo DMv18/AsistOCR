@@ -122,12 +122,13 @@ export default function VerAsistenciaScreen() {
                 {nombreEvento || 'Sin nombre'}
               </ThemedText>
             </View>
-            <View style={styles.headerCol}>
+            {/* Elimina la columna de fecha de creación */}
+            {/* <View style={styles.headerCol}>
               <ThemedText style={[styles.headerLabel, { color: c.text }]}>Creación del evento:</ThemedText>
               <ThemedText style={[styles.headerValue, { color: c.text }]}>
                 {fecha || 'Sin fecha'}
               </ThemedText>
-            </View>
+            </View> */}
           </View>
         </View>
         {/* Tabla con el contenido del Excel */}
@@ -137,7 +138,7 @@ export default function VerAsistenciaScreen() {
               style={{
                 borderWidth: 1,
                 borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
-                backgroundColor: '#fff',
+                backgroundColor: c.ResultadoAsistencia?.tablaBg ?? '#fff',
                 minWidth: 480,
                 maxWidth: 900,
                 alignSelf: 'center',
@@ -161,10 +162,11 @@ export default function VerAsistenciaScreen() {
                             style={{
                               borderWidth: 1,
                               borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
-                              backgroundColor: '#f3f6fa',
-                              width: idx === 1 ? 260 : 80,
+                              backgroundColor: c.ResultadoAsistencia?.tablaHeaderText ? '#f3f6fa' : '#f3f6fa',
+                              width: colWidths[idx] ?? (idx === 1 ? 260 : 80),
                               minHeight: 44,
                               justifyContent: 'center',
+                              alignItems: idx === 1 ? 'flex-start' : 'center',
                               paddingHorizontal: 8,
                             }}
                           >
@@ -187,19 +189,19 @@ export default function VerAsistenciaScreen() {
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={true}
                       >
-                        {excelData.slice(1).map((fila, idx) => {
-                          const celdas = [];
-                          for (let j = 0; j < excelData[0].length; j++) {
-                            celdas.push(
+                        {excelData.slice(1).map((fila, idx) => (
+                          <View key={idx} style={{ flexDirection: 'row' }}>
+                            {excelData[0].map((_, j) => (
                               <View
                                 key={j}
                                 style={{
                                   borderWidth: 1,
                                   borderColor: c.ResultadoAsistencia?.tablaBorder ?? c.border,
-                                  backgroundColor: '#fff',
-                                  width: j === 1 ? 260 : 80,
+                                  backgroundColor: c.ResultadoAsistencia?.tablaBg ?? '#fff',
+                                  width: colWidths[j] ?? (j === 1 ? 260 : 80),
                                   minHeight: 44,
                                   justifyContent: 'center',
+                                  alignItems: j === 1 ? 'flex-start' : 'center',
                                   paddingHorizontal: 8,
                                 }}
                               >
@@ -215,14 +217,9 @@ export default function VerAsistenciaScreen() {
                                   {fila[j] ?? ''}
                                 </ThemedText>
                               </View>
-                            );
-                          }
-                          return (
-                            <View key={idx} style={{ flexDirection: 'row' }}>
-                              {celdas}
-                            </View>
-                          );
-                        })}
+                            ))}
+                          </View>
+                        ))}
                       </ScrollView>
                     </>
                   ) : (
@@ -348,3 +345,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+   

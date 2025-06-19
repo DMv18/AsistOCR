@@ -5,7 +5,7 @@ import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 // Importa los nuevos componentes
 import { AgregarListaDia } from '@/components/EditarEvento/AgregarListaDia';
@@ -21,8 +21,9 @@ export default function EditarEventoScreen() {
   const cEditar = c.EditarEvento;
 
   const [nombreEvento, setNombreEvento] = useState<string>('');
-  const [fechaEvento, setFechaEvento] = useState<string>('');
+  //const [fechaEvento, setFechaEvento] = useState<string>('');
   const [modo, setModo] = useState<'menu' | 'agregarPersona' | 'agregarListaDia' | 'cambiarAsistencia'>('menu');
+  const [modalEditarAgregar, setModalEditarAgregar] = useState(false);
 
   useEffect(() => {
     if (!eventoId) return;
@@ -31,24 +32,24 @@ export default function EditarEventoScreen() {
         const nombreSinExtension = eventoId.replace('.xlsx', '');
         setNombreEvento(nombreSinExtension.replace(/(\d{2}[-_.]\d{2}[-_.]\d{4})/, '').replace(/[-_.]+$/, '').trim() || nombreSinExtension);
         const match = eventoId.match(/(\d{2}[-_.]\d{2}[-_.]\d{4})/);
-        setFechaEvento(match ? match[1].replace(/[-_.]/g, '/') : '');
+        //setFechaEvento(match ? match[1].replace(/[-_.]/g, '/') : '');
       });
   }, [eventoId]);
 
   const opciones = [
     {
       icon: 'person-add-outline',
-      texto: 'Agregar una nueva persona a la lista',
+      texto: 'Editar o agregar un nombre',
       bg: cEditar.opcion1Bg,
       iconBg: cEditar.icon1Bg,
-      onPress: () => setModo('agregarPersona'),
+      onPress: () => setModalEditarAgregar(true),
     },
     {
       icon: 'grid-outline',
-      texto: 'Realizar cambios a la tabla',
+      texto: 'Editar ✓ o ✗ de la asistencia',
       bg: cEditar.opcion2Bg,
       iconBg: cEditar.icon2Bg,
-      onPress: () => setModo('cambiarAsistencia'),
+      onPress: () => router.push({ pathname: '/editar-checks', params: { eventoId } }), // <--- redirige aquí
     },
     {
       icon: 'document-attach-outline',
@@ -64,9 +65,75 @@ export default function EditarEventoScreen() {
       <ThemedText type="title" style={{ marginBottom: 8, textAlign: 'center' }}>
         {nombreEvento || 'Evento'}
       </ThemedText>
-      <ThemedText style={{ fontSize: 16, marginBottom: 16, textAlign: 'center' }}>
-        Fecha: {fechaEvento || 'Sin fecha'}
-      </ThemedText>
+
+      {/* Modal para elegir entre agregar o editar */}
+      <Modal
+        visible={modalEditarAgregar}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setModalEditarAgregar(false)}
+      >
+        <View style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.15)',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <View style={{
+            backgroundColor: c.card,
+            borderRadius: 14,
+            padding: 24,
+            alignItems: 'center',
+            minWidth: 260,
+            elevation: 8,
+          }}>
+            <ThemedText style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 8, color: c.text }}>
+              ¿Qué desea hacer?
+            </ThemedText>
+            <View style={{ flexDirection: 'row', gap: 18 }}>
+              <TouchableOpacity
+                style={{
+                  minWidth: 90,
+                  borderRadius: 8,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  marginHorizontal: 6,
+                  backgroundColor: c.btnPrimary
+                }}
+                onPress={() => {
+                  setModalEditarAgregar(false);
+                  setModo('agregarPersona');
+                }}
+              >
+                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16 }}>Agregar nombre</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  minWidth: 90,
+                  borderRadius: 8,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  marginHorizontal: 6,
+                  backgroundColor: c.btnPrimary
+                }}
+                onPress={() => {
+                  setModalEditarAgregar(false);
+                  router.push({ pathname: '/editar-nombre', params: { eventoId } });
+                }}
+              >
+                <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16 }}>Editar nombre</ThemedText>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={{ marginTop: 18 }}
+              onPress={() => setModalEditarAgregar(false)}
+            >
+              <ThemedText style={{ color: c.btnPrimary, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {modo === 'menu' ? (
         <>
           <View style={[styles.greenBlock, { backgroundColor: cEditar.greenBlock }]}>

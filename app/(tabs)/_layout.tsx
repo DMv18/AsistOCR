@@ -12,6 +12,8 @@ export default function TabLayout() {
       <Stack.Screen name="crear-asistencia" />
       <Stack.Screen name="config" />
       <Stack.Screen name="editar-evento" />
+      <Stack.Screen name="editar-nombre" />
+      <Stack.Screen name="editar-checks" />
     </Stack>
   );
 }

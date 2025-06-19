@@ -69,13 +69,7 @@ export default function HistorialScreen() {
     router.push({ pathname: '/ver-asistencia', params: { nombre } });
   };
 
-  function extraerFecha(nombre: string): string {
-    const match = nombre.match(/(\d{2}[-_.]\d{2}[-_.]\d{4})/);
-    if (match) {
-      return match[1].replace(/[-_.]/g, '/');
-    }
-    return 'Sin fecha';
-  }
+
 
   return (
     <AppLayout description="Aquí puedes ver y gestionar tus archivos de asistencia.">
@@ -92,7 +86,7 @@ export default function HistorialScreen() {
               key={evento.nombre}
               style={{
                 borderRadius: 18,
-                flexDirection: 'column', // Cambia a columna
+                flexDirection: 'column',
                 alignItems: 'center',
                 marginBottom: 16,
                 padding: 12,
@@ -100,7 +94,8 @@ export default function HistorialScreen() {
                 backgroundColor: c.eventoCard,
                 width: '92%',
                 alignSelf: 'center',
-                minHeight: 90,
+                minHeight: 140,
+                justifyContent: 'flex-start',
               }}
             >
               {/* Nombre y fecha arriba, centrados */}
@@ -108,80 +103,79 @@ export default function HistorialScreen() {
                 <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.eventoNombre, textAlign: 'center' }}>
                   {evento.nombre.replace('.xlsx', '')}
                 </ThemedText>
-                <ThemedText style={{ fontSize: 13, color: c.eventoFecha, textAlign: 'center' }}>
-                  {extraerFecha(evento.nombre)}
-                </ThemedText>
+            
               </View>
-              {/* Icono y botones en fila */}
-              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', gap: 8 }}>
-                {/* Icono archivo */}
-                <View style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 19,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 8,
-                  backgroundColor: c.historialArchivoIconBg,
-                }}>
-                  <Ionicons name="document-text-outline" size={22} color={c.historialArchivoIconColor} />
-                </View>
-                {/* Botones */}
+              {/* Botones siempre dentro del componente, usando View con flexGrow */}
+              <View style={{
+                flex: 1,
+                width: '100%',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                minHeight: 0,
+              }}>
                 <View style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 2,
-                  flex: 1,
-                  justifyContent: 'flex-end',
+                  justifyContent: 'center',
+                  width: '100%',
+                  gap: 10,
+                  marginTop: 8,
+                  marginBottom: 2,
                 }}>
-                  {/* Icono editar */}
-                  <View style={{
-                    borderRadius: 8,
-                    padding: 6,
-                    marginHorizontal: 2,
-                    backgroundColor: c.historialEditarIconBg,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <TouchableOpacity
-                      onPress={() => handleEditar(evento.nombre)}
-                      accessibilityLabel="Editar"
-                    >
-                      <Ionicons name="pencil" size={20} color={c.historialEditarIconColor} />
-                    </TouchableOpacity>
-                  </View>
-                  {/* Icono borrar */}
-                  <View style={{
-                    borderRadius: 8,
-                    padding: 6,
-                    marginHorizontal: 2,
-                    backgroundColor: c.historialBorrarIconBg,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <TouchableOpacity
-                      onPress={() => handleBorrar(evento.nombre)}
-                      accessibilityLabel="Borrar"
-                    >
-                      <Ionicons name="trash" size={20} color={c.historialBorrarIconColor} />
-                    </TouchableOpacity>
-                  </View>
-                  {/* Icono observar */}
-                  <View style={{
-                    borderRadius: 8,
-                    padding: 6,
-                    marginHorizontal: 2,
-                    backgroundColor: c.historialObservarIconBg,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <TouchableOpacity
-                      onPress={() => handleVer(evento.nombre)}
-                      accessibilityLabel="Ver"
-                    >
-                      <Ionicons name="eye" size={20} color={c.historialObservarIconColor} />
-                    </TouchableOpacity>
-                  </View>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 12,
+                      paddingVertical: 10,
+                      paddingHorizontal: 18,
+                      backgroundColor: c.historialEditarIconBg,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: 2,
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                    onPress={() => handleEditar(evento.nombre)}
+                    accessibilityLabel="Editar"
+                  >
+                    <Ionicons name="pencil" size={22} color={c.historialEditarIconColor} />
+                    <ThemedText style={{ color: c.historialEditarIconColor, fontWeight: 'bold', fontSize: 14, marginTop: 2 }}>Editar</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 12,
+                      paddingVertical: 10,
+                      paddingHorizontal: 18,
+                      backgroundColor: c.historialBorrarIconBg,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: 2,
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                    onPress={() => handleBorrar(evento.nombre)}
+                    accessibilityLabel="Borrar"
+                  >
+                    <Ionicons name="trash" size={22} color={c.historialBorrarIconColor} />
+                    <ThemedText style={{ color: c.historialBorrarIconColor, fontWeight: 'bold', fontSize: 14, marginTop: 2 }}>Borrar</ThemedText>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 12,
+                      paddingVertical: 10,
+                      paddingHorizontal: 18,
+                      backgroundColor: c.historialObservarIconBg,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: 2,
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                    onPress={() => handleVer(evento.nombre)}
+                    accessibilityLabel="Ver"
+                  >
+                    <Ionicons name="eye" size={22} color={c.historialObservarIconColor} />
+                    <ThemedText style={{ color: c.historialObservarIconColor, fontWeight: 'bold', fontSize: 14, marginTop: 2 }}>Ver</ThemedText>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

@@ -368,10 +368,17 @@ def crear_asistencia():
 @app.route('/asistencias/<filename>', methods=['PUT'])
 def sobrescribir_asistencia(filename):
     excel_path = os.path.join(ASISTENCIAS_FOLDER, filename)
+    # Verifica que haya un archivo en la petición
     if 'file' not in request.files:
         return jsonify({'error': 'No se envió ningún archivo'}), 400
     file = request.files['file']
     file.save(excel_path)
+    # Imprime información para depuración
+    if os.path.exists(excel_path):
+        print(f"Archivo guardado en: {excel_path}")
+        print(f"Tamaño del archivo: {os.path.getsize(excel_path)} bytes")
+    else:
+        print(f"Error: No se guardó el archivo en {excel_path}")
     return jsonify({'ok': True})
 
 if __name__ == '__main__':

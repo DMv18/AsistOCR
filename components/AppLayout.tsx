@@ -21,9 +21,10 @@ type Props = {
   children: React.ReactNode;
   description?: string;
   showBack?: boolean;
+  onHelp?: () => void; // <-- agrega la prop
 };
 
-export function AppLayout({ children, description, showBack = true }: Props) {
+export function AppLayout({ children, description, showBack = true, onHelp }: Props) {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
   const { fontScale, theme, colorMode } = useThemeCustom();
@@ -191,6 +192,7 @@ export function AppLayout({ children, description, showBack = true }: Props) {
                   }
                 ]}
                 accessibilityLabel="Ayuda"
+                onPress={onHelp} // <-- llama a la prop si existe
               >
                 <ThemedText style={[styles.helpBtnText, { fontSize: 22 * fontScale, color: c.helpBtnText }]}>?</ThemedText>
               </TouchableOpacity>
