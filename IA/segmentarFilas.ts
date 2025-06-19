@@ -1,8 +1,6 @@
 import { SERVER_URL } from '@/constants/server';
 
-// Stub para evitar error de importación. Implementa la lógica real según tu backend.
 export async function segmentarFilas(uri: string): Promise<{ excel: string; nombresDetectados: string[] }> {
-  // Sube la imagen al backend y espera la respuesta real
   const formData = new FormData();
   formData.append('imagen', {
     uri,
@@ -15,7 +13,6 @@ export async function segmentarFilas(uri: string): Promise<{ excel: string; nomb
     body: formData,
     headers: {
       'Accept': 'application/json',
-      // 'Content-Type' NO debe estar presente para FormData en React Native
     },
   });
 

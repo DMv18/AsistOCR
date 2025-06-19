@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 16, // Se sobreescribe inline con fontScale
+    fontSize: 16,
   },
   content: {
     padding: 12,

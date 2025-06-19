@@ -75,10 +75,8 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
           } else if (header.match(/n[°º]/i)) {
             nuevaFila.push((excelData.length).toString());
           } else if (i === excelData[0].length - 1) {
-            // Última columna: asistencia actual
             nuevaFila.push(asistio ? '✓' : 'x');
           } else {
-            // Columnas anteriores: siempre 'x'
             nuevaFila.push('x');
           }
         }
@@ -158,7 +156,6 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
                       </View>
                     ))}
                   </View>
-                  {/* Filas */}
                   <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{ flexGrow: 1 }}

@@ -1,4 +1,3 @@
-// Paleta tritanopia: basada en colors.normal, con azules/verdes reemplazados por púrpuras y marrón-anaranjado.
 
 const colorsTritanopia = {
   light: {

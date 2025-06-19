@@ -90,12 +90,10 @@ export default function EditarNombreScreen() {
           }
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          // Trabaja como array de arrays para mantener encabezados y filas
           const tabla = utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
           const colNombre = tabla[0].findIndex(h => h && h.toLowerCase().includes('nombre'));
           if (colNombre === -1) throw new Error('No se encontró la columna de nombres');
 
-          // Debug: imprime antes
           console.log('ANTES:', tabla.map(fila => fila[colNombre]));
 
           // Reemplaza el nombre solo en la columna correcta
@@ -110,7 +108,6 @@ export default function EditarNombreScreen() {
             }
           }
 
-          // Debug: imprime después
           console.log('DESPUÉS:', tabla.map(fila => fila[colNombre]));
 
           if (!reemplazado) {
@@ -131,7 +128,6 @@ export default function EditarNombreScreen() {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           } as any);
 
-          // Debug: imprime nombre de archivo y tamaño
           console.log('Subiendo archivo:', eventoId, 'Tamaño base64:', wbout.length);
 
           const putRes = await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId)}`, {

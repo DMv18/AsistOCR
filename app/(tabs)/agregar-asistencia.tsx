@@ -117,31 +117,25 @@ export default function AgregarAsistenciaScreen() {
     try {
       const { nuevosNombres, tabla, colNombre } = procesado;
 
-      // Siempre agrega la nueva columna, aunque el encabezado ya exista
       tabla[0].push(fecha);
 
-      // Para cada nombre detectado
       nuevosNombres.forEach(nombreDetectado => {
-        // Busca si ya existe el nombre
         const idx = tabla.findIndex((fila, i) => i > 0 && fila[colNombre]?.trim().toLowerCase() === nombreDetectado.trim().toLowerCase());
         if (idx === -1) {
-          // No existe, agrega nueva fila
           const nuevaFila = [];
           for (let i = 0; i < tabla[0].length; i++) {
             if (i === 0) {
-              nuevaFila.push((tabla.length).toString()); // N°
+              nuevaFila.push((tabla.length).toString()); 
             } else if (i === colNombre) {
               nuevaFila.push(nombreDetectado);
             } else if (i === tabla[0].length - 1) {
-              nuevaFila.push('✓'); // check en la nueva columna
+              nuevaFila.push('✓'); 
             } else {
-              // Para columnas anteriores, pon 'x'
               nuevaFila.push('x');
             }
           }
           tabla.push(nuevaFila);
         } else {
-          // Ya existe, pon check en la nueva columna
           while (tabla[idx].length < tabla[0].length) {
             tabla[idx].push('');
           }
@@ -149,7 +143,6 @@ export default function AgregarAsistenciaScreen() {
         }
       });
 
-      // Para los que no están en nuevosNombres, pon 'x' en la nueva columna
       for (let i = 1; i < tabla.length; i++) {
         while (tabla[i].length < tabla[0].length) {
           tabla[i].push('');
@@ -159,7 +152,6 @@ export default function AgregarAsistenciaScreen() {
         }
       }
 
-      // Sube el nuevo Excel al backend (sobrescribe)
       const ws = utils.aoa_to_sheet(tabla);
       const wb = utils.book_new();
       utils.book_append_sheet(wb, ws, 'Sheet1');
@@ -172,12 +164,11 @@ export default function AgregarAsistenciaScreen() {
       } as any);
 
       await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId)}`, {
-        method: 'PUT', // <--- Cambia POST por PUT
+        method: 'PUT',
         body: formData,
-        // No pongas headers: Content-Type
+       
       });
 
-      // Redirige a ver-asistencia
       router.replace({ pathname: '/ver-asistencia', params: { nombre: eventoId } });
     } catch (err) {
       Alert.alert('Error', 'No se pudo guardar la asistencia: ' + (err instanceof Error ? err.message : 'Error desconocido'));

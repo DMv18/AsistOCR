@@ -14,7 +14,7 @@ export default function ResultadoAsistenciaScreen() {
   const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
-  // Obtener los nombres detectados desde los parámetros (respuestas)
+  // Obtener los nombres detectados desde los parámetros 
   const nombresDetectados: string[] = (() => {
     if (typeof params.respuestas === 'string') {
       try {
@@ -93,7 +93,6 @@ export default function ResultadoAsistenciaScreen() {
   return (
     <AppLayout description="Historial de asistencia procesado">
       <View style={{ width: '100%', alignItems: 'center' }}>
-        {/* Bloque superior igual que ver-asistencia */}
         <View style={{
           borderRadius: 14,
           padding: 12,
@@ -128,7 +127,6 @@ export default function ResultadoAsistenciaScreen() {
             />
           </View>
         </View>
-        {/* Tabla - Actualizada para coincidir con AgregarPersona */}
         <View style={{ width: '100%', flex: 1, minHeight: 200 }}>
           <ThemedText style={{ 
             fontWeight: 'bold', 
@@ -152,7 +150,6 @@ export default function ResultadoAsistenciaScreen() {
             >
               {excelData.length > 0 && (
                 <>
-                  {/* Header */}
                   <View style={{ flexDirection: 'row' }}>
                     {excelData[0].map((col, idx) => (
                       <View
@@ -249,7 +246,6 @@ export default function ResultadoAsistenciaScreen() {
             </View>
           </ScrollView>
         </View>
-        {/* Botones */}
         <View
           style={{
             flexDirection: 'row',

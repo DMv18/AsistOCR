@@ -1,1 +1,0 @@
-// Archivo eliminado: este componente no se usa y la paleta ya está en constants/colors.tritanopia.ts

@@ -58,8 +58,8 @@ export default function TomarFotoScreen() {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center', // centra verticalmente
-    flex: 1, // ocupa todo el alto disponible
+    justifyContent: 'center', 
+    flex: 1, 
     width: '100%',
     marginTop: 0,
   },

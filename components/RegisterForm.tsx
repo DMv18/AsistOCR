@@ -70,7 +70,6 @@ export function RegisterForm() {
       >
         <ThemedText style={[globalStyles.btnPrimaryText, { color: colors.btnPrimaryText }]}>Crear cuenta</ThemedText>
       </TouchableOpacity>
-      {/* Solo texto, sin TouchableOpacity */}
       <ThemedText style={[styles.linkText, { color: colors.loginLinkText, fontSize: 16 * fontScale }]}>
         Ya tienes una cuenta?
       </ThemedText>
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontWeight: 'bold',
-    fontSize: 16, // Se sobreescribe inline con fontScale
+    fontSize: 16, 
   },
 });
 

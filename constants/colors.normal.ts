@@ -1,5 +1,3 @@
-// Paleta normal: colores suaves, modernos y accesibles, con buen contraste y jerarquía visual.
-
 const colorsNormal = {
   light: {
     // Fondo general de la app (área exterior)

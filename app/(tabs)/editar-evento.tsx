@@ -32,7 +32,6 @@ export default function EditarEventoScreen() {
         const nombreSinExtension = eventoId.replace('.xlsx', '');
         setNombreEvento(nombreSinExtension.replace(/(\d{2}[-_.]\d{2}[-_.]\d{4})/, '').replace(/[-_.]+$/, '').trim() || nombreSinExtension);
         const match = eventoId.match(/(\d{2}[-_.]\d{2}[-_.]\d{4})/);
-        //setFechaEvento(match ? match[1].replace(/[-_.]/g, '/') : '');
       });
   }, [eventoId]);
 
@@ -49,7 +48,7 @@ export default function EditarEventoScreen() {
       texto: 'Editar ✓ o ✗ de la asistencia',
       bg: cEditar.opcion2Bg,
       iconBg: cEditar.icon2Bg,
-      onPress: () => router.push({ pathname: '/editar-checks', params: { eventoId } }), // <--- redirige aquí
+      onPress: () => router.push({ pathname: '/editar-checks', params: { eventoId } }), 
     },
     {
       icon: 'document-attach-outline',

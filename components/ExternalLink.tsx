@@ -27,4 +27,3 @@ export function ExternalLink({ href, children, style, ...props }: Props) {
   );
 }
 
-// Donde uses colors.externalLink, ahora funcionará porque existe en Colors

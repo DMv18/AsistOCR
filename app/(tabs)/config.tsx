@@ -7,7 +7,6 @@ import { Platform, StyleSheet, Switch, TextInput, TouchableOpacity, View } from 
 
 import { ColorMode, Colors } from '@/constants/Colors';
 
-// Opciones de accesibilidad visual
 const colorOptions: { key: ColorMode; label: string; description: string }[] = [
   {
     key: 'normal',
@@ -51,11 +50,9 @@ export default function ConfigScreen() {
 
   const c = Colors[colorMode][theme].Config;
 
-  // Calcula el máximo permitido según la plataforma
   const maxFontSize = Platform.OS === 'web' ? 24 : 22;
   const minFontSize = 12;
 
-  // Calcula el fontScale máximo y mínimo según el tamaño base (16)
   const maxFontScale = maxFontSize / 16;
   const minFontScale = minFontSize / 16;
 
@@ -83,7 +80,7 @@ export default function ConfigScreen() {
                 borderColor: c.colorRadio,
                 color: c.labelText,
                 height: 44,
-                fontSize: 22 * fontScale, // aplica el escalado aquí
+                fontSize: 22 * fontScale, 
                 paddingVertical: 0,
               }
             ]}

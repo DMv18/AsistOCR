@@ -1,5 +1,3 @@
-// Paleta para deuteranopía: basada en colors.normal, con verdes reemplazados por azules y rojos más oscuros.
-
 const colorsDeuteranopia = {
   light: {
     background: '#F7FAFC',

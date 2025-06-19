@@ -21,7 +21,7 @@ type Props = {
   children: React.ReactNode;
   description?: string;
   showBack?: boolean;
-  onHelp?: () => void; // <-- agrega la prop
+  onHelp?: () => void; 
 };
 
 export function AppLayout({ children, description, showBack = true, onHelp }: Props) {
@@ -91,7 +91,7 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
                   styles.menuPopup,
                   {
                     backgroundColor: cardColor,
-                    marginTop: 40, // más arriba aún
+                    marginTop: 40, 
                     alignSelf: 'flex-end',
                   }
                 ]}>
@@ -192,7 +192,7 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
                   }
                 ]}
                 accessibilityLabel="Ayuda"
-                onPress={onHelp} // <-- llama a la prop si existe
+                onPress={onHelp} 
               >
                 <ThemedText style={[styles.helpBtnText, { fontSize: 22 * fontScale, color: c.helpBtnText }]}>?</ThemedText>
               </TouchableOpacity>
@@ -224,7 +224,6 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
                 {children}
               </View>
             </ScrollView>
-            {/* Botón regresar */}
             {showBack && (
               <TouchableOpacity
                 style={[

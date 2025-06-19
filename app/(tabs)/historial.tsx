@@ -60,12 +60,10 @@ export default function HistorialScreen() {
   };
 
   const handleEditar = (nombre: string) => {
-    // Redirige a la pantalla de editar evento, pasando el nombre como parámetro
     router.push({ pathname: '/editar-evento', params: { id: nombre } });
   };
 
   const handleVer = (nombre: string) => {
-    // Navega a la página de visualización pasando el nombre del archivo
     router.push({ pathname: '/ver-asistencia', params: { nombre } });
   };
 
@@ -98,14 +96,12 @@ export default function HistorialScreen() {
                 justifyContent: 'flex-start',
               }}
             >
-              {/* Nombre y fecha arriba, centrados */}
               <View style={{ width: '100%', alignItems: 'center', marginBottom: 6 }}>
                 <ThemedText style={{ fontWeight: 'bold', fontSize: 15, color: c.eventoNombre, textAlign: 'center' }}>
                   {evento.nombre.replace('.xlsx', '')}
                 </ThemedText>
             
               </View>
-              {/* Botones siempre dentro del componente, usando View con flexGrow */}
               <View style={{
                 flex: 1,
                 width: '100%',

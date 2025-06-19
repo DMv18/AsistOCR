@@ -16,7 +16,6 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 OUTPUT_FOLDER = os.path.join(BASE_DIR, 'filas')
 ASISTENCIAS_FOLDER = os.path.join(BASE_DIR, 'asistencias')
 
-# Forzar la creación de carpetas y mostrar errores si ocurren
 try:
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
@@ -40,7 +39,6 @@ print(f"BASE_DIR: {BASE_DIR}")
 print(f"UPLOAD_FOLDER: {UPLOAD_FOLDER}")
 print(f"OUTPUT_FOLDER: {OUTPUT_FOLDER}")
 
-# Guarda el proceso de Python lanzado para poder cancelarlo
 python_process = None
 
 @app.route('/segmentar', methods=['POST'])
@@ -51,10 +49,8 @@ def segmentar():
     print(f"OUTPUT_FOLDER: {OUTPUT_FOLDER}")
     print(f"Contenido de BASE_DIR: {os.listdir(BASE_DIR)}")
 
-    # Borra el contenido de la carpeta 'filas' ANTES de guardar nuevas filas
     try:
         import shutil
-        # Reintenta borrar hasta que la carpeta quede vacía
         intentos = 0
         while True:
             archivos = os.listdir(OUTPUT_FOLDER)
@@ -229,7 +225,7 @@ def segmentar():
 
     return jsonify({
         'filas': fila_urls,
-        'excel': f"{BASE_URL}fila/{excel_filename}",  # <-- ahora se sirve desde filas
+        'excel': f"{BASE_URL}fila/{excel_filename}", 
         'nombresDetectados': nombres_detectados
     })
 

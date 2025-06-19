@@ -5,7 +5,6 @@ import { useRouter } from 'expo-router';
 import React, { useCallback } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 
-// Copilot imports actualizados
 import { CopilotProvider, CopilotStep, useCopilot, walkthroughable } from 'react-native-copilot';
 
 const WalkthroughableTouchableOpacity = walkthroughable(TouchableOpacity);
@@ -16,9 +15,7 @@ function HomeScreen() {
   const globalStyles = useGlobalStyles();
   const { start } = useCopilot();
 
-  // Callback estable para pasar a onHelp
   const handleHelp = useCallback(() => {
-    // Pequeño delay para asegurar que el contexto esté listo
     setTimeout(() => {
       start();
     }, 100);
@@ -31,7 +28,6 @@ function HomeScreen() {
       onHelp={handleHelp}
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-        {/* Elimina el botón de ayuda extra */}
         <CopilotStep
           text="Aquí puedes crear una nueva asistencia. Sube una foto de la lista y el sistema la procesará automáticamente."
           order={1}

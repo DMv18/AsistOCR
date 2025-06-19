@@ -51,11 +51,9 @@ export default function VerAsistenciaScreen() {
             const json = utils.sheet_to_json(worksheet, { header: 1 });
             setExcelData(json as string[][]);
 
-            // Calcular el ancho de cada columna según el dato más largo
             if (Array.isArray(json) && json.length > 0) {
               const colCount = Math.max(...json.map((row: any) => row.length));
               const widths: number[] = [];
-              // Asegura que json es tratado como any[][] para evitar errores de tipo
               const jsonArray = json as any[][];
               for (let col = 0; col < colCount; col++) {
                 let maxLen = 0;
@@ -64,7 +62,6 @@ export default function VerAsistenciaScreen() {
                   const len = (cell ? String(cell) : '').length;
                   if (len > maxLen) maxLen = len;
                 }
-                // Ajusta el ancho mínimo y máximo en px (aprox. 8px por caracter)
                 widths.push(Math.min(Math.max(maxLen * 8 + 24, 80), 260));
               }
               setColWidths(widths);
@@ -89,7 +86,6 @@ export default function VerAsistenciaScreen() {
           setFecha(extraerFecha(nombreArchivo));
           setLoading(false);
         };
-        // Usa readAsArrayBuffer para máxima compatibilidad
         reader.readAsArrayBuffer(blob);
       })
       .catch((err) => {
@@ -112,8 +108,6 @@ export default function VerAsistenciaScreen() {
   return (
     <AppLayout description={`Historial de "${nombreEvento}"`}>
       <View style={[styles.card, { backgroundColor: c.card }]}>
-        {/* Elimina el botón para seleccionar archivo Excel local */}
-        {/* Encabezado con nombre y fecha */}
         <View style={[styles.headerBlock, { backgroundColor: c.appLayoutGreenBlock }]}>
           <View style={styles.headerInfo}>
             <View style={styles.headerCol}>
@@ -122,16 +116,9 @@ export default function VerAsistenciaScreen() {
                 {nombreEvento || 'Sin nombre'}
               </ThemedText>
             </View>
-            {/* Elimina la columna de fecha de creación */}
-            {/* <View style={styles.headerCol}>
-              <ThemedText style={[styles.headerLabel, { color: c.text }]}>Creación del evento:</ThemedText>
-              <ThemedText style={[styles.headerValue, { color: c.text }]}>
-                {fecha || 'Sin fecha'}
-              </ThemedText>
-            </View> */}
+
           </View>
         </View>
-        {/* Tabla con el contenido del Excel */}
         <View style={{ width: '100%', flex: 1, minHeight: 200 }}>
           <ScrollView horizontal style={{ width: '100%' }}>
             <View
@@ -154,7 +141,6 @@ export default function VerAsistenciaScreen() {
                 <>
                   {excelData && Array.isArray(excelData) && excelData.length > 0 && Array.isArray(excelData[0]) && excelData[0].length > 0 ? (
                     <>
-                      {/* Header */}
                       <View style={{ flexDirection: 'row' }}>
                         {excelData[0].map((col, idx) => (
                           <View
@@ -183,7 +169,6 @@ export default function VerAsistenciaScreen() {
                           </View>
                         ))}
                       </View>
-                      {/* Filas */}
                       <ScrollView
                         style={{ flex: 1 }}
                         contentContainerStyle={{ flexGrow: 1 }}
@@ -237,7 +222,6 @@ export default function VerAsistenciaScreen() {
             </View>
           </ScrollView>
         </View>
-        {/* Botones de acción */}
         <View style={styles.btnRow}>
           <TouchableOpacity
             style={[styles.btn, { backgroundColor: c.btnEditar }]}
@@ -247,7 +231,6 @@ export default function VerAsistenciaScreen() {
             <Ionicons name="pencil" size={20} color={c.btnText} />
             <ThemedText style={[styles.btnText, { color: c.btnText }]}>Editar</ThemedText>
           </TouchableOpacity>
-          {/* Botón de regresar eliminado */}
         </View>
       </View>
     </AppLayout>
@@ -319,7 +302,6 @@ const styles = StyleSheet.create({
   tablaCell: {
     flex: 0,
     fontSize: 14,
-    // textAlign se ajusta dinámicamente en el render
     minWidth: 80,
     maxWidth: 260,
     paddingVertical: 2,

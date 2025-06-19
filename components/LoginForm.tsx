@@ -52,7 +52,6 @@ export function LoginForm() {
       >
         <ThemedText style={[globalStyles.btnPrimaryText, { color: colors.btnPrimaryText }]}>Iniciar sesión</ThemedText>
       </TouchableOpacity>
-      {/* Solo texto, sin TouchableOpacity */}
       <ThemedText style={[styles.linkText, { color: colors.loginLinkText, fontSize: 16 }]}>
         No tiene una cuenta?
       </ThemedText>
