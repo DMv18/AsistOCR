@@ -23,6 +23,7 @@ export default function EditarChecksScreen() {
   const [nombreSeleccionado, setNombreSeleccionado] = useState<string | null>(null);
   const [asistencias, setAsistencias] = useState<boolean[]>([]);
   const [colAsistencias, setColAsistencias] = useState<number[]>([]);
+  const [guardarError, setGuardarError] = useState<string | null>(null);
 
   // Cargar Excel
   useEffect(() => {
@@ -95,7 +96,11 @@ export default function EditarChecksScreen() {
 
   // Guardar cambios
   const handleGuardar = async () => {
-    if (!nombreSeleccionado || !tabla.length || colNombre === -1 || !colAsistencias.length) return;
+    if (!nombreSeleccionado || !tabla.length || colNombre === -1 || !colAsistencias.length) {
+      setGuardarError('Selecciona un nombre válido para editar la asistencia.');
+      Alert.alert('Error', 'Selecciona un nombre válido para editar la asistencia.');
+      return;
+    }
     const filaIdx = tabla.findIndex((fila, i) => i > 0 && String(fila[colNombre] ?? '') === nombreSeleccionado);
     if (filaIdx === -1) return;
     const nuevaTabla = tabla.map(fila => [...fila]);
@@ -269,6 +274,11 @@ export default function EditarChecksScreen() {
                 <ThemedText style={{ color: c.btnText, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
               </TouchableOpacity>
             </View>
+            {guardarError && (
+              <ThemedText style={{ color: c.danger, fontSize: 13, marginTop: 4 }}>
+                {guardarError}
+              </ThemedText>
+            )}
           </View>
         )}
       </View>

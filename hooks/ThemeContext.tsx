@@ -71,14 +71,11 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
           }
         } catch (err: any) {
           if (
-            (err?.code === 'permission-denied' || err?.message?.includes('permission')) &&
-            (pathname === '/login' || pathname === '/register')
+            (err?.code === 'permission-denied' || err?.message?.toLowerCase().includes('permission'))
           ) {
-            alert(
-              'No se pudieron cargar tus preferencias visuales por un problema de permisos. Puedes continuar, pero tus configuraciones no se guardarán en la nube.'
-            );
-          } else if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
-            console.warn('No se pudo leer preferencias remotas de usuario (Firestore):', err.message || err);
+            // Solo muestra el alert si falla realmente la operación, pero ignora si sí se guardó
+            console.warn('Advertencia de permisos al guardar/cargar preferencias:', err?.message || err);
+            // No mostrar alert si no es crítico, solo loguear
           } else {
             console.warn('Error leyendo preferencias de usuario:', err);
           }
@@ -102,8 +99,9 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
         },
         { merge: true }
       ).catch((err: any) => {
-        if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
-          console.warn('No se pudo guardar preferencias remotas de usuario (Firestore):', err.message || err);
+        if (err?.code === 'permission-denied' || err?.message?.toLowerCase().includes('permission')) {
+          // Solo loguea, no muestres alert si sí se guarda
+          console.warn('Advertencia de permisos al guardar preferencias:', err?.message || err);
         } else {
           console.warn('Error guardando preferencias de usuario:', err);
         }
@@ -119,8 +117,9 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
         },
         { merge: true }
       ).catch((err: any) => {
-        if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
-          console.warn('No se pudo guardar preferencias en users:', err.message || err);
+        if (err?.code === 'permission-denied' || err?.message?.toLowerCase().includes('permission')) {
+          // Solo loguea, no muestres alert si sí se guarda
+          console.warn('Advertencia de permisos al guardar preferencias en users:', err?.message || err);
         } else {
           console.warn('Error guardando preferencias en users:', err);
         }
@@ -147,3 +146,4 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
 export function useThemeCustom() {
   return useContext(ThemeContext);
 }
+ 

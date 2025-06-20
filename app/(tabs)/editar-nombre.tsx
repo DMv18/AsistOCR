@@ -7,8 +7,9 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
 import { read, utils, write } from 'xlsx';
+import { CopilotProvider } from 'react-native-copilot';
 
-export default function EditarNombreScreen() {
+function EditarNombreScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const eventoId = typeof params.eventoId === 'string' ? params.eventoId : '';
@@ -18,6 +19,7 @@ export default function EditarNombreScreen() {
   const [nombres, setNombres] = useState<string[]>([]);
   const [nombreSeleccionado, setNombreSeleccionado] = useState<string | null>(null);
   const [nuevoNombre, setNuevoNombre] = useState('');
+  const [nuevoNombreError, setNuevoNombreError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Cargar nombres del Excel
@@ -63,12 +65,28 @@ export default function EditarNombreScreen() {
       });
   }, [eventoId]);
 
+  // Validación en tiempo real para el nuevo nombre
+  useEffect(() => {
+    const trimmed = nuevoNombre.replace(/\s+$/, '');
+    if (!trimmed) setNuevoNombreError('El nuevo nombre no puede estar vacío.');
+    else if (trimmed.length < 2) setNuevoNombreError('El nuevo nombre debe tener al menos 2 caracteres.');
+    else if (trimmed.length > 64) setNuevoNombreError('El nuevo nombre es demasiado largo (máx. 64 caracteres).');
+    else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s.'-]+$/.test(trimmed)) setNuevoNombreError('El nuevo nombre contiene caracteres no permitidos.');
+    else if (/\s$/.test(nuevoNombre)) setNuevoNombreError('El nombre no puede terminar con espacios.');
+    else setNuevoNombreError(null);
+  }, [nuevoNombre]);
+
   const handleReemplazar = async () => {
-    if (!nombreSeleccionado || !nuevoNombre.trim()) {
+    const nuevoNombreTrim = nuevoNombre.replace(/\s+$/, '');
+    if (!nombreSeleccionado || !nuevoNombreTrim) {
       Alert.alert('Error', 'Selecciona un nombre y escribe el nuevo nombre.');
       return;
     }
-    if (nombres.some(n => n.trim().toLowerCase() === nuevoNombre.trim().toLowerCase())) {
+    if (nuevoNombreError) {
+      Alert.alert('Error', nuevoNombreError);
+      return;
+    }
+    if (nombres.some(n => n.trim().toLowerCase() === nuevoNombreTrim.toLowerCase())) {
       Alert.alert('Error', 'El nuevo nombre ya existe en la lista.');
       return;
     }
@@ -103,7 +121,7 @@ export default function EditarNombreScreen() {
               typeof tabla[i][colNombre] === 'string' &&
               tabla[i][colNombre].trim() === nombreSeleccionado
             ) {
-              tabla[i][colNombre] = nuevoNombre.trim();
+              tabla[i][colNombre] = nuevoNombreTrim;
               reemplazado = true;
             }
           }
@@ -210,6 +228,11 @@ export default function EditarNombreScreen() {
           placeholder="Ingrese el nuevo nombre"
           placeholderTextColor={c.inputPlaceholder}
         />
+        {nuevoNombreError && (
+          <ThemedText style={{ color: c.danger, fontSize: 13, marginBottom: 4 }}>
+            {nuevoNombreError}
+          </ThemedText>
+        )}
         <TouchableOpacity
           style={{
             backgroundColor: c.btnPrimary,
@@ -240,6 +263,25 @@ export default function EditarNombreScreen() {
         </TouchableOpacity>
       </View>
     </AppLayout>
+  );
+}
+
+export default function EditarNombreScreenWrapper() {
+  return (
+    <CopilotProvider
+      overlay="svg"
+      animated
+      tooltipStyle={{ borderRadius: 12, padding: 12 }}
+      labels={{
+        finish: 'Listo',
+        next: 'Siguiente',
+        previous: 'Anterior',
+        skip: 'Saltar',
+      }}
+      stepNumberComponent={() => null}
+    >
+      <EditarNombreScreen />
+    </CopilotProvider>
   );
 }
 

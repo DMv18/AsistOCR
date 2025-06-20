@@ -32,6 +32,16 @@ export default function AgregarAsistenciaScreen() {
     tabla: string[][];
     colNombre: number;
   } | null>(null);
+  const [fechaError, setFechaError] = useState<string | null>(null);
+
+  // Validación en tiempo real para la fecha/encabezado
+  useEffect(() => {
+    const valor = fecha.trim();
+    if (!valor) setFechaError(null); // Se permite vacío (usará fecha por defecto)
+    else if (valor.length < 3) setFechaError('El encabezado debe tener al menos 3 caracteres.');
+    else if (valor.length > 14) setFechaError('El encabezado no puede tener más de 14 caracteres.');
+    else setFechaError(null);
+  }, [fecha]);
 
   useEffect(() => {
     if (!eventoId || !uri) return;
@@ -114,10 +124,18 @@ export default function AgregarAsistenciaScreen() {
 
   const handleGuardar = async () => {
     if (!procesado) return;
+    if (fechaError) {
+      Alert.alert('Error', fechaError);
+      return;
+    }
     try {
       const { nuevosNombres, tabla, colNombre } = procesado;
 
-      tabla[0].push(fecha);
+      // Determina el encabezado final: si está vacío, usa la fecha por defecto
+      const hoy = new Date();
+      const encabezadoFinal = fecha.trim() ? fecha.trim() : hoy.toISOString().slice(0, 10);
+
+      tabla[0].push(encabezadoFinal);
 
       nuevosNombres.forEach(nombreDetectado => {
         const idx = tabla.findIndex((fila, i) => i > 0 && fila[colNombre]?.trim().toLowerCase() === nombreDetectado.trim().toLowerCase());
@@ -232,9 +250,15 @@ export default function AgregarAsistenciaScreen() {
               }}
               value={fecha}
               onChangeText={setFecha}
-              placeholder="Fecha (YYYY-MM-DD)"
+              placeholder="Fecha (YYYY-MM-DD) o texto"
               placeholderTextColor={c.inputPlaceholder}
+              maxLength={14}
             />
+            {fechaError && (
+              <ThemedText style={{ color: c.danger, fontSize: 13, marginBottom: 4 }}>
+                {fechaError}
+              </ThemedText>
+            )}
             <TouchableOpacity
               style={{
                 backgroundColor: c.btnPrimary,

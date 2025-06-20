@@ -34,8 +34,8 @@ export function LoginForm() {
 
     if (!emailLower) {
       newErrors.email = 'El correo es obligatorio';
-    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailLower)) {
-      newErrors.email = 'Correo electrónico inválido';
+    } else if (!/^[\w-.]+@gmail\.com$/.test(emailLower)) {
+      newErrors.email = 'Solo se permiten correos @gmail.com';
     }
 
     if (!password) {
@@ -156,7 +156,13 @@ export function LoginForm() {
             placeholder="tucorreo@ejemplo.com"
             placeholderTextColor={colors.inputPlaceholder}
             value={email}
-            onChangeText={setEmail}
+            onChangeText={text => {
+              setEmail(text);
+              const emailLower = text.trim().toLowerCase();
+              if (!emailLower) setErrors(e => ({ ...e, email: 'El correo es obligatorio' }));
+              else if (!/^[\w-.]+@gmail\.com$/.test(emailLower)) setErrors(e => ({ ...e, email: 'Solo se permiten correos @gmail.com' }));
+              else setErrors(e => ({ ...e, email: undefined }));
+            }}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
@@ -183,7 +189,12 @@ export function LoginForm() {
               placeholder="••••••••"
               placeholderTextColor={colors.inputPlaceholder}
               value={password}
-              onChangeText={setPassword}
+              onChangeText={text => {
+                setPassword(text);
+                if (!text) setErrors(e => ({ ...e, password: 'La contraseña es obligatoria' }));
+                else if (text.length < 6) setErrors(e => ({ ...e, password: 'Mínimo 6 caracteres' }));
+                else setErrors(e => ({ ...e, password: undefined }));
+              }}
               secureTextEntry={secureTextEntry}
               editable={!loading}
             />

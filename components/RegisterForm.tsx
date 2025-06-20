@@ -42,19 +42,24 @@ export function RegisterForm() {
   const validateForm = () => {
     const newErrors: typeof errors = {};
     const emailLower = email.trim().toLowerCase();
+    const nameTrimmed = name.replace(/\s+$/, '');
 
     // Validación de nombre
-    if (!name.trim()) {
+    if (!nameTrimmed) {
       newErrors.name = 'El nombre es obligatorio';
-    } else if (name.trim().length < 2) {
+    } else if (nameTrimmed.length < 2) {
       newErrors.name = 'Mínimo 2 caracteres';
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s.'-]+$/.test(nameTrimmed)) {
+      newErrors.name = 'El nombre contiene caracteres no permitidos';
+    } else if (/\s$/.test(name)) {
+      newErrors.name = 'El nombre no puede terminar con espacios.';
     }
 
     // Validación de email
     if (!emailLower) {
       newErrors.email = 'El correo es obligatorio';
-    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailLower)) {
-      newErrors.email = 'Correo electrónico inválido';
+    } else if (!/^[\w-.]+@gmail\.com$/.test(emailLower)) {
+      newErrors.email = 'Solo se permiten correos @gmail.com';
     }
 
     // Validación de contraseña
@@ -212,7 +217,15 @@ export function RegisterForm() {
               placeholder="Tu nombre"
               placeholderTextColor={colors.inputPlaceholder}
               value={name}
-              onChangeText={setName}
+              onChangeText={text => {
+                setName(text);
+                const trimmed = text.replace(/\s+$/, '');
+                if (!trimmed) setErrors(e => ({ ...e, name: 'El nombre es obligatorio' }));
+                else if (trimmed.length < 2) setErrors(e => ({ ...e, name: 'Mínimo 2 caracteres' }));
+                else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s.'-]+$/.test(trimmed)) setErrors(e => ({ ...e, name: 'El nombre contiene caracteres no permitidos' }));
+                else if (/\s$/.test(text)) setErrors(e => ({ ...e, name: 'El nombre no puede terminar con espacios.' }));
+                else setErrors(e => ({ ...e, name: undefined }));
+              }}
               autoCapitalize="words"
               autoCorrect={false}
               editable={!loading}
@@ -237,7 +250,13 @@ export function RegisterForm() {
               placeholder="tucorreo@ejemplo.com"
               placeholderTextColor={colors.inputPlaceholder}
               value={email}
-              onChangeText={setEmail}
+              onChangeText={text => {
+                setEmail(text);
+                const emailLower = text.trim().toLowerCase();
+                if (!emailLower) setErrors(e => ({ ...e, email: 'El correo es obligatorio' }));
+                else if (!/^[\w-.]+@gmail\.com$/.test(emailLower)) setErrors(e => ({ ...e, email: 'Solo se permiten correos @gmail.com' }));
+                else setErrors(e => ({ ...e, email: undefined }));
+              }}
               keyboardType="email-address"
               autoCapitalize="none"
               autoCorrect={false}
@@ -265,7 +284,12 @@ export function RegisterForm() {
                 placeholder="••••••••"
                 placeholderTextColor={colors.inputPlaceholder}
                 value={password}
-                onChangeText={setPassword}
+                onChangeText={text => {
+                  setPassword(text);
+                  if (!text) setErrors(e => ({ ...e, password: 'La contraseña es obligatoria' }));
+                  else if (text.length < 6) setErrors(e => ({ ...e, password: 'Mínimo 6 caracteres' }));
+                  else setErrors(e => ({ ...e, password: undefined }));
+                }}
                 secureTextEntry={secureTextEntry}
                 editable={!loading}
               />
@@ -303,7 +327,12 @@ export function RegisterForm() {
                 placeholder="••••••••"
                 placeholderTextColor={colors.inputPlaceholder}
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={text => {
+                  setConfirmPassword(text);
+                  if (!text) setErrors(e => ({ ...e, confirmPassword: 'Confirma tu contraseña' }));
+                  else if (text !== password) setErrors(e => ({ ...e, confirmPassword: 'Las contraseñas no coinciden' }));
+                  else setErrors(e => ({ ...e, confirmPassword: undefined }));
+                }}
                 secureTextEntry={confirmSecureTextEntry}
                 editable={!loading}
               />

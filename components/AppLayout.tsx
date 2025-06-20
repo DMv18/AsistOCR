@@ -121,13 +121,15 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
                       style={styles.menuOption}
                       onPress={() => {
                         setMenuVisible(false);
-                        if (userName) return; // No hace nada si ya está logueado
-                        router.push('/login');
+                        if (userName) {
+                          router.push('/usuario'); // Abre la pantalla de usuario
+                        } else {
+                          router.push('/login');
+                        }
                       }}
                     >
                       <Ionicons name="person-circle-outline" size={22} color={textColor} />
-                      <ThemedText style={[styles.menuOptionText, { color: textColor }]}
-                      >
+                      <ThemedText style={[styles.menuOptionText, { color: textColor }]}>
                         {userName ? userName : 'Usuario'}
                       </ThemedText>
                     </TouchableOpacity>
@@ -163,12 +165,16 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
                 style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
                 accessibilityLabel="Usuario"
                 onPress={() => {
-                  if (userName) return;
-                  router.push('/login');
+                  if (userName) {
+                    router.push('/usuario'); // Abre la pantalla de usuario
+                  } else {
+                    router.push('/login');
+                  }
                 }}
               >
                 <Ionicons name="person-circle-outline" size={20} color={headerBtnTextColor} />
-                <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>
+                <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}
+                >
                   {userName ? userName : 'Usuario'}
                 </ThemedText>
               </TouchableOpacity>

@@ -7,8 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
+import { CopilotProvider } from 'react-native-copilot';
 
-export default function ResultadoAsistenciaScreen() {
+function ResultadoAsistenciaScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
   const { theme, colorMode, fontScale } = useThemeCustom();
@@ -43,13 +44,23 @@ export default function ResultadoAsistenciaScreen() {
       : 'Evento_' + new Date().toISOString().slice(0, 10)
   );
   const [fechaEvento] = useState(new Date().toISOString().slice(0, 10));
+  // Nuevo: input para el nombre de la columna
+  const [nombreColumna, setNombreColumna] = useState('');
 
   const handleFinalizar = async () => {
-    if (!nombreEvento || !nombreEvento.trim()) {
+    const nombreEventoTrim = nombreEvento.replace(/\s+$/, '');
+    const nombreColumnaTrim = nombreColumna.replace(/\s+$/, '');
+    if (!nombreEventoTrim) {
       Alert.alert('Nombre requerido', 'Debes ingresar un nombre para la asistencia.');
       return;
     }
-    const nombreExcel = nombreEvento.trim().replace(/[^a-zA-Z0-9_\-]/g, '_') + '.xlsx';
+    if (nombreEventoTrim.length < 2) {
+      Alert.alert('Nombre inválido', 'El nombre del evento debe tener al menos 2 caracteres.');
+      return;
+    }
+    // Usa el nombre de columna si lo puso, si no la fecha por defecto
+    const columnaFinal = nombreColumnaTrim ? nombreColumnaTrim : fechaEvento;
+    const nombreExcel = nombreEventoTrim.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.xlsx';
     const nombres = resultado.map(f => f.nombre);
     try {
       const res = await fetch(`${SERVER_URL}/crear-asistencia`, {
@@ -58,7 +69,7 @@ export default function ResultadoAsistenciaScreen() {
         body: JSON.stringify({
           nombre: nombreExcel,
           nombres,
-          fecha: fechaEvento
+          fecha: columnaFinal, // <--- aquí se envía el nombre de columna limpio
         }),
       });
       if (res.status === 409) {
@@ -81,8 +92,9 @@ export default function ResultadoAsistenciaScreen() {
   };
 
   // Construir datos tipo excelData: encabezado + filas
+  const columnaPreview = nombreColumna.replace(/\s+$/, '') ? nombreColumna.replace(/\s+$/, '') : fechaEvento;
   const excelData: string[][] = [
-    ['N°', 'Nombre', fechaEvento],
+    ['N°', 'Nombre', columnaPreview], // <--- aquí también se muestra el nombre limpio
     ...resultado.map((fila, idx) => [
       (idx + 1).toString(),
       fila.nombre,
@@ -105,6 +117,32 @@ export default function ResultadoAsistenciaScreen() {
             {"Nombre del evento: '"+nombreEvento+"'"}
           </ThemedText>
           <View style={{ width: '100%', maxWidth: 420, alignItems: 'center' }}>
+            <ThemedText style={{ color: c.text, fontWeight: 'bold', marginBottom: 2, fontSize: 15 * fontScale }}>
+              Nombre del evento
+            </ThemedText>
+            <TextInput
+              style={{
+                borderWidth: 1,
+                borderColor: c.ResultadoAsistencia?.infoInputBorder,
+                backgroundColor: c.ResultadoAsistencia?.infoInputBg,
+                color: c.ResultadoAsistencia?.infoInputText,
+                borderRadius: 24,
+                paddingVertical: 10,
+                paddingHorizontal: 18,
+                fontSize: 16 * fontScale,
+                marginBottom: 8,
+                width: '100%',
+                maxWidth: 350,
+                textAlign: 'center',
+              }}
+              value={nombreEvento}
+              onChangeText={setNombreEvento}
+              placeholder="Nombre del evento"
+              placeholderTextColor={c.ResultadoAsistencia?.infoInputText}
+            />
+            <ThemedText style={{ color: c.text, fontWeight: 'bold', marginBottom: 2, fontSize: 15 * fontScale }}>
+              Nombre de la columna
+            </ThemedText>
             <TextInput
               style={{
                 borderWidth: 1,
@@ -120,9 +158,9 @@ export default function ResultadoAsistenciaScreen() {
                 maxWidth: 350,
                 textAlign: 'center',
               }}
-              value={nombreEvento}
-              onChangeText={setNombreEvento}
-              placeholder="Nombre del evento"
+              value={nombreColumna}
+              onChangeText={setNombreColumna}
+              placeholder={`Nombre de la columna (por defecto: ${fechaEvento})`}
               placeholderTextColor={c.ResultadoAsistencia?.infoInputText}
             />
           </View>
@@ -304,3 +342,24 @@ export default function ResultadoAsistenciaScreen() {
     </AppLayout>
   );
 }
+
+function ResultadoAsistenciaScreenWrapper() {
+  return (
+    <CopilotProvider
+      overlay="svg"
+      animated
+      tooltipStyle={{ borderRadius: 12, padding: 12 }}
+      labels={{
+        finish: 'Listo',
+        next: 'Siguiente',
+        previous: 'Anterior',
+        skip: 'Saltar',
+      }}
+      stepNumberComponent={() => null}
+    >
+      <ResultadoAsistenciaScreen />
+    </CopilotProvider>
+  );
+}
+
+export default ResultadoAsistenciaScreenWrapper;
