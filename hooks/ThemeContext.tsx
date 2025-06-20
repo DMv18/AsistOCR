@@ -1,6 +1,9 @@
 import { ThemeName } from '@/constants/Colors';
 import { useColorScheme as useDeviceColorScheme } from '@/hooks/useColorScheme';
-import React, { createContext, useContext, useState } from 'react';
+import { auth, firebase } from '@/firebaseConfig';
+import 'firebase/compat/firestore'; // <--- Importa Firestore compat aquí
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { usePathname } from 'expo-router';
 
 type ColorMode =
   | 'normal'
@@ -40,7 +43,90 @@ export function ThemeProviderCustom({ children }: { children: React.ReactNode })
       ? (deviceScheme as ThemeName)
       : (themeSetting as ThemeName);
 
+  // Añade Firestore
+  const firestore = firebase.firestore();
+  const pathname = usePathname();
 
+  // Cargar preferencias del usuario logueado
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user && firestore) {
+        try {
+          // Cada usuario tiene su propio documento de preferencias por su UID
+          const docRef = firestore.collection('userPrefs').doc(user.uid);
+          const doc = await docRef.get();
+          if (doc.exists) {
+            const prefs = doc.data();
+            if (prefs?.fontScale) setFontScale(prefs.fontScale);
+            else setFontScale(1); // Por defecto 16px
+            if (prefs?.themeSetting) setThemeSetting(prefs.themeSetting);
+            else setThemeSetting('system'); // Por defecto modo sistema
+            if (prefs?.colorMode) setColorMode(prefs.colorMode);
+            else setColorMode('normal'); // Por defecto normal
+          } else {
+            // Si es un usuario nuevo (no hay doc), aplica configuración limpia por defecto
+            setFontScale(1); // 16px
+            setThemeSetting('system');
+            setColorMode('normal');
+          }
+        } catch (err: any) {
+          if (
+            (err?.code === 'permission-denied' || err?.message?.includes('permission')) &&
+            (pathname === '/login' || pathname === '/register')
+          ) {
+            alert(
+              'No se pudieron cargar tus preferencias visuales por un problema de permisos. Puedes continuar, pero tus configuraciones no se guardarán en la nube.'
+            );
+          } else if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
+            console.warn('No se pudo leer preferencias remotas de usuario (Firestore):', err.message || err);
+          } else {
+            console.warn('Error leyendo preferencias de usuario:', err);
+          }
+        }
+      }
+    });
+    return () => unsubscribe();
+  }, [firestore, pathname]);
+
+  // Guardar preferencias cuando cambian y usuario logueado
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user && firestore) {
+      // Actualiza preferencias en userPrefs (por compatibilidad)
+      const docRef = firestore.collection('userPrefs').doc(user.uid);
+      docRef.set(
+        {
+          fontScale,
+          themeSetting,
+          colorMode,
+        },
+        { merge: true }
+      ).catch((err: any) => {
+        if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
+          console.warn('No se pudo guardar preferencias remotas de usuario (Firestore):', err.message || err);
+        } else {
+          console.warn('Error guardando preferencias de usuario:', err);
+        }
+      });
+
+      // Actualiza también en el documento principal del usuario
+      const userDocRef = firestore.collection('users').doc(user.uid);
+      userDocRef.set(
+        {
+          fontScale,
+          themeSetting,
+          colorMode,
+        },
+        { merge: true }
+      ).catch((err: any) => {
+        if (err?.code === 'permission-denied' || err?.message?.includes('permission')) {
+          console.warn('No se pudo guardar preferencias en users:', err.message || err);
+        } else {
+          console.warn('Error guardando preferencias en users:', err);
+        }
+      });
+    }
+  }, [fontScale, themeSetting, colorMode, firestore]);
 
   return (
     <ThemeContext.Provider

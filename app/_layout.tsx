@@ -1,6 +1,6 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack , useRouter, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import 'react-native-reanimated';
@@ -8,6 +8,8 @@ import 'react-native-reanimated';
 import { SplashScreen } from '@/components/SplashScreen';
 import { ThemeProviderCustom } from '@/hooks/ThemeContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { auth } from '@/firebaseConfig';
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const colorScheme = useColorScheme();
@@ -15,6 +17,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // No proteger login ni register
+    if (pathname === '/login' || pathname === '/register') return;
+    // Solo en cliente
+    let unsub: any;
+    if (typeof window !== 'undefined') {
+      unsub = auth.onAuthStateChanged((user) => {
+        if (!user) {
+          router.replace('/login');
+        }
+      });
+    }
+    return () => {
+      if (unsub) unsub();
+    };
+  }, [pathname, router]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);

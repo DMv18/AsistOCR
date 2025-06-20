@@ -176,6 +176,4 @@ dependencies {
     }
 }
 
-// Asegúrate de que las dependencias de Node.js estén instaladas correctamente
-// Ejecuta `npm install` o `yarn install` en el directorio raíz del proyecto.
-// Verifica que Node.js esté instalado y accesible desde la línea de comandos.
+apply plugin: 'com.google.gms.google-services'

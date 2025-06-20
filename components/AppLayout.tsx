@@ -2,7 +2,7 @@ import { Colors } from '@/constants/Colors';
 import { useThemeCustom } from '@/hooks/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -16,15 +16,17 @@ import {
   View,
 } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { auth } from '@/firebaseConfig'; // Importa auth
 
 type Props = {
   children: React.ReactNode;
   description?: string;
   showBack?: boolean;
   onHelp?: () => void; 
+  hideUserButtons?: boolean; // <-- Añadido
 };
 
-export function AppLayout({ children, description, showBack = true, onHelp }: Props) {
+export function AppLayout({ children, description, showBack = true, onHelp, hideUserButtons }: Props) {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
   const { fontScale, theme, colorMode } = useThemeCustom();
@@ -48,7 +50,26 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
   const showCompactMenu = width < 420 || fontScale > 1.15;
   const [menuVisible, setMenuVisible] = useState(false);
 
- 
+  // Estado para usuario y modal de logout
+  const [userName, setUserName] = useState<string | null>(null);
+  const [logoutModal, setLogoutModal] = useState(false);
+
+  // Escucha cambios de usuario
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUserName(user?.displayName || null);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Función para cerrar sesión
+  const handleLogout = async () => {
+    setLogoutModal(false);
+    await auth.signOut();
+    setUserName(null);
+    router.replace('/login');
+  };
+
   const headerFontSize = 24;
   const headerBtnFontSize = 16;
   const headerPaddingVertical = 18;
@@ -71,73 +92,106 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
         <TouchableOpacity onPress={() => router.push('/')} accessibilityLabel="Inicio">
           <ThemedText style={[styles.headerTitle, { fontSize: headerFontSize, color: headerTitleColor }]}>AsistOCR</ThemedText>
         </TouchableOpacity>
-        {showCompactMenu ? (
-          <>
-            <TouchableOpacity
-              style={[styles.menuBtn, { backgroundColor: accentColor }]}
-              accessibilityLabel="Menú"
-              onPress={() => setMenuVisible(true)}
-            >
-              <Ionicons name="menu" size={28} color={headerBtnTextColor} />
-            </TouchableOpacity>
-            <Modal
-              visible={menuVisible}
-              transparent
-              animationType="fade"
-              onRequestClose={() => setMenuVisible(false)}
-            >
-              <Pressable style={[styles.menuOverlay, { justifyContent: 'flex-start', alignItems: 'flex-end' }]} onPress={() => setMenuVisible(false)}>
-                <View style={[
-                  styles.menuPopup,
-                  {
-                    backgroundColor: cardColor,
-                    marginTop: 40, 
-                    alignSelf: 'flex-end',
-                  }
-                ]}>
-                  <TouchableOpacity
-                    style={styles.menuOption}
-                    onPress={() => {
-                      setMenuVisible(false);
-                      router.push('/login');
-                    }}
-                  >
-                    <Ionicons name="person-circle-outline" size={22} color={textColor} />
-                    <ThemedText style={[styles.menuOptionText, { color: textColor }]}>Usuario</ThemedText>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.menuOption}
-                    onPress={() => {
-                      setMenuVisible(false);
-                      router.push('/config');
-                    }}
-                  >
-                    <Ionicons name="settings" size={22} color={textColor} />
-                    <ThemedText style={[styles.menuOptionText, { color: textColor }]}>Ajustes</ThemedText>
-                  </TouchableOpacity>
-                </View>
-              </Pressable>
-            </Modal>
-          </>
-        ) : (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableOpacity
-              style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
-              accessibilityLabel="Usuario"
-              onPress={() => router.push('/login')}
-            >
-              <Ionicons name="person-circle-outline" size={20} color={headerBtnTextColor} />
-              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Usuario</ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
-              accessibilityLabel="Ajustes"
-              onPress={() => router.push('/config')}
-            >
-              <Ionicons name="settings" size={20} color={headerBtnTextColor} />
-              <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Ajustes</ThemedText>
-            </TouchableOpacity>
-          </View>
+        {!hideUserButtons && (
+          showCompactMenu ? (
+            <>
+              <TouchableOpacity
+                style={[styles.menuBtn, { backgroundColor: accentColor }]}
+                accessibilityLabel="Menú"
+                onPress={() => setMenuVisible(true)}
+              >
+                <Ionicons name="menu" size={28} color={headerBtnTextColor} />
+              </TouchableOpacity>
+              <Modal
+                visible={menuVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setMenuVisible(false)}
+              >
+                <Pressable style={[styles.menuOverlay, { justifyContent: 'flex-start', alignItems: 'flex-end' }]} onPress={() => setMenuVisible(false)}>
+                  <View style={[
+                    styles.menuPopup,
+                    {
+                      backgroundColor: cardColor,
+                      marginTop: 40, 
+                      alignSelf: 'flex-end',
+                    }
+                  ]}>
+                    <TouchableOpacity
+                      style={styles.menuOption}
+                      onPress={() => {
+                        setMenuVisible(false);
+                        if (userName) return; // No hace nada si ya está logueado
+                        router.push('/login');
+                      }}
+                    >
+                      <Ionicons name="person-circle-outline" size={22} color={textColor} />
+                      <ThemedText style={[styles.menuOptionText, { color: textColor }]}
+                      >
+                        {userName ? userName : 'Usuario'}
+                      </ThemedText>
+                    </TouchableOpacity>
+                    {userName && (
+                      <TouchableOpacity
+                        style={styles.menuOption}
+                        onPress={() => {
+                          setMenuVisible(false);
+                          setLogoutModal(true);
+                        }}
+                      >
+                        <Ionicons name="log-out-outline" size={22} color={textColor} />
+                        <ThemedText style={[styles.menuOptionText, { color: textColor }]}>Cerrar sesión</ThemedText>
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity
+                      style={styles.menuOption}
+                      onPress={() => {
+                        setMenuVisible(false);
+                        router.push('/config');
+                      }}
+                    >
+                      <Ionicons name="settings" size={22} color={textColor} />
+                      <ThemedText style={[styles.menuOptionText, { color: textColor }]}>Ajustes</ThemedText>
+                    </TouchableOpacity>
+                  </View>
+                </Pressable>
+              </Modal>
+            </>
+          ) : (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchableOpacity
+                style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
+                accessibilityLabel="Usuario"
+                onPress={() => {
+                  if (userName) return;
+                  router.push('/login');
+                }}
+              >
+                <Ionicons name="person-circle-outline" size={20} color={headerBtnTextColor} />
+                <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>
+                  {userName ? userName : 'Usuario'}
+                </ThemedText>
+              </TouchableOpacity>
+              {userName && (
+                <TouchableOpacity
+                  style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
+                  accessibilityLabel="Cerrar sesión"
+                  onPress={() => setLogoutModal(true)}
+                >
+                  <Ionicons name="log-out-outline" size={20} color={headerBtnTextColor} />
+                  <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Cerrar sesión</ThemedText>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                style={[styles.headerBtn, { backgroundColor: headerBtnBgColor }]}
+                accessibilityLabel="Ajustes"
+                onPress={() => router.push('/config')}
+              >
+                <Ionicons name="settings" size={20} color={headerBtnTextColor} />
+                <ThemedText style={[styles.headerBtnText, { fontSize: headerBtnFontSize, color: headerBtnTextColor }]}>Ajustes</ThemedText>
+              </TouchableOpacity>
+            </View>
+          )
         )}
       </View>
       {}
@@ -245,6 +299,57 @@ export function AppLayout({ children, description, showBack = true, onHelp }: Pr
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      {/* Modal de confirmación de logout */}
+      <Modal
+        visible={logoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLogoutModal(false)}
+      >
+        <Pressable style={[styles.menuOverlay, { justifyContent: 'center', alignItems: 'center' }]} onPress={() => setLogoutModal(false)}>
+          <View style={[
+            styles.menuPopup,
+            {
+              backgroundColor: cardColor,
+              minWidth: 260,
+              alignItems: 'center',
+              elevation: 8,
+            }
+          ]}>
+            <ThemedText style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 8, color: textColor }}>
+              ¿Quieres cerrar sesión?
+            </ThemedText>
+            <View style={{ flexDirection: 'row', gap: 18, marginTop: 8 }}>
+              <TouchableOpacity
+                style={{
+                  minWidth: 90,
+                  borderRadius: 8,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  marginHorizontal: 6,
+                  backgroundColor: regresarBtnColor,
+                }}
+                onPress={handleLogout}
+              >
+                <ThemedText style={{ color: regresarBtnTextColor, fontWeight: 'bold', fontSize: 16 }}>Sí, cerrar</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  minWidth: 90,
+                  borderRadius: 8,
+                  paddingVertical: 10,
+                  alignItems: 'center',
+                  marginHorizontal: 6,
+                  backgroundColor: accentColor,
+                }}
+                onPress={() => setLogoutModal(false)}
+              >
+                <ThemedText style={{ color: headerBtnTextColor, fontWeight: 'bold', fontSize: 16 }}>Cancelar</ThemedText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Pressable>
+      </Modal>
     </SafeAreaView>
   );
 }
