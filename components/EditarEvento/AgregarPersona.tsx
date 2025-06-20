@@ -18,6 +18,7 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
   const [excelData, setExcelData] = useState<string[][]>([]);
   const [loadingExcel, setLoadingExcel] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState('');
+  const [nuevoNombreError, setNuevoNombreError] = useState<string | null>(null);
   const [asistio, setAsistio] = useState(true);
   const [confirmarModal, setConfirmarModal] = useState(false);
 
@@ -25,6 +26,24 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
     cargarExcel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventoId]);
+
+  useEffect(() => {
+    const trimmed = nuevoNombre.replace(/\s+$/, '');
+    if (!trimmed) setNuevoNombreError('El nombre no puede estar vacío.');
+    else if (nuevoNombre !== trimmed) setNuevoNombreError('El nombre no puede terminar con espacios.');
+    else {
+      // Validar que no exista ya el nombre (ignorando mayúsculas/minúsculas y espacios)
+      const colNombre = excelData[0]?.findIndex(h => h && h.toLowerCase().includes('nombre'));
+      if (colNombre !== undefined && colNombre >= 0) {
+        const existe = excelData.slice(1).some(fila => (fila[colNombre] || '').trim().toLowerCase() === trimmed.toLowerCase());
+        if (existe) {
+          setNuevoNombreError('Ese nombre ya existe en la lista.');
+          return;
+        }
+      }
+      setNuevoNombreError(null);
+    }
+  }, [nuevoNombre, excelData]);
 
   const cargarExcel = async () => {
     setLoadingExcel(true);
@@ -66,23 +85,48 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
     setConfirmarModal(false);
     setLoadingExcel(true);
     try {
-      const nuevaFila = [];
+      const nombreFinal = nuevoNombre.replace(/\s+$/, '');
+      let nuevaTabla = [...excelData];
+      let filaInsertada = false;
       if (excelData.length > 0) {
-        for (let i = 0; i < excelData[0].length; i++) {
-          const header = excelData[0][i]?.toLowerCase();
-          if (header.includes('nombre')) {
-            nuevaFila.push(nuevoNombre);
-          } else if (header.match(/n[°º]/i)) {
-            nuevaFila.push((excelData.length).toString());
-          } else if (i === excelData[0].length - 1) {
-            nuevaFila.push(asistio ? '✓' : 'x');
-          } else {
-            nuevaFila.push('x');
+        const colNombre = excelData[0].findIndex(h => h && h.toLowerCase().includes('nombre'));
+        // Buscar la primera fila vacía en la columna de nombre
+        for (let i = 1; i < nuevaTabla.length; i++) {
+          if (!nuevaTabla[i][colNombre] || nuevaTabla[i][colNombre].trim() === '') {
+            for (let j = 0; j < nuevaTabla[0].length; j++) {
+              const header = nuevaTabla[0][j]?.toLowerCase();
+              if (header.includes('nombre')) {
+                nuevaTabla[i][j] = nombreFinal;
+              } else if (header.match(/n[°º]/i)) {
+                nuevaTabla[i][j] = i.toString();
+              } else if (j === nuevaTabla[0].length - 1) {
+                nuevaTabla[i][j] = asistio ? '✓' : 'x';
+              } else {
+                nuevaTabla[i][j] = 'x';
+              }
+            }
+            filaInsertada = true;
+            break;
           }
         }
+        // Si no hay fila vacía, agrega una nueva
+        if (!filaInsertada) {
+          const nuevaFila = [];
+          for (let i = 0; i < nuevaTabla[0].length; i++) {
+            const header = nuevaTabla[0][i]?.toLowerCase();
+            if (header.includes('nombre')) {
+              nuevaFila.push(nombreFinal);
+            } else if (header.match(/n[°º]/i)) {
+              nuevaFila.push((nuevaTabla.length).toString());
+            } else if (i === nuevaTabla[0].length - 1) {
+              nuevaFila.push(asistio ? '✓' : 'x');
+            } else {
+              nuevaFila.push('x');
+            }
+          }
+          nuevaTabla = [...nuevaTabla, nuevaFila];
+        }
       }
-      const nuevaTabla = [...excelData, nuevaFila];
-
       const formData = new FormData();
       const ws = utils.aoa_to_sheet(nuevaTabla);
       const wb = utils.book_new();
@@ -221,6 +265,9 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
           placeholder="Ingrese el nombre"
           placeholderTextColor={c.inputPlaceholder}
         />
+        {nuevoNombreError && (
+          <ThemedText style={{ color: c.danger, fontSize: 13, marginBottom: 4 }}>{nuevoNombreError}</ThemedText>
+        )}
         <TouchableOpacity
           style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}
           onPress={() => setAsistio(a => !a)}
@@ -242,7 +289,7 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
             marginBottom: 8,
           }}
           onPress={() => setConfirmarModal(true)}
-          disabled={!nuevoNombre.trim()}
+          disabled={!nuevoNombre.trim() || !!nuevoNombreError}
         >
           <ThemedText style={{ color: c.btnText, fontWeight: 'bold' }}>Continuar</ThemedText>
         </TouchableOpacity>
