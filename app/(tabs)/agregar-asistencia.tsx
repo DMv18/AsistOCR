@@ -26,7 +26,7 @@ export default function AgregarAsistenciaScreen() {
   const anim = useRef(new Animated.Value(0)).current;
   const [inputVisible, setInputVisible] = useState(false);
 
-  // Guardar los datos procesados para usarlos después
+  
   const [procesado, setProcesado] = useState<{
     nuevosNombres: string[];
     tabla: string[][];
@@ -34,10 +34,9 @@ export default function AgregarAsistenciaScreen() {
   } | null>(null);
   const [fechaError, setFechaError] = useState<string | null>(null);
 
-  // Validación en tiempo real para la fecha/encabezado
   useEffect(() => {
     const valor = fecha.trim();
-    if (!valor) setFechaError(null); // Se permite vacío (usará fecha por defecto)
+    if (!valor) setFechaError(null); 
     else if (valor.length < 3) setFechaError('El encabezado debe tener al menos 3 caracteres.');
     else if (valor.length > 14) setFechaError('El encabezado no puede tener más de 14 caracteres.');
     else setFechaError(null);
@@ -131,7 +130,6 @@ export default function AgregarAsistenciaScreen() {
     try {
       const { nuevosNombres, tabla, colNombre } = procesado;
 
-      // Determina el encabezado final: si está vacío, usa la fecha por defecto
       const hoy = new Date();
       const encabezadoFinal = fecha.trim() ? fecha.trim() : hoy.toISOString().slice(0, 10);
 

@@ -1,37 +1,37 @@
 const colorsNormal = {
   light: {
-    // Fondo general de la app (área exterior)
-    background: '#F7FAFC', // gris azulado muy claro
+    // Fondo general
+    background: '#F7FAFC',
 
-    // Fondo de los contenedores principales (cards, AppLayout, etc)
+    // Fondo de los contenedores principales 
     card: '#FFFFFF',
     appLayoutCard: '#FFFFFF',
 
-    // Fondo de bloques funcionales internos (ej: bloque funcional principal)
-    mainBlockBg: '#E3F2FD', // azul muy claro
+    // Fondo de bloques funcionales internos 
+    mainBlockBg: '#E3F2FD', 
 
-    // General (usado en toda la app)
-    text: '#1A202C',         // gris oscuro
-    border: '#CBD5E0',       // gris claro
-    accent: '#3182CE',       // azul principal/acento
-    danger: '#E53E3E',       // rojo
-    warning: '#ECC94B',      // amarillo
-    success: '#38A169',      // verde
-    help: '#EDF2F7',         // gris claro
-    btnPrimary: '#3182CE',   // azul principal
-    btnSecondary: '#63B3ED', // azul secundario
+    // General 
+    text: '#1A202C',         
+    border: '#CBD5E0',       
+    accent: '#3182CE',       
+    danger: '#E53E3E',       
+    warning: '#ECC94B',    
+    success: '#38A169',      
+    help: '#EDF2F7',        
+    btnPrimary: '#3182CE',   
+    btnSecondary: '#63B3ED', 
     btnDanger: '#E53E3E',
     btnText: '#FFF',
 
-    // Header/AppBar (AppLayout, globalStyles)
-    headerBg: '#2B6CB0',     // azul más oscuro
+    // Header
+    headerBg: '#2B6CB0',    
     headerText: '#FFF',
     headerBtnBg: '#3182CE',
     headerBtnText: '#FFF',
     helpBtnBg: '#E3F2FD',
     helpBtnText: '#1A202C',
 
-    // Input (TextInput, etc) (LoginForm, RegisterForm, FormularioAsistencia)
+    // Input 
     inputBg: '#F7FAFC',
     inputBorder: '#CBD5E0',
     inputText: '#1A202C',
@@ -42,7 +42,7 @@ const colorsNormal = {
     inputIconCircle: '#3182CE',
     inputLinkText: '#3182CE',
 
-    // ListaEventos (ListaEventos, historial.tsx)
+    // ListaEventos 
     listaEventosSearchBar: '#E3F2FD',
     listaEventosCard: '#FFFFFF',
     listaEventosIcon: '#3182CE',
@@ -53,36 +53,36 @@ const colorsNormal = {
     listaEventosBtnVer: '#3182CE',
     listaEventosBtnIcon: '#FFF',
 
-    // FormularioAsistencia (FormularioAsistencia.tsx)
+    // FormularioAsistencia 
     formFotosBlock: '#E3F2FD',
     formFotoRow: '#FFFFFF',
     formFotoRowBorder: '#CBD5E0',
     formAddBtn: '#63B3ED',
-    formAddBtnText: '#FFF', // <-- Cambiado a blanco
+    formAddBtnText: '#FFF', 
     formBtnDanger: '#E53E3E',
     formBtnDangerText: '#FFF',
     formBtnPrimary: '#3182CE',
     formBtnPrimaryText: '#FFF',
     formBtnSecondary: '#63B3ED',
 
-    // AppLayout (AppLayout.tsx)
+    // AppLayout 
     appLayoutBg: '#F7FAFC',
     appLayoutGreenBlock: '#E3F2FD',
     appLayoutRegresarBtn: '#3182CE',
     appLayoutRegresarBtnText: '#FFF',
 
-    // Home (index.tsx)
+    // Home 
     homeCardBg: '#FFFFFF',
-    homeBtnText: '#3182CE',        // Texto de los botones en Home (puedes ajustar si lo deseas)
+    homeBtnText: '#3182CE',        
 
-    // TomarFoto (tomar-foto.tsx)
+    // TomarFoto 
     tomarFotoBtnBg: '#3182CE',
     tomarFotoBtnText: '#FFF',
     tomarFotoPreviewBorder: '#CBD5E0',
     tomarFotoRegresarBtnBg: '#63B3ED',
     tomarFotoRegresarBtnText: '#FFF',
 
-    // EditarEvento (editar-evento.tsx)
+    // EditarEvento 
     editarEventoGreenBlock: '#E3F2FD',
     editarEventoRegresarBtn: '#3182CE',
     editarEventoRegresarBtnText: '#FFF',
@@ -94,7 +94,7 @@ const colorsNormal = {
     editarEventoIcon2Bg: '#38A169',
     editarEventoIcon3Bg: '#ECC94B',
 
-    // Config (config.tsx)
+    // Config 
     configSectionBg: '#FFFFFF',
     configColorOptionBg: '#E3F2FD',
     configColorOptionSelected: '#63B3ED',
@@ -104,11 +104,11 @@ const colorsNormal = {
     configFontBtnText: '#FFF',
     configLabelText: '#1A202C',
 
-    // Historial (historial.tsx)
+    // Historial 
     historialMainBg: '#F7FAFC',
-    historialCardBg: '#FFFFFF',// Card en Historial
+    historialCardBg: '#FFFFFF',
 
-    // ListaEventos (ListaEventos.tsx)
+    // ListaEventos 
     eventoCard: '#FFFFFF',
     btnIcon: '#3182CE',
     eventoNombre: '#1A202C',
@@ -118,7 +118,7 @@ const colorsNormal = {
     btnVer: '#3182CE',
     iconTendencias: '#63B3ED',
 
-    // TomarFoto (tomar-foto.tsx)
+    // TomarFoto 
     TomarFoto: {
       cameraBtnBg: '#3182CE',
       cameraBtnText: '#FFF',
@@ -127,7 +127,7 @@ const colorsNormal = {
       regresarBtnText: '#FFF',
     },
 
-    // EditarEvento (editar-evento.tsx)
+    // EditarEvento 
     EditarEvento: {
       greenBlock: '#E3F2FD',
       regresarBtn: '#3182CE',
@@ -141,7 +141,7 @@ const colorsNormal = {
       icon3Bg: '#ECC94B',
     },
 
-    // Config (usado en app/(tabs)/config.tsx)
+    // Config 
     Config: {
       sectionBg: '#FFFFFF',
       colorOptionBg: '#E3F2FD',
@@ -153,19 +153,19 @@ const colorsNormal = {
       labelText: '#1A202C',
     },
 
-    // LoginForm/RegisterForm (LoginForm.tsx, RegisterForm.tsx)
+    // LoginForm/RegisterForm 
     iconCircle: '#E3F2FD',
     iconCircleIcon: '#3182CE',
 
-    // LoginForm (colores específicos para botones y textos)
-    loginBtnBg: '#63B3ED',         // Botón "Iniciar sesión" fondo (azul claro)
-    loginBtnText: '#FFF',          // Botón "Iniciar sesión" texto (blanco)
-    loginLinkText: '#1A202C',      // "No tiene una cuenta?" (negro)
-    loginCreateBtnBg: '#63B3ED',   // Botón "Crear cuenta" fondo (azul claro)
-    loginCreateBtnText: '#FFF',    // Botón "Crear cuenta" texto (blanco)
-    loginIconColor: '#3182CE', // <-- icono persona en light
+    // LoginForm 
+    loginBtnBg: '#63B3ED',        
+    loginBtnText: '#FFF',          
+    loginLinkText: '#1A202C',      
+    loginCreateBtnBg: '#63B3ED',  
+    loginCreateBtnText: '#FFF',    
+    loginIconColor: '#3182CE',
 
-    // ThemedText (ThemedText.tsx)
+    // ThemedText 
     themedText: {
       default: '#3182CE',
       title: '#2B6CB0',
@@ -173,13 +173,13 @@ const colorsNormal = {
       subtitle: '#1A202C',
       defaultSemiBold: '#1A202C',
     },
-    // ThemedView (ThemedView.tsx)
+    // ThemedView 
     themedView: '#F7FAFC',
 
-    // ExternalLink (ExternalLink.tsx)
+    // ExternalLink 
     externalLink: '#3182CE',
 
-    // RegisterForm/LoginForm (LoginForm.tsx, RegisterForm.tsx)
+    // RegisterForm/LoginForm 
     formIconCircle: '#E3F2FD',
     formIconCircleIcon: '#3182CE',
 
@@ -190,7 +190,7 @@ const colorsNormal = {
       icon: '#3182CE',
     },
 
-    // Historial (iconos individuales)
+    // Historial 
     historialArchivoIconBg: '#1565c0',      
     historialArchivoIconColor: '#FFFF',   
     historialEditarIconBg: '#388e3c',      
@@ -200,7 +200,7 @@ const colorsNormal = {
     historialObservarIconBg: '#1565c0',     
     historialObservarIconColor: '#FFFF',    
 
-    // ResultadoAsistencia (resultado-asistencia.tsx)
+    // ResultadoAsistencia 
     ResultadoAsistencia: {
       infoInputBg: '#e8f5e9',
       infoInputBorder: '#b4cded',
@@ -225,10 +225,10 @@ const colorsNormal = {
   },
 
   dark: {
-    // Fondo general de la app (área exterior)
-    background: '#1A202C', // Fondo principal oscuro
+    // Fondo general 
+    background: '#1A202C', 
 
-    // Fondo de los contenedores principales (cards, AppLayout)
+    // Fondo de los contenedores principales 
     card: '#2D3748',
     appLayoutCard: '#2D3748',
 
@@ -260,7 +260,7 @@ const colorsNormal = {
     inputBg: '#2D3748',
     inputBorder: '#4A5568',
     inputText: '#E2E8F0',
-    inputPlaceholder: '#B3C7E6', // <-- Más claro para contraste en dark
+    inputPlaceholder: '#B3C7E6', 
     inputIcon: '#63B3ED',
     inputError: '#F56565',
     inputFocus: '#63B3ED',
@@ -282,8 +282,8 @@ const colorsNormal = {
     formFotosBlock: '#1E365D',
     formFotoRow: '#2D3748',
     formFotoRowBorder: '#4A5568',
-    formAddBtn: '#90CDF4', // <-- Azul más claro en dark
-    formAddBtnText: '#FFF', // <-- Cambiado a blanco
+    formAddBtn: '#90CDF4', 
+    formAddBtnText: '#FFF', 
     formBtnDanger: '#F56565',
     formBtnDangerText: '#FFF',
     formBtnPrimary: '#63B3ED',
@@ -375,22 +375,22 @@ const colorsNormal = {
       labelText: '#E2E8F0',
     },
 
-    // Nuevas propiedades para login/register
+   
     iconCircle: '#2D3748',
     iconCircleIcon: '#90CDF4',
 
-    // LoginForm (colores específicos para botones y textos)
-    loginBtnBg: '#90CDF4',         // Botón "Iniciar sesión" fondo (azul más claro)
-    loginBtnText: '#FFF',          // Botón "Iniciar sesión" texto (blanco)
-    loginLinkText: '#FFF',         // "No tiene una cuenta?" (blanco)
-    loginCreateBtnBg: '#90CDF4',   // Botón "Crear cuenta" fondo (azul más claro)
-    loginCreateBtnText: '#FFF',    // Botón "Crear cuenta" texto (blanco)
-    loginIconColor: '#FFF', // <-- icono persona en dark
+    // LoginForm 
+    loginBtnBg: '#90CDF4',        
+    loginBtnText: '#FFF',        
+    loginLinkText: '#FFF',         
+    loginCreateBtnBg: '#90CDF4', 
+    loginCreateBtnText: '#FFF',    
+    loginIconColor: '#FFF', 
 
     // ThemedText
     themedText: {
       default: '#63B3ED',
-      title: '#E3F2FD', // <-- Azul muy claro, casi blanco, para el título en dark
+      title: '#E3F2FD', 
       link: '#63B3ED',
       subtitle: '#CBD5E0',
       defaultSemiBold: '#E2E8F0',
@@ -423,7 +423,7 @@ const colorsNormal = {
     historialObservarIconBg: '#4299E1',
     historialObservarIconColor: '#1A202C',
 
-    // ResultadoAsistencia (resultado-asistencia.tsx)
+    // ResultadoAsistencia 
     ResultadoAsistencia: {
       infoInputBg: '#1E365D',
       infoInputBorder: '#4299E1',

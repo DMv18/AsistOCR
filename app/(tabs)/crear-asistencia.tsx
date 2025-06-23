@@ -3,7 +3,6 @@ import { FormularioAsistencia } from '@/components/FormularioAsistencia';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback } from 'react';
 
-// Copilot imports
 import { CopilotProvider, useCopilot } from 'react-native-copilot';
 
 function CrearAsistenciaScreenInner() {
@@ -11,7 +10,6 @@ function CrearAsistenciaScreenInner() {
   const fotoCamara = typeof params.foto === 'string' ? params.foto : undefined;
   const { start } = useCopilot();
 
-  // Callback para activar el tour desde el botón de ayuda
   const handleHelp = useCallback(() => {
     setTimeout(() => {
       start();

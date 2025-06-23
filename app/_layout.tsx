@@ -21,9 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
 
   useEffect(() => {
-    // No proteger login ni register
     if (pathname === '/login' || pathname === '/register') return;
-    // Solo en cliente
     let unsub: any;
     if (typeof window !== 'undefined') {
       unsub = auth.onAuthStateChanged((user) => {

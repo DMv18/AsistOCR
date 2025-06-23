@@ -44,19 +44,15 @@ function getExtension(uri: string): string {
 
 async function copyImageToApp(uri: string): Promise<string> {
   await ensureImagenesDir();
-  // Si la imagen ya está en la carpeta de la app, no la copies de nuevo
   if (uri.startsWith(IMAGENES_DIR)) {
     return uri;
   }
-  // Si la imagen viene de la cámara y es de MediaLibrary, verifica si existe antes de copiar
   try {
     const fileInfo = await FileSystem.getInfoAsync(uri);
     if (!fileInfo.exists) {
-      // Si no existe, retorna la uri original (no intentes copiar)
       return uri;
     }
   } catch {
-    // Si ocurre error, retorna la uri original
     return uri;
   }
   const ext = getExtension(uri);
@@ -70,7 +66,6 @@ async function copyImageToApp(uri: string): Promise<string> {
     }
     return dest;
   } catch (e) {
-    // Si falla copiar, retorna la uri original
     console.error('Error al copiar la imagen:', e, 'Origen:', uri, 'Destino:', dest);
     return uri;
   }
@@ -90,7 +85,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
   const router = useRouter();
   const limpiarFilasBackend = useLimpiarFilasBackend();
 
-  // Si llega una foto desde la cámara, súbela y cópiala inmediatamente
   React.useEffect(() => {
     if (fotoCamara && !fotos.some(f => f.uri === fotoCamara)) {
       setFotos([{ uri: fotoCamara, status: 'pending' }]);
@@ -103,10 +97,8 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
         }
       })();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fotoCamara]);
 
-  // Procesar imagen: solo si hay una imagen y está en success
   const handleProcesar = async () => {
     if (fotos.length === 0 || fotos[0].status !== 'success') {
       Alert.alert('Debe subir una imagen válida', 'Por favor, suba una imagen antes de procesar.');
@@ -136,7 +128,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
     router.push('/tomar-foto');
   };
 
-  // Permite subir desde galería
   const handleGaleria = async () => {
     setModalVisible(false);
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -171,7 +162,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
         Subir imagen para procesar
       </ThemedText>
       <View style={[styles.fotosBlock, { backgroundColor: c.formFotosBlock }]}>
-        {/* Feedback de imagen subida/error o mensaje de vacío */}
         {fotos.length === 0 ? (
           <CopilotStep
             text="Aquí verás si la imagen se subió correctamente o si hubo un error. Si no hay imagen cargada, verás este mensaje."
@@ -239,7 +229,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
             </CopilotStep>
           ))
         )}
-        {/* Botón subir imagen */}
         <CopilotStep
           text="Pulsa aquí para subir una imagen de la lista de asistencia. Se abrirá un menú para elegir entre cámara o galería."
           order={1}
@@ -255,7 +244,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
             </ThemedText>
           </WalkthroughableTouchableOpacity>
         </CopilotStep>
-        {/* Botón procesar */}
         <CopilotStep
           text="Cuando la imagen esté lista, este botón se activará. Pulsa 'Procesar' para que el sistema interprete la lista de asistencia."
           order={4}
@@ -276,7 +264,6 @@ export function FormularioAsistencia({ fotoCamara, onProcesar, modoAgregarListaD
           </WalkthroughableTouchableOpacity>
         </CopilotStep>
       </View>
-      {/* Modal de selección de origen */}
       <CopilotStep
         text="Elige si deseas tomar una foto con la cámara o seleccionar una imagen desde la galería."
         order={2}

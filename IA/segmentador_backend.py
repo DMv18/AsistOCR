@@ -86,7 +86,6 @@ def segmentar():
         print(f"Error: No se pudo cargar la imagen '{filepath}'")
         return jsonify({'error': 'No se pudo cargar la imagen'}), 400
 
-    # --- Lógica de segmentación ---
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (5, 5), 0)
     is_handwritten = np.mean(cv2.Laplacian(blur, cv2.CV_64F).var() < 100)
@@ -174,8 +173,7 @@ def segmentar():
         espera += 0.5
     print(f"Archivos en 'filas' antes de procesar Excel: {os.listdir(OUTPUT_FOLDER)}")
 
-   
-    # Cambia la ruta del excel temporal a la carpeta filas
+
     excel_filename = "resultados_filas.xlsx"
     excel_path = os.path.join(OUTPUT_FOLDER, excel_filename)
     try:
@@ -274,7 +272,6 @@ def limpiar_filas():
                     print(f"Carpeta eliminada de filas: {fpath}")
             except Exception as e:
                 print(f"Error eliminando {fpath}: {e}")
-        # Verifica si realmente quedó vacía
         print(f"Contenido final de 'filas': {os.listdir(OUTPUT_FOLDER)}")
         return jsonify({'ok': True})
     except Exception as e:
@@ -349,7 +346,6 @@ def crear_asistencia():
     destino = os.path.join(ASISTENCIAS_FOLDER, nombre)
     if os.path.exists(destino):
         return jsonify({'ok': False, 'error': 'Ya existe un archivo con ese nombre'}), 409
-    # Crea el DataFrame con el formato solicitado
     df = pd.DataFrame({
         'N°': list(range(1, len(nombres) + 1)),
         'Nombre': nombres,
@@ -364,12 +360,10 @@ def crear_asistencia():
 @app.route('/asistencias/<filename>', methods=['PUT'])
 def sobrescribir_asistencia(filename):
     excel_path = os.path.join(ASISTENCIAS_FOLDER, filename)
-    # Verifica que haya un archivo en la petición
     if 'file' not in request.files:
         return jsonify({'error': 'No se envió ningún archivo'}), 400
     file = request.files['file']
     file.save(excel_path)
-    # Imprime información para depuración
     if os.path.exists(excel_path):
         print(f"Archivo guardado en: {excel_path}")
         print(f"Tamaño del archivo: {os.path.getsize(excel_path)} bytes")

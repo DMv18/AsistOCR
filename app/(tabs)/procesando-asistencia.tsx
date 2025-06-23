@@ -18,7 +18,7 @@ export default function ProcesandoAsistenciaScreen() {
   const uri = typeof params.uri === 'string' ? params.uri : undefined;
 
   const [excelUrl, setExcelUrl] = useState<string | null>(null);
-  const [respuestas, setRespuestas] = useState<string[]>([]); // Para cachear los nombres detectados
+  const [respuestas, setRespuestas] = useState<string[]>([]); 
 
   const [progreso, setProgreso] = useState(0);
   const anim = useRef(new Animated.Value(0)).current;
@@ -36,7 +36,7 @@ export default function ProcesandoAsistenciaScreen() {
     const interval = setInterval(() => {
       if (backendRespondio) return;
       percent += Math.floor(Math.random() * 15) + 5;
-      if (percent >= 60) { // No llegues a 100% hasta que el backend termine
+      if (percent >= 60) { 
         percent = 60;
       }
       setProgreso(percent);
@@ -50,7 +50,6 @@ export default function ProcesandoAsistenciaScreen() {
     if (uri) {
       (async () => {
         try {
-          // Elimina el replace de la IP, solo pasa uri directamente
           const resultado = await segmentarFilas(uri);
           backendRespondio = true;
           setExcelUrl(resultado.excel);
@@ -82,7 +81,7 @@ export default function ProcesandoAsistenciaScreen() {
     try {
       await fetch(`${SERVER_URL}/cancelar-procesamiento`, { method: 'POST' });
     } catch {
-      // Ignora errores de red
+      console.error('Error al cancelar el procesamiento');
     }
     router.back();
   };
@@ -103,7 +102,6 @@ export default function ProcesandoAsistenciaScreen() {
             </TouchableOpacity>
           </View>
         ) : !procesandoInfo || progreso < 100 ? (
-          // Pantalla de carga real
           <>
             <ThemedText style={[styles.title, { color: c.text }]}>Procesando imagen...</ThemedText>
             <View style={{ alignItems: 'center', marginVertical: 24 }}>
@@ -139,9 +137,7 @@ export default function ProcesandoAsistenciaScreen() {
             </View>
           </>
         ) : (
-          // Pantalla de "Continuar"
           <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
-            {/* Solo muestra la imagen procesada, NO el ActivityIndicator */}
             {imagenes.length > 0 && (
               <Image
                 source={{ uri: imagenes[0] }}
@@ -209,7 +205,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     gap: 12,
     elevation: 2,
-    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   imagenesRow: {
     flexDirection: 'row',
@@ -227,7 +222,6 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 8,
     borderWidth: 1,
-    // Quitar borderColor aquí, se debe poner inline usando c.border
   },
   imgCheck: {
     position: 'absolute',
@@ -236,14 +230,12 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 2,
     elevation: 2,
-    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   subtitle: {
     fontWeight: 'bold',
     fontSize: 16,
     marginVertical: 10,
     textAlign: 'center',
-    // Quitar color aquí, se debe poner inline usando c.text
   },
   cancelBtn: {
     borderRadius: 10,
@@ -252,7 +244,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     width: 200,
-    // backgroundColor se define inline con c.formBtnDanger o c.formBtnPrimary
   },
   progressBlock: {
     marginTop: 18,
@@ -265,12 +256,10 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 10,
     overflow: 'hidden',
-    // Quitar backgroundColor aquí, se debe poner inline usando c.border
   },
   progressBar: {
     height: 18,
     borderRadius: 10,
-    // backgroundColor se define inline con c.success
   },
   segmentedRows: {
     marginTop: 20,
@@ -284,7 +273,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 1,
-    // Quitar backgroundColor aquí, se debe poner inline usando c.card
   },
   rowImage: {
     width: 60,
@@ -295,6 +283,5 @@ const styles = StyleSheet.create({
   rowText: {
     flex: 1,
     fontWeight: '500',
-    // Quitar color aquí, se debe poner inline usando c.inputText
   },
 });

@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Text,
-  Dimensions,
-  Alert,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView
-} from 'react-native';
+import {StyleSheet,TextInput,TouchableOpacity,View,Text,Dimensions,Alert,ActivityIndicator,KeyboardAvoidingView,Platform,ScrollView} 
+from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { auth, modularAuth, firebase } from '@/firebaseConfig';
@@ -44,7 +33,6 @@ export function RegisterForm() {
     const emailLower = email.trim().toLowerCase();
     const nameTrimmed = name.replace(/\s+$/, '');
 
-    // Validación de nombre
     if (!nameTrimmed) {
       newErrors.name = 'El nombre es obligatorio';
     } else if (nameTrimmed.length < 2) {
@@ -55,21 +43,18 @@ export function RegisterForm() {
       newErrors.name = 'El nombre no puede terminar con espacios.';
     }
 
-    // Validación de email
     if (!emailLower) {
       newErrors.email = 'El correo es obligatorio';
     } else if (!/^[\w-.]+@gmail\.com$/.test(emailLower)) {
       newErrors.email = 'Solo se permiten correos @gmail.com';
     }
 
-    // Validación de contraseña
     if (!password) {
       newErrors.password = 'La contraseña es obligatoria';
     } else if (password.length < 6) {
       newErrors.password = 'Mínimo 6 caracteres';
     }
 
-    // Validación de confirmación de contraseña
     if (!confirmPassword) {
       newErrors.confirmPassword = 'Confirma tu contraseña';
     } else if (password !== confirmPassword) {
@@ -87,14 +72,12 @@ export function RegisterForm() {
     try {
       const emailChecked = email.trim().toLowerCase();
 
-      // Solo permitir correos @gmail.com
       if (!emailChecked.endsWith('@gmail.com')) {
         setLoading(false);
         Alert.alert('Correo inválido', 'Solo se permiten correos que terminen en @gmail.com');
         return;
       }
 
-      // Verifica si el correo ya está registrado antes de crear el usuario
       const signInMethods = await fetchSignInMethodsForEmail(modularAuth, emailChecked);
       if (signInMethods && signInMethods.length > 0) {
         setLoading(false);
@@ -107,12 +90,10 @@ export function RegisterForm() {
         password
       );
       
-      // Actualizar perfil del usuario con el nombre
       await userCredential.user?.updateProfile({
         displayName: name.trim()
       });
 
-      // Guardar datos del usuario y preferencias por defecto en Firestore
       const firestore = firebase.firestore();
       try {
         await firestore.collection('users').doc(userCredential.user.uid).set({
@@ -128,12 +109,10 @@ export function RegisterForm() {
           firestoreErr?.code === 'permission-denied' ||
           firestoreErr?.message?.includes('permission')
         ) {
-          // Solo muestra un mensaje informativo, no bloqueante
           Alert.alert(
             'Registro exitoso',
             'Tu cuenta fue creada. No se pudo guardar tus preferencias en la base de datos por falta de permisos, pero podrás usar la app normalmente.'
           );
-          // Permite continuar aunque falle Firestore
           router.replace('/config');
           setLoading(false);
           return;
@@ -145,7 +124,6 @@ export function RegisterForm() {
         }
       }
 
-      // Enviar email de verificación
       await userCredential.user?.sendEmailVerification();
 
       Alert.alert(
@@ -201,8 +179,6 @@ export function RegisterForm() {
           <View style={[styles.iconContainer, { backgroundColor: colors.formIconCircle }]}>
             <Ionicons name="person-add-outline" size={48} color={colors.loginIconColor} />
           </View>
-
-          {/* Campo de Nombre */}
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.inputLabel }]}>Nombre Completo</Text>
             <TextInput
@@ -235,7 +211,6 @@ export function RegisterForm() {
             )}
           </View>
 
-          {/* Campo de Email */}
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.inputLabel }]}>Correo Electrónico</Text>
             <TextInput
@@ -267,7 +242,6 @@ export function RegisterForm() {
             )}
           </View>
 
-          {/* Campo de Contraseña */}
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.inputLabel }]}>Contraseña</Text>
             <View style={styles.passwordContainer}>
@@ -310,7 +284,6 @@ export function RegisterForm() {
             )}
           </View>
 
-          {/* Campo de Confirmar Contraseña */}
           <View style={styles.inputContainer}>
             <Text style={[styles.label, { color: colors.inputLabel }]}>Confirmar Contraseña</Text>
             <View style={styles.passwordContainer}>
@@ -355,7 +328,6 @@ export function RegisterForm() {
             )}
           </View>
 
-          {/* Requisitos de contraseña */}
           <View style={styles.passwordRequirements}>
             <Text style={[styles.requirementText, { color: colors.textSecondary }]}>
               La contraseña debe contener:
@@ -372,7 +344,6 @@ export function RegisterForm() {
             </View>
           </View>
 
-          {/* Botón de Registro */}
           <TouchableOpacity
             style={[
               globalStyles.btnPrimary,
@@ -395,7 +366,6 @@ export function RegisterForm() {
             )}
           </TouchableOpacity>
 
-          {/* Enlace a Login */}
           <View style={styles.footer}>
             <Text style={[styles.footerText, { color: colors.text }]}>
               ¿Ya tienes una cuenta?

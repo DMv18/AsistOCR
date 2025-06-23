@@ -25,7 +25,6 @@ export default function EditarChecksScreen() {
   const [colAsistencias, setColAsistencias] = useState<number[]>([]);
   const [guardarError, setGuardarError] = useState<string | null>(null);
 
-  // Cargar Excel
   useEffect(() => {
     if (!eventoId) return;
     setLoading(true);
@@ -49,7 +48,6 @@ export default function EditarChecksScreen() {
             setTabla(tablaArr);
             const idxNombre = tablaArr[0].findIndex(h => h && h.toLowerCase().includes('nombre'));
             setColNombre(idxNombre);
-            // Encuentra columnas de asistencia (✓/x)
             const colsAsist = tablaArr[0]
               .map((_, idx) =>
                 idx !== idxNombre && tablaArr.slice(1).some(fila => ['✓', 'x', '', undefined].includes((fila[idx] ?? '').toString().trim()))
@@ -58,7 +56,6 @@ export default function EditarChecksScreen() {
               )
               .filter(idx => idx !== null) as number[];
             setColAsistencias(colsAsist);
-            // Lista de nombres
             if (idxNombre !== -1) {
               setNombres(tablaArr.slice(1).map(fila => String(fila[idxNombre] ?? '')));
             } else {
@@ -83,7 +80,6 @@ export default function EditarChecksScreen() {
       });
   }, [eventoId]);
 
-  // Cuando selecciona un nombre, carga su fila de asistencias
   useEffect(() => {
     if (!nombreSeleccionado || !tabla.length || colNombre === -1 || !colAsistencias.length) return;
     const filaIdx = tabla.findIndex((fila, i) => i > 0 && String(fila[colNombre] ?? '') === nombreSeleccionado);
@@ -94,7 +90,6 @@ export default function EditarChecksScreen() {
     );
   }, [nombreSeleccionado, tabla, colNombre, colAsistencias]);
 
-  // Guardar cambios
   const handleGuardar = async () => {
     if (!nombreSeleccionado || !tabla.length || colNombre === -1 || !colAsistencias.length) {
       setGuardarError('Selecciona un nombre válido para editar la asistencia.');
@@ -127,7 +122,6 @@ export default function EditarChecksScreen() {
 
       Alert.alert('Éxito', 'Asistencia actualizada correctamente.');
       setNombreSeleccionado(null);
-      // Recarga la tabla para reflejar cambios
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
@@ -187,10 +181,8 @@ export default function EditarChecksScreen() {
             <ThemedText style={{ fontWeight: 'bold', fontSize: 16 * fontScale, marginBottom: 8 }}>
               Editando asistencia de: {nombreSeleccionado}
             </ThemedText>
-            {/* Tabla de encabezado y checkboxes */}
             <ScrollView horizontal style={{ width: '100%' }}>
               <View>
-                {/* Encabezado */}
                 <View style={{ flexDirection: 'row', backgroundColor: c.card }}>
                   {colAsistencias.map((colIdx, idx) => (
                     <View
@@ -217,7 +209,6 @@ export default function EditarChecksScreen() {
                     </View>
                   ))}
                 </View>
-                {/* Fila de checkboxes */}
                 <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                   {colAsistencias.map((colIdx, idx) => (
                     <TouchableOpacity
@@ -247,7 +238,6 @@ export default function EditarChecksScreen() {
                 </View>
               </View>
             </ScrollView>
-            {/* Botones */}
             <View style={{ flexDirection: 'row', gap: 18, marginTop: 18 }}>
               <TouchableOpacity
                 style={{

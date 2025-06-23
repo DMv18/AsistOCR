@@ -156,7 +156,6 @@ export default function UsuarioScreen() {
                 editable={editMode}
                 onChangeText={text => {
                   setNewName(text);
-                  // validación en tiempo real ya está en useEffect
                 }}
                 placeholder="Nombre"
                 placeholderTextColor={c.inputPlaceholder}
@@ -168,7 +167,6 @@ export default function UsuarioScreen() {
                 autoCapitalize="words"
                 autoCorrect={false}
                 onBlur={() => {
-                  // Limpia espacios extra al salir del input
                   if (editMode) setNewName(newName.trim());
                 }}
               />

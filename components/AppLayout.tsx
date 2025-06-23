@@ -16,14 +16,14 @@ import {
   View,
 } from 'react-native';
 import { ThemedText } from './ThemedText';
-import { auth } from '@/firebaseConfig'; // Importa auth
+import { auth } from '@/firebaseConfig'; 
 
 type Props = {
   children: React.ReactNode;
   description?: string;
   showBack?: boolean;
   onHelp?: () => void; 
-  hideUserButtons?: boolean; // <-- Añadido
+  hideUserButtons?: boolean; 
 };
 
 export function AppLayout({ children, description, showBack = true, onHelp, hideUserButtons }: Props) {
@@ -50,11 +50,9 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
   const showCompactMenu = width < 420 || fontScale > 1.15;
   const [menuVisible, setMenuVisible] = useState(false);
 
-  // Estado para usuario y modal de logout
   const [userName, setUserName] = useState<string | null>(null);
   const [logoutModal, setLogoutModal] = useState(false);
 
-  // Escucha cambios de usuario
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUserName(user?.displayName || null);
@@ -62,7 +60,6 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
     return () => unsubscribe();
   }, []);
 
-  // Función para cerrar sesión
   const handleLogout = async () => {
     setLogoutModal(false);
     await auth.signOut();
@@ -122,7 +119,7 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
                       onPress={() => {
                         setMenuVisible(false);
                         if (userName) {
-                          router.push('/usuario'); // Abre la pantalla de usuario
+                          router.push('/usuario'); 
                         } else {
                           router.push('/login');
                         }
@@ -166,7 +163,7 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
                 accessibilityLabel="Usuario"
                 onPress={() => {
                   if (userName) {
-                    router.push('/usuario'); // Abre la pantalla de usuario
+                    router.push('/usuario'); 
                   } else {
                     router.push('/login');
                   }
@@ -305,7 +302,6 @@ export function AppLayout({ children, description, showBack = true, onHelp, hide
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      {/* Modal de confirmación de logout */}
       <Modal
         visible={logoutModal}
         transparent
@@ -419,7 +415,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
-    // marginTop se sobreescribe inline para subir el menú
   },
   menuOption: {
     flexDirection: 'row',

@@ -8,12 +8,12 @@ const colorsDeuteranopia = {
     text: '#1A202C',
     border: '#CBD5E0',
     accent: '#3182CE',
-    danger: '#9B2C2C', // Rojo vino
-    warning: '#D69E2E', // Mostaza
-    success: '#2B6CB0', // Azul oscuro en vez de verde
+    danger: '#9B2C2C', 
+    warning: '#D69E2E',
+    success: '#2B6CB0', 
     help: '#EDF2F7',
     btnPrimary: '#3182CE',
-    btnSecondary: '#4299E1', // Azul claro, más contraste
+    btnSecondary: '#4299E1', 
     btnDanger: '#9B2C2C',
     btnText: '#FFF',
 
@@ -39,8 +39,8 @@ const colorsDeuteranopia = {
     listaEventosIcon: '#3182CE',
     listaEventosNombre: '#1A202C',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#2B6CB0', // Azul fuerte
-    listaEventosBtnBorrar: '#9B2C2C', // Rojo vino
+    listaEventosBtnEditar: '#2B6CB0', 
+    listaEventosBtnBorrar: '#9B2C2C', 
     listaEventosBtnVer: '#3182CE',
     listaEventosBtnIcon: '#FFF',
 
@@ -77,8 +77,8 @@ const colorsDeuteranopia = {
     editarEventoOpcion3Bg: '#F7FAFC',
     editarEventoOpcionText: '#1A202C',
     editarEventoIcon1Bg: '#3182CE',
-    editarEventoIcon2Bg: '#2B6CB0', // Azul fuerte
-    editarEventoIcon3Bg: '#D69E2E', // Mostaza
+    editarEventoIcon2Bg: '#2B6CB0', 
+    editarEventoIcon3Bg: '#D69E2E', 
 
     configSectionBg: '#FFFFFF',
     configColorOptionBg: '#E3F2FD',
@@ -164,7 +164,7 @@ const colorsDeuteranopia = {
 
     historialArchivoIconBg: '#1565c0',
     historialArchivoIconColor: '#FFFF',
-    historialEditarIconBg: '#2B6CB0', // Azul fuerte en vez de verde
+    historialEditarIconBg: '#2B6CB0', 
     historialEditarIconColor: '#FFFF',
     historialBorrarIconBg: '#9B2C2C',
     historialBorrarIconColor: '#FFFF',
@@ -203,9 +203,9 @@ const colorsDeuteranopia = {
     text: '#E2E8F0',
     border: '#4A5568',
     accent: '#63B3ED',
-    danger: '#C53030', // Rojo oscuro
+    danger: '#C53030', 
     warning: '#D69E2E',
-    success: '#4299E1', // Azul claro en vez de verde
+    success: '#4299E1', 
     help: '#2D3748',
     btnPrimary: '#63B3ED',
     btnSecondary: '#4299E1',
@@ -234,8 +234,8 @@ const colorsDeuteranopia = {
     listaEventosIcon: '#63B3ED',
     listaEventosNombre: '#E2E8F0',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#4299E1', // Azul claro en vez de verde
-    listaEventosBtnBorrar: '#C53030', // Rojo oscuro
+    listaEventosBtnEditar: '#4299E1', 
+    listaEventosBtnBorrar: '#C53030', 
     listaEventosBtnVer: '#63B3ED',
     listaEventosBtnIcon: '#FFF',
 
@@ -272,7 +272,7 @@ const colorsDeuteranopia = {
     editarEventoOpcion3Bg: '#2D3748',
     editarEventoOpcionText: '#E2E8F0',
     editarEventoIcon1Bg: '#63B3ED',
-    editarEventoIcon2Bg: '#4299E1', // Azul claro en vez de verde
+    editarEventoIcon2Bg: '#4299E1', 
     editarEventoIcon3Bg: '#D69E2E',
 
     configSectionBg: '#2D3748',
@@ -291,7 +291,7 @@ const colorsDeuteranopia = {
     btnIcon: '#63B3ED',
     eventoNombre: '#E2E8F0',
     eventoFecha: '#718096',
-    btnEditar: '#4299E1', // Azul claro en vez de verde
+    btnEditar: '#4299E1', 
     btnBorrar: '#C53030',
     btnVer: '#63B3ED',
     iconTendencias: '#4299E1',

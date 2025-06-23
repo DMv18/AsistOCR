@@ -175,9 +175,9 @@ const styles = StyleSheet.create({
   },
   eventoNombre: {
     fontWeight: 'bold',
-    fontSize: 16, // Se sobreescribe inline con fontScale
+    fontSize: 16, 
   },
   eventoFecha: {
-    fontSize: 13, // Se sobreescribe inline con fontScale
+    fontSize: 13, 
   },
 });

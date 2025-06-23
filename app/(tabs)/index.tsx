@@ -83,7 +83,6 @@ function HomeScreen() {
   );
 }
 
-// Exporta el componente envuelto en CopilotProvider
 export default function HomeScreenWithCopilot() {
   return (
     <CopilotProvider

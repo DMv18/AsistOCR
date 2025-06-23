@@ -6,8 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
-
-// Importa los nuevos componentes
 import { AgregarListaDia } from '@/components/EditarEvento/AgregarListaDia';
 import { AgregarPersona } from '@/components/EditarEvento/AgregarPersona';
 import { CambiarAsistencia } from '@/components/EditarEvento/CambiarAsistencia';
@@ -21,7 +19,6 @@ export default function EditarEventoScreen() {
   const cEditar = c.EditarEvento;
 
   const [nombreEvento, setNombreEvento] = useState<string>('');
-  //const [fechaEvento, setFechaEvento] = useState<string>('');
   const [modo, setModo] = useState<'menu' | 'agregarPersona' | 'agregarListaDia' | 'cambiarAsistencia'>('menu');
   const [modalEditarAgregar, setModalEditarAgregar] = useState(false);
 
@@ -65,7 +62,6 @@ export default function EditarEventoScreen() {
         {nombreEvento || 'Evento'}
       </ThemedText>
 
-      {/* Modal para elegir entre agregar o editar */}
       <Modal
         visible={modalEditarAgregar}
         transparent

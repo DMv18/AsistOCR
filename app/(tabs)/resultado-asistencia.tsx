@@ -15,7 +15,6 @@ function ResultadoAsistenciaScreen() {
   const { theme, colorMode, fontScale } = useThemeCustom();
   const c = Colors[colorMode][theme];
 
-  // Obtener los nombres detectados desde los parámetros 
   const nombresDetectados: string[] = (() => {
     if (typeof params.respuestas === 'string') {
       try {
@@ -32,7 +31,6 @@ function ResultadoAsistenciaScreen() {
     presente: boolean;
   };
 
-  // Todos los nombres detectados se marcan como presentes por defecto
   const resultado: ResultadoFila[] = nombresDetectados.map(nombre => ({
     nombre,
     presente: true,
@@ -44,7 +42,6 @@ function ResultadoAsistenciaScreen() {
       : 'Evento_' + new Date().toISOString().slice(0, 10)
   );
   const [fechaEvento] = useState(new Date().toISOString().slice(0, 10));
-  // Nuevo: input para el nombre de la columna
   const [nombreColumna, setNombreColumna] = useState('');
 
   const handleFinalizar = async () => {
@@ -58,7 +55,7 @@ function ResultadoAsistenciaScreen() {
       Alert.alert('Nombre inválido', 'El nombre del evento debe tener al menos 2 caracteres.');
       return;
     }
-    // Usa el nombre de columna si lo puso, si no la fecha por defecto
+
     const columnaFinal = nombreColumnaTrim ? nombreColumnaTrim : fechaEvento;
     const nombreExcel = nombreEventoTrim.replace(/[^a-zA-Z0-9_\-]/g, '_') + '.xlsx';
     const nombres = resultado.map(f => f.nombre);
@@ -69,7 +66,7 @@ function ResultadoAsistenciaScreen() {
         body: JSON.stringify({
           nombre: nombreExcel,
           nombres,
-          fecha: columnaFinal, // <--- aquí se envía el nombre de columna limpio
+          fecha: columnaFinal, 
         }),
       });
       if (res.status === 409) {
@@ -91,10 +88,9 @@ function ResultadoAsistenciaScreen() {
     router.replace('/historial');
   };
 
-  // Construir datos tipo excelData: encabezado + filas
   const columnaPreview = nombreColumna.replace(/\s+$/, '') ? nombreColumna.replace(/\s+$/, '') : fechaEvento;
   const excelData: string[][] = [
-    ['N°', 'Nombre', columnaPreview], // <--- aquí también se muestra el nombre limpio
+    ['N°', 'Nombre', columnaPreview], 
     ...resultado.map((fila, idx) => [
       (idx + 1).toString(),
       fila.nombre,
@@ -215,7 +211,6 @@ function ResultadoAsistenciaScreen() {
                       </View>
                     ))}
                   </View>
-                  {/* Filas */}
                   <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{ flexGrow: 1 }}

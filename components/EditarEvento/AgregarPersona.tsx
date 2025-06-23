@@ -24,7 +24,6 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
 
   useEffect(() => {
     cargarExcel();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [eventoId]);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
     if (!trimmed) setNuevoNombreError('El nombre no puede estar vacío.');
     else if (nuevoNombre !== trimmed) setNuevoNombreError('El nombre no puede terminar con espacios.');
     else {
-      // Validar que no exista ya el nombre (ignorando mayúsculas/minúsculas y espacios)
       const colNombre = excelData[0]?.findIndex(h => h && h.toLowerCase().includes('nombre'));
       if (colNombre !== undefined && colNombre >= 0) {
         const existe = excelData.slice(1).some(fila => (fila[colNombre] || '').trim().toLowerCase() === trimmed.toLowerCase());
@@ -90,7 +88,6 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
       let filaInsertada = false;
       if (excelData.length > 0) {
         const colNombre = excelData[0].findIndex(h => h && h.toLowerCase().includes('nombre'));
-        // Buscar la primera fila vacía en la columna de nombre
         for (let i = 1; i < nuevaTabla.length; i++) {
           if (!nuevaTabla[i][colNombre] || nuevaTabla[i][colNombre].trim() === '') {
             for (let j = 0; j < nuevaTabla[0].length; j++) {
@@ -109,7 +106,6 @@ export function AgregarPersona({ eventoId, onSalir }: Props) {
             break;
           }
         }
-        // Si no hay fila vacía, agrega una nueva
         if (!filaInsertada) {
           const nuevaFila = [];
           for (let i = 0; i < nuevaTabla[0].length; i++) {

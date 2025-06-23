@@ -22,7 +22,6 @@ function EditarNombreScreen() {
   const [nuevoNombreError, setNuevoNombreError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Cargar nombres del Excel
   useEffect(() => {
     if (!eventoId) return;
     setLoading(true);
@@ -42,7 +41,6 @@ function EditarNombreScreen() {
             }
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-            // Usar sheet_to_json para obtener objetos con encabezados
             const tabla = utils.sheet_to_json(worksheet, { header: 1 }) as string[][];
             const colNombre = tabla[0].findIndex(h => h && h.toLowerCase().includes('nombre'));
             if (colNombre === -1) {
@@ -65,7 +63,6 @@ function EditarNombreScreen() {
       });
   }, [eventoId]);
 
-  // Validación en tiempo real para el nuevo nombre
   useEffect(() => {
     const trimmed = nuevoNombre.replace(/\s+$/, '');
     if (!trimmed) setNuevoNombreError('El nuevo nombre no puede estar vacío.');
@@ -92,7 +89,6 @@ function EditarNombreScreen() {
     }
     setLoading(true);
     try {
-      // Descargar y modificar el Excel
       const res = await fetch(`${SERVER_URL}/asistencias/${encodeURIComponent(eventoId)}`);
       const blob = await res.blob();
       const reader = new FileReader();
@@ -114,7 +110,6 @@ function EditarNombreScreen() {
 
           console.log('ANTES:', tabla.map(fila => fila[colNombre]));
 
-          // Reemplaza el nombre solo en la columna correcta
           let reemplazado = false;
           for (let i = 1; i < tabla.length; i++) {
             if (
@@ -134,7 +129,6 @@ function EditarNombreScreen() {
             return;
           }
 
-          // Reconstruye la hoja y el libro
           const ws = utils.aoa_to_sheet(tabla);
           const wb = utils.book_new();
           utils.book_append_sheet(wb, ws, sheetName);

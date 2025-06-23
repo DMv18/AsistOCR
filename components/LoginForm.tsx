@@ -57,7 +57,6 @@ export function LoginForm() {
       Alert.alert('Éxito', 'Inicio de sesión correcto');
       router.replace('/(tabs)');
     } catch (error: any) {
-      // No mostrar el error crudo de Firebase al usuario
       let errorMessage = 'Error al iniciar sesión';
 
       if (

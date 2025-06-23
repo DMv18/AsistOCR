@@ -1,30 +1,29 @@
 
 const colorsTritanopia = {
   light: {
-    // Fondo general de la app (área exterior)
     background: '#F7FAFC',
 
-    // Fondo de los contenedores principales (cards, AppLayout, etc)
+    // Fondo de los contenedores principales 
     card: '#FFFFFF',
     appLayoutCard: '#FFFFFF',
 
-    // Fondo de bloques funcionales internos (ej: bloque funcional principal)
-    mainBlockBg: '#F9EAF3', // Rosa muy claro
+    // Fondo de bloques funcionales internos 
+    mainBlockBg: '#F9EAF3', 
 
-    // General (usado en toda la app)
+    // General 
     text: '#1A202C',
     border: '#CBD5E0',
-    accent: '#B46FC2',      // Púrpura
-    danger: '#E53E3E',      // Rojo
-    warning: '#D17C3A',     // Marrón-anaranjado
-    success: '#8E44AD',     // Púrpura oscuro
-    help: '#F5E9F7',        // Rosa claro
-    btnPrimary: '#B46FC2',  // Púrpura
-    btnSecondary: '#D17C3A', // Marrón-anaranjado
+    accent: '#B46FC2',     
+    danger: '#E53E3E',      
+    warning: '#D17C3A',     
+    success: '#8E44AD',     
+    help: '#F5E9F7',        
+    btnPrimary: '#B46FC2',  
+    btnSecondary: '#D17C3A', 
     btnDanger: '#E53E3E',
     btnText: '#FFF',
 
-    // Header/AppBar (AppLayout, globalStyles)
+    // Header/AppBar 
     headerBg: '#8E44AD',
     headerText: '#FFF',
     headerBtnBg: '#B46FC2',
@@ -32,7 +31,7 @@ const colorsTritanopia = {
     helpBtnBg: '#F9EAF3',
     helpBtnText: '#1A202C',
 
-    // Input (TextInput, etc)
+    // Input 
     inputBg: '#F7FAFC',
     inputBorder: '#CBD5E0',
     inputText: '#1A202C',
@@ -49,16 +48,16 @@ const colorsTritanopia = {
     listaEventosIcon: '#B46FC2',
     listaEventosNombre: '#1A202C',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#D17C3A',  // Marrón-anaranjado
-    listaEventosBtnBorrar: '#E53E3E',  // Rojo
-    listaEventosBtnVer: '#B46FC2',     // Púrpura
+    listaEventosBtnEditar: '#D17C3A', 
+    listaEventosBtnBorrar: '#E53E3E',  
+    listaEventosBtnVer: '#B46FC2',     
     listaEventosBtnIcon: '#FFF',
 
     // FormularioAsistencia
     formFotosBlock: '#F9EAF3',
     formFotoRow: '#FFFFFF',
     formFotoRowBorder: '#CBD5E0',
-    formAddBtn: '#E09AC7', // Rosa
+    formAddBtn: '#E09AC7', 
     formAddBtnText: '#FFF',
     formBtnDanger: '#E53E3E',
     formBtnDangerText: '#FFF',
@@ -191,7 +190,7 @@ const colorsTritanopia = {
       icon: '#B46FC2',
     },
 
-    // Historial (iconos individuales)
+    // Historial 
     historialArchivoIconBg: '#8E44AD',
     historialArchivoIconColor: '#FFF',
     historialEditarIconBg: '#D17C3A',
@@ -226,23 +225,23 @@ const colorsTritanopia = {
   },
 
   dark: {
-    // Fondo general de la app (área exterior)
+    // Fondo general de la app 
     background: '#1A202C',
 
-    // Fondo de los contenedores principales (cards, AppLayout)
+    // Fondo de los contenedores principales 
     card: '#2D3748',
     appLayoutCard: '#2D3748',
 
     // Fondo de bloques funcionales internos 
-    mainBlockBg: '#3B2C3F', // púrpura oscuro
+    mainBlockBg: '#3B2C3F', 
 
     // General
     text: '#E2E8F0',
     border: '#4A5568',
-    accent: '#E09AC7',      // Rosa púrpura
-    danger: '#F56565',      // Rojo brillante
-    warning: '#D17C3A',     // Marrón-anaranjado
-    success: '#9C27B0',     // Púrpura vibrante
+    accent: '#E09AC7',     
+    danger: '#F56565',     
+    warning: '#D17C3A',     
+    success: '#9C27B0',    
     help: '#2D3748',
     btnPrimary: '#E09AC7',
     btnSecondary: '#D17C3A',
@@ -250,7 +249,7 @@ const colorsTritanopia = {
     btnText: '#FFF',
 
     // Header/AppBar
-    headerBg: '#6A1B9A',    // Púrpura oscuro
+    headerBg: '#6A1B9A',   
     headerText: '#FFF',
     headerBtnBg: '#E09AC7',
     headerBtnText: '#FFF',
@@ -376,7 +375,6 @@ const colorsTritanopia = {
       labelText: '#E2E8F0',
     },
 
-    // Nuevas propiedades para login/register
     iconCircle: '#2D3748',
     iconCircleIcon: '#E09AC7',
 
@@ -412,7 +410,7 @@ const colorsTritanopia = {
     formIconCircle: '#2D3748',
     formIconCircleIcon: '#E09AC7',
 
-    // Historial (iconos individuales)
+    // Historial 
     historialArchivoIconBg: '#6A1B9A',
     historialArchivoIconColor: '#1A202C',
     historialEditarIconBg: '#D17C3A',

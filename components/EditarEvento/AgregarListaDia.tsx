@@ -13,7 +13,6 @@ function AgregarListaDiaInner({ eventoId, onSalir }: Props) {
   const router = useRouter();
 
   const handleProcesarListaDia = (uri: string) => {
-    // Navega a la pantalla de agregar-asistencia con los parámetros correctos
     router.replace({
       pathname: '/agregar-asistencia',
       params: { eventoId, uri }

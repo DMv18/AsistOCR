@@ -100,4 +100,4 @@ const styles = StyleSheet.create({
     color: '#0a7ea4',
   },
 });
-// Donde uses colors.themedText, ahora funcionará porque existe en Colors
+

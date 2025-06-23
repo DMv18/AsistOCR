@@ -1,6 +1,5 @@
 export const colorsProtanopia = {
   light: {
-    // ...fondos y básicos...
     background: '#F7FAFC',
     card: '#FFFFFF',
     appLayoutCard: '#FFFFFF',
@@ -9,12 +8,12 @@ export const colorsProtanopia = {
     text: '#1A202C',
     border: '#CBD5E0',
     accent: '#3182CE',
-    danger: '#D82C2C', // Rojo oscuro
-    warning: '#D69E2E', // Mostaza
-    success: '#2B6CB0', // Azul-verde
+    danger: '#D82C2C',
+    warning: '#D69E2E', 
+    success: '#2B6CB0', 
     help: '#EDF2F7',
     btnPrimary: '#3182CE',
-    btnSecondary: '#2B6CB0', // Azul-verde en vez de verde
+    btnSecondary: '#2B6CB0', 
     btnDanger: '#D82C2C',
     btnText: '#FFF',
 
@@ -40,7 +39,7 @@ export const colorsProtanopia = {
     listaEventosIcon: '#3182CE',
     listaEventosNombre: '#1A202C',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#2B6CB0', // Azul-verde
+    listaEventosBtnEditar: '#2B6CB0', 
     listaEventosBtnBorrar: '#D82C2C',
     listaEventosBtnVer: '#3182CE',
     listaEventosBtnIcon: '#FFF',
@@ -78,7 +77,7 @@ export const colorsProtanopia = {
     editarEventoOpcion3Bg: '#F7FAFC',
     editarEventoOpcionText: '#1A202C',
     editarEventoIcon1Bg: '#3182CE',
-    editarEventoIcon2Bg: '#2B6CB0', // Azul-verde
+    editarEventoIcon2Bg: '#2B6CB0', 
     editarEventoIcon3Bg: '#D69E2E',
 
     configSectionBg: '#FFFFFF',
@@ -198,9 +197,9 @@ export const colorsProtanopia = {
     text: '#E2E8F0',
     border: '#4A5568',
     accent: '#63B3ED',
-    danger: '#F56565', // Rojo brillante pero distinguible
+    danger: '#F56565', 
     warning: '#D69E2E',
-    success: '#4299E1', // Azul en vez de verde
+    success: '#4299E1',
     help: '#2D3748',
     btnPrimary: '#63B3ED',
     btnSecondary: '#4299E1',
@@ -229,7 +228,7 @@ export const colorsProtanopia = {
     listaEventosIcon: '#63B3ED',
     listaEventosNombre: '#E2E8F0',
     listaEventosFecha: '#718096',
-    listaEventosBtnEditar: '#4299E1', // Azul
+    listaEventosBtnEditar: '#4299E1', 
     listaEventosBtnBorrar: '#F56565',
     listaEventosBtnVer: '#63B3ED',
     listaEventosBtnIcon: '#FFF',
